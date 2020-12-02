@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+group 'io.fluentcoding'
+version '1.0-SNAPSHOT'
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    compile ('net.dv8tion:JDA:4.1.1_167') {
+        exclude module: 'opus-java'
+    }
+    compile 'org.mongodb:mongo-java-driver:3.12.5'
+    compile 'org.apache.httpcomponents:httpclient:4.5.13'
+    compile group: 'org.json', name: 'json', version: '20090211'
+}
+
+repositories {
+    jcenter()
+}
+
+ext {
+    javaMainClass = "io.fluentcoding.codemanbot.Application"
+}
+
+application {
+    mainClassName = javaMainClass
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+jar {
+    manifest {
+        attributes 'Main-Class': javaMainClass
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
