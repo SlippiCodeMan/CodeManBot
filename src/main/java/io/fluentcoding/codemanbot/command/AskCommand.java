@@ -23,7 +23,7 @@ public class AskCommand extends CodeManCommand {
         builder.setThumbnail(e.getAuthor().getAvatarUrl());
         builder.setColor(GlobalVar.SUCCESS);
 
-        builder.addField("His Code", DatabaseBridge.getCode(e.getAuthor().getIdLong()), false);
+        builder.addField("Their code", DatabaseBridge.getCode(e.getAuthor().getIdLong()), false);
         builder.setFooter(GlobalVar.FROG_EMOJI + " slippi 2.x.x");
 
         e.getChannel().sendMessage(builder.build()).content(e.getMessage().getMentionedRoles().stream().map(role -> role.getAsMention()).collect(Collectors.joining(" "))).queue();
