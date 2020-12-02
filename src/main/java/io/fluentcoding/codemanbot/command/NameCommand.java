@@ -24,7 +24,18 @@ public class NameCommand extends CodeManCommandWithArgs {
         EmbedBuilder builder = new EmbedBuilder();
 
         /* NO NAME SPECIFIED */
-        if (code == null) {
+        if (e.getMessage().getMentionedMembers().size() > 0) {
+            String retrievedCode = DatabaseBridge.getCode(e.getMessage().getMentionedMembers().get(0).getIdLong());
+
+            if (retrievedCode == null) {
+                builder.setDescription("You haven't connected yourself with CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
+                builder.setColor(GlobalVar.ERROR);
+            } else {
+                String name = SlippiBridge.getName(DatabaseBridge.getCode(e.getAuthor().getIdLong()));
+                builder.addField("Your name", name, false);
+                builder.setColor(GlobalVar.SUCCESS);
+            }
+        } else if (code == null) {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
             if (retrievedCode == null) {
