@@ -23,7 +23,17 @@ public class CodeCommand extends CodeManCommandWithArgs {
         EmbedBuilder builder = new EmbedBuilder();
 
         /* NO NAME SPECIFIED */
-        if (name == null) {
+        if (e.getMessage().getMentionedMembers().size() > 0) {
+            String code = DatabaseBridge.getCode(e.getMessage().getMentionedMembers().get(0).getIdLong());
+
+            if (code == null) {
+                builder.setDescription("This person hasn't set his code yet!");
+                builder.setColor(GlobalVar.ERROR);
+            } else {
+                builder.addField("Their code", code, false);
+                builder.setColor(GlobalVar.SUCCESS);
+            }
+        } else if (name == null) {
             String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
             if (code == null) {

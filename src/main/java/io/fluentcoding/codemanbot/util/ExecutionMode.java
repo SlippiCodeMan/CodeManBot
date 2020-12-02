@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum ExecutionMode {
     PRODUCTION(System.getenv("CODEMAN_PROD_TOKEN"), "&"),
-    DEV(System.getenv("CODEMAN_PROD_TOKEN"), "!");
+    DEV(System.getenv("CODEMAN_DEV_TOKEN"), "!");
 
     private String discordToken;
     private String commandPrefix;
