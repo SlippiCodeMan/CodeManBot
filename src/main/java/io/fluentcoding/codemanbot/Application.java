@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 
 public class Application {
-    public final static ExecutionMode EXEC_MODE = ExecutionMode.DEV;
+    public final static ExecutionMode EXEC_MODE = ExecutionMode.PRODUCTION;
 
     public static void main(String[] args) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
