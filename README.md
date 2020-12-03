@@ -9,7 +9,7 @@ First make sure [gradle](https://gradle.org/) is installed on your system.
 Then you can build it with:
 
 ```bash
-gradle build
+gradle shadowjar
 ```
 
 ## Usage
