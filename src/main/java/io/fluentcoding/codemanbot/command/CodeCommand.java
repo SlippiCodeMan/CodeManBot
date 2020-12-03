@@ -63,7 +63,7 @@ public class CodeCommand extends CodeManCommandWithArgs {
                     builder.addField("Their code", codes.get(0), false);
                     builder.setColor(GlobalVar.SUCCESS);
                 } else {
-                    builder.setDescription("**" + codes.size() + " players are using this code:**\n\n" + String.join("\n", codes));
+                    builder.setDescription("**" + codes.size() + " players are using this name:**\n\n" + String.join("\n", codes));
                     builder.setColor(GlobalVar.SUCCESS);
                 }
             }
