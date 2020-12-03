@@ -26,8 +26,3 @@ jobs:
       uses: eskatos/gradle-command-action@v1
       with:
         arguments: shadowjar
-    - name: Build a docker container
-      uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: docker
-
