@@ -2,13 +2,15 @@ package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
-import io.fluentcoding.codemanbot.util.*;
+import io.fluentcoding.codemanbot.util.CodeManCommandWithArgs;
+import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
+import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.PatternChecker;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CodeCommand extends CodeManCommandWithArgs {
 
@@ -61,7 +63,7 @@ public class CodeCommand extends CodeManCommandWithArgs {
                     builder.addField("Their code", codes.get(0), false);
                     builder.setColor(GlobalVar.SUCCESS);
                 } else {
-                    builder.setDescription("**" + codes.size() + " players are using this code:**\n\n" + codes.stream().collect(Collectors.joining("\n")));
+                    builder.setDescription("**" + codes.size() + " players are using this code:**\n\n" + String.join("\n", codes));
                     builder.setColor(GlobalVar.SUCCESS);
                 }
             }

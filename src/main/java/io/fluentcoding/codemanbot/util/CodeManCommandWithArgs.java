@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 @Getter
 public class CodeManCommandWithArgs extends CodeManCommand {
-    private CodeManArgumentSet argumentSet;
+    private final CodeManArgumentSet argumentSet;
 
     public CodeManCommandWithArgs(CodeManArgumentSet argSet, String description, String name, String... aliases) {
         super(description, name, aliases);
@@ -17,7 +17,9 @@ public class CodeManCommandWithArgs extends CodeManCommand {
         this.argumentSet = argSet;
     }
 
-    public void handle(MessageReceivedEvent e, Map<String, String> args) {}
+    public void handle(MessageReceivedEvent e, Map<String, String> args) {
+        // Leave empty
+    }
 
     @Override
     public String getHelpTitle() {

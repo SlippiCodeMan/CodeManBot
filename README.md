@@ -22,10 +22,10 @@ gradle shadowjar
 ## Usage
 
 To use it you have to create a `.env` file at the root of the project containing those env vars :
-- `CODEMAN_DB_URI` to a [mongodb](https://www.mongodb.com/) database access url.
-- `CODEMAN_PROD_TOKEN` to a discord bot token.
-- `CODEMAN_DEV_TOKEN` (optional) to a test bot token.
-- `CODEMAN_EXEC_MODE` to PROD or DEV
+-   `CODEMAN_DB_URI` to a [mongodb](https://www.mongodb.com/) database access url.
+-   `CODEMAN_PROD_TOKEN` to a discord bot token.
+-   `CODEMAN_DEV_TOKEN` (optional) to a test bot token.
+-   `CODEMAN_EXEC_MODE` to PROD or DEV
 
 Then you can run it with:
 

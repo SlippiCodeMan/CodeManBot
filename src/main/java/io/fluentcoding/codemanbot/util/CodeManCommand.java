@@ -5,12 +5,12 @@ import lombok.Getter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Getter
 public class CodeManCommand {
-    private String name, description;
-    private String[] aliases;
+    private final String name;
+    private final String description;
+    private final String[] aliases;
 
     public CodeManCommand(String description, String name, String... aliases) {
         this.description = description;
@@ -21,6 +21,6 @@ public class CodeManCommand {
     protected void handle(MessageReceivedEvent e) {}
     public String getHelpTitle() {
         return aliases.length == 0 ? name :
-                name + " (" + Arrays.stream(aliases).collect(Collectors.joining(", ")) + ")";
+                name + " (" + String.join(", ", aliases) + ")";
     }
 }

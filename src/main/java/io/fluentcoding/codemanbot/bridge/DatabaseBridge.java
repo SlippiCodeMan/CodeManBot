@@ -171,7 +171,8 @@ public class DatabaseBridge {
     @Data
     public static class InsertCodeResult {
         private final String oldCode;
-        private final boolean isAccepted, firstCreation;
+        private final boolean isAccepted;
+        private final boolean firstCreation;
 
         public static InsertCodeResult declined() {
             return new InsertCodeResult(null, false, false);
