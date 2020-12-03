@@ -5,6 +5,8 @@
 
 # CodeMan
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e114c6dfaa934ece8132fccdab19e4a3)](https://app.codacy.com/gh/SlippiCodeMan/CodeManBot?utm_source=github.com&utm_medium=referral&utm_content=SlippiCodeMan/CodeManBot&utm_campaign=Badge_Grade)
+
 [CodeMan](https://slippicodeman.github.io/CodeManWebsite/) is a Discord bot to manage Slippi connect codes for SSBM. 
 
 ## Installation
