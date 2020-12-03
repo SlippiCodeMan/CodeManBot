@@ -17,11 +17,14 @@ Then you can build it with:
 gradle shadowjar
 ```
 
+> If gradle is too old on your system you can use the `gradlew` script instead (or `gradle.bat` if you run Windows).
+
 ## Usage
 
-To use it make sure to set a few environement variables first:
+To use it you have to create a `.env` file at the root of the project containing those env vars :
 - `CODEMAN_DB_URI` to a [mongodb](https://www.mongodb.com/) database access url.
 - `CODEMAN_PROD_TOKEN` to a discord bot token.
+- `CODEMAN_TEST_TOKEN` (optional) to a test bot token.
 
 Then you can run it with:
 
@@ -29,7 +32,26 @@ Then you can run it with:
 gradle run
 ```
 
-Docker support is planned.
+### Docker
+
+To run it inside docker you need to install docker and then:
+
+To create your container:
+```bash
+gradle docker
+```
+
+To start your container:
+```bash
+gradle dockerStart
+```
+
+To start your container:
+```bash
+gradle dockerStart
+```
+
+> Use `sudo` in front of those commands if you get a permission error.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

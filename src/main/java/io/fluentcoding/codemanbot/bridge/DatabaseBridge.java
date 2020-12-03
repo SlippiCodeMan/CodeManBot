@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.bridge;
 
+import io.fluentcoding.codemanbot.util.GlobalVar;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
@@ -10,7 +11,7 @@ import lombok.Data;
 import org.bson.Document;
 
 public class DatabaseBridge {
-    private final static String mongoUri = System.getenv("CODEMAN_DB_URI");
+    private final static String mongoUri = GlobalVar.dotenv.get("CODEMAN_DB_URI");
 
     public static InsertCodeResult insertCode(long discordId, String code) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
