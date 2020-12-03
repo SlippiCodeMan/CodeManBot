@@ -18,7 +18,8 @@ public class CodeManArgumentSet {
         String lastArgument = null;
         if (lastArgumentVarArgs) {
             int paramCount = necessaryArguments.length + optionalArguments.length;
-            int currentPos = 0, spaces = 0;
+            int currentPos = 0;
+            int spaces = 0;
 
             while (true) {
                 currentPos = input.indexOf(" ", currentPos);

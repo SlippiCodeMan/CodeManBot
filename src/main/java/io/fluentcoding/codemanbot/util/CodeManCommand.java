@@ -18,7 +18,10 @@ public class CodeManCommand {
         this.aliases = Arrays.stream(aliases).map(original -> Application.EXEC_MODE.getCommandPrefix() + original).toArray(String[]::new);
     }
 
-    protected void handle(MessageReceivedEvent e) {}
+    protected void handle(MessageReceivedEvent e) {
+        // Leave emply
+    }
+
     public String getHelpTitle() {
         return aliases.length == 0 ? name :
                 name + " (" + String.join(", ", aliases) + ")";
