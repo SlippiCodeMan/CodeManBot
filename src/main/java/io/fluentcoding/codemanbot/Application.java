@@ -5,6 +5,7 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
 import io.fluentcoding.codemanbot.util.CommandHandler;
 import io.fluentcoding.codemanbot.util.ExecutionMode;
+import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -12,7 +13,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 
 public class Application {
-    public final static ExecutionMode EXEC_MODE = ExecutionMode.PRODUCTION;
+    public final static ExecutionMode EXEC_MODE = (GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("PROD")) ? ExecutionMode.PRODUCTION : ExecutionMode.DEV;
 
     public static void main(String[] args) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
