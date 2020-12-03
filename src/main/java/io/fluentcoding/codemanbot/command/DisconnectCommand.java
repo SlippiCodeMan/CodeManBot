@@ -6,9 +6,9 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class RemoveCommand extends CodeManCommand {
+public class DisconnectCommand extends CodeManCommand {
 
-    public RemoveCommand(String description, String name, String... aliases) {
+    public DisconnectCommand(String description, String name, String... aliases) {
         super(description, name, aliases);
     }
 
