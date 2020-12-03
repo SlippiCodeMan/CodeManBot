@@ -49,6 +49,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
             } else {
                 List<Long> discordIds = new ArrayList<>();
                 for (String code : codes) {
+                    code = code.toUpperCase();
                     long discordId = DatabaseBridge.getDiscordIdFromConnectCode(code);
                     if (discordId != -1)
                         discordIds.add(discordId);
