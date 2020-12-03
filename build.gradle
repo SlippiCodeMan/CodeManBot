@@ -12,6 +12,8 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version "6.1.0"
+    id 'com.palantir.docker' version '0.25.0'
+    id 'com.palantir.docker-run' version '0.25.0'
 }
 
 group 'io.fluentcoding'
@@ -20,12 +22,12 @@ version '1.0-SNAPSHOT'
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
-    compileOnly ('net.dv8tion:JDA:4.1.1_167') {
+    implementation ('net.dv8tion:JDA:4.1.1_167') {
         exclude module: 'opus-java'
     }
-    compileOnly 'org.mongodb:mongo-java-driver:3.12.5'
-    compileOnly 'org.apache.httpcomponents:httpclient:4.5.13'
-    compileOnly group: 'org.json', name: 'json', version: '20090211'
+    implementation 'org.mongodb:mongo-java-driver:3.12.5'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation group: 'org.json', name: 'json', version: '20090211'
 }
 
 repositories {
@@ -48,4 +50,17 @@ jar {
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+docker {
+    name "${project.name}:${project.version}"
+    files "$buildDir/libs/${project.name}-${project.version}-all.jar"
+    buildArgs([JAR_FILE: "${project.name}-${project.version}-all.jar"])
+}
+dockerRun {
+    name "${project.name}"
+    image "${project.name}:${project.version}"
+    clean true
+    daemonize false
+    arguments '--env-file=.env'
 }
