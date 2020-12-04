@@ -40,4 +40,4 @@ jobs:
             ./gradlew shadowjar
             ./gradlew docker
             ./gradlew dockerStop
-            ./gradlew dockerStart
+            ./gradlew dockerRun
