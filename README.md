@@ -1,4 +1,4 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/SlippiCodeMan/CodeManBot/Java%20CI%20with%20Gradle)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/SlippiCodeMan/CodeManBot/Build%20and%20Deploy%20Production%20Build)
 ![License](https://img.shields.io/github/license/SlippiCodeMan/CodeManBot)
 ![Discord API](https://img.shields.io/badge/discord%20api-JDA-%23843fd1)
 ![Codacy grade](https://img.shields.io/codacy/grade/7841a115752a446db5cff42a5243081b)
