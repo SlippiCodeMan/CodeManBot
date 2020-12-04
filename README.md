@@ -56,7 +56,11 @@ gradle dockerStop
 > Use `sudo` before those commands if you get a permission error.
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+We only accept pull requests on the dev branch which has autodeployement on the dev bot.
+When we feel everything is stable we merge dev into main which has autodeployement on the production bot.
+
+If your change is huge please open an issue first.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
