@@ -38,7 +38,7 @@ repositories {
 
 ext {
     javaMainClass = "io.fluentcoding.codemanbot.Application"
-    execmode = env.fetch("CODEMAN_EXEC_MODE")
+    execmode = env.fetch("CODEMAN_EXEC_MODE", "dev")
 }
 
 application {
