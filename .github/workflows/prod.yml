@@ -5,7 +5,7 @@ on:
     workflows: ["Java CI with Gradle"]
     branches: [main]
     types: 
-      - success
+      - completed
 
 jobs:
   deploy:
