@@ -110,3 +110,6 @@ Temporary Items
 
 # Ignore env vars
 .env
+
+# Ignore vscode stuff
+.vscode
