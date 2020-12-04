@@ -2,10 +2,7 @@ package io.fluentcoding.codemanbot;
 
 import io.fluentcoding.codemanbot.command.*;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
-import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
-import io.fluentcoding.codemanbot.util.CommandHandler;
-import io.fluentcoding.codemanbot.util.ExecutionMode;
-import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.*;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -19,7 +16,7 @@ public class Application {
         JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
 
         builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.EMOTE);
-        builder.setActivity(Activity.playing(Application.EXEC_MODE.getCommandPrefix() + "help | " + DatabaseBridge.countDatabase() + " users"));
+        ActivityUpdater.update(builder);
 
         // EVENTS
         CommandHandler handler = new CommandHandler(

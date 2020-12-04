@@ -28,6 +28,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
         EmbedBuilder builder = new EmbedBuilder();
 
         if (PatternChecker.isConnectCode(user)) {
+            user = user.toUpperCase();
             long discordId = DatabaseBridge.getDiscordIdFromConnectCode(user);
 
             // ERROR

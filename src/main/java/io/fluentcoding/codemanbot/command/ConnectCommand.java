@@ -1,10 +1,7 @@
 package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
-import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
-import io.fluentcoding.codemanbot.util.CodeManCommandWithArgs;
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import io.fluentcoding.codemanbot.util.PatternChecker;
+import io.fluentcoding.codemanbot.util.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -33,6 +30,7 @@ public class ConnectCommand extends CodeManCommandWithArgs {
                     builder.addField("Old Code", result.getOldCode(), true);
                 }
                 builder.addField("New Code", code, true);
+                ActivityUpdater.update(e.getJDA());
             } else {
                 builder.setColor(GlobalVar.ERROR);
                 builder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
