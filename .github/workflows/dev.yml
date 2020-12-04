@@ -1,0 +1,29 @@
+name: Auto deployement on the development bot
+
+on:
+  workflow_run:
+    workflows: ["Java CI with Gradle"]
+    branches: [dev]
+    types: 
+      - success
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build and deploy development build
+        uses: appleboy/ssh-action@master
+        with: 
+          host: 144.91.113.190
+          username: codeman
+          key: ${{ secrets.SSH_SECRET_KEY }}
+          port: 22
+          script: |
+            cd CodeManDev
+            git checkout dev
+            git pull
+            ./gradlew shadowjar
+            ./gradlew docker
+            ./gradlew dockerStop
+            ./gradlew dockerStart

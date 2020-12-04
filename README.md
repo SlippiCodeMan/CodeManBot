@@ -26,7 +26,7 @@ To use it you have to create a `.env` file at the root of the project containing
 -   `CODEMAN_DB_URI` to a [mongodb](https://www.mongodb.com/) database access url.
 -   `CODEMAN_PROD_TOKEN` to a discord bot token.
 -   `CODEMAN_DEV_TOKEN` (optional) to a test bot token.
--   `CODEMAN_EXEC_MODE` to PROD or DEV
+-   `CODEMAN_EXEC_MODE` to prod or dev
 
 Then you can run it with:
 
@@ -56,7 +56,11 @@ gradle dockerStop
 > Use `sudo` before those commands if you get a permission error.
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+We only accept pull requests on the dev branch which has autodeployement on the dev bot.
+When we feel everything is stable we merge dev into main which has autodeployement on the production bot.
+
+If your change is huge please open an issue first.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

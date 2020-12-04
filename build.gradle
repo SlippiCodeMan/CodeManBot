@@ -14,6 +14,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version "6.1.0"
     id 'com.palantir.docker' version '0.25.0'
     id 'com.palantir.docker-run' version '0.25.0'
+    id "co.uzzu.dotenv.gradle" version "1.1.0"
 }
 
 group 'io.fluentcoding'
@@ -37,6 +38,7 @@ repositories {
 
 ext {
     javaMainClass = "io.fluentcoding.codemanbot.Application"
+    execmode = env.fetch("CODEMAN_EXEC_MODE")
 }
 
 application {
@@ -53,25 +55,14 @@ jar {
     }
 }
 
-run {
-    doLast {
-        exec {
-            file('.env').readLines().each() {
-                def (key, value) = it.tokenize('=')
-                environment key, value
-            }
-        }
-    }
-}
-
 docker {
-    name "${project.name}:${project.version}"
+    name "${project.name}${execmode}:${project.version}"
     files "$buildDir/libs/${project.name}-${project.version}-all.jar", "$rootDir/.env"
     buildArgs([JAR_FILE: "${project.name}-${project.version}-all.jar"])
 }
 dockerRun {
-    name "${project.name}"
-    image "${project.name}:${project.version}"
+    name "${project.name}${execmode}"
+    image "${project.name}${execmode}:${project.version}"
     clean true
     daemonize true
 }
