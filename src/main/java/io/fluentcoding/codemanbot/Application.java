@@ -1,25 +1,34 @@
 package io.fluentcoding.codemanbot;
 
-import io.fluentcoding.codemanbot.command.*;
-import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
-import io.fluentcoding.codemanbot.util.*;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
-
 import javax.security.auth.login.LoginException;
 
-public class Application {
-    public final static ExecutionMode EXEC_MODE = (GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("PROD")) ? ExecutionMode.PRODUCTION : ExecutionMode.DEV;
+import io.fluentcoding.codemanbot.command.AskCommand;
+import io.fluentcoding.codemanbot.command.CodeCommand;
+import io.fluentcoding.codemanbot.command.ConnectCommand;
+import io.fluentcoding.codemanbot.command.DisconnectCommand;
+import io.fluentcoding.codemanbot.command.HelpCommand;
+import io.fluentcoding.codemanbot.command.NameCommand;
+import io.fluentcoding.codemanbot.command.WhoisCommand;
+import io.fluentcoding.codemanbot.util.ActivityUpdater;
+import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
+import io.fluentcoding.codemanbot.util.CommandHandler;
+import io.fluentcoding.codemanbot.util.ExecutionMode;
+import io.fluentcoding.codemanbot.util.GlobalVar;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-    public static void main(String[] args) throws LoginException {
-        JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
+public class Application {
+    public final static ExecutionMode EXEC_MODE =
+        GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("prod") ? ExecutionMode.PRODUCTION : ExecutionMode.DEV;
+
+    public static void main(final String[] args) throws LoginException {
+        final JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
 
         builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.EMOTE);
         ActivityUpdater.update(builder);
 
         // EVENTS
-        CommandHandler handler = new CommandHandler(
+        final CommandHandler handler = new CommandHandler(
                 new ConnectCommand(new CodeManArgumentSet().setNecessaryArguments("code"),
                         "Connects through Slippi by using your connect code ", "connect"),
                 new CodeCommand(new CodeManArgumentSet().setOptionalArguments("name").setLastArgumentVarArg(),
@@ -37,4 +46,9 @@ public class Application {
 
         builder.build();
     }
+
+	@Override
+	public String toString() {
+		return "Application []";
+	}
 }
