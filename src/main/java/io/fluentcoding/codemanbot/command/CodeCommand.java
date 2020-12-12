@@ -37,7 +37,6 @@ public class CodeCommand extends CodeManCommandWithArgs {
             }
         } else if (name == null) {
             String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
-
             if (code == null) {
                 builder.setDescription("You haven't set your code yet! Try `&connect <code>`.");
                 builder.setColor(GlobalVar.ERROR);
