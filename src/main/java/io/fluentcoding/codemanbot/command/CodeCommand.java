@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.command;
 
+import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.CodeManCommandWithArgs;
@@ -37,8 +38,9 @@ public class CodeCommand extends CodeManCommandWithArgs {
             }
         } else if (name == null) {
             String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
+
             if (code == null) {
-                builder.setDescription("You haven't set your code yet! Try `&connect <code>`.");
+                builder.setDescription("You haven't set your code yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
                 builder.addField("Your code", code, false);
