@@ -44,6 +44,40 @@ public class SlippiBridge {
 
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
+                    "  connectCode" +
+                    "}" +
+                    "query fetch($name: String!) {" +
+                    "  users(where: { displayName: { _ilike: $name } }) {" +
+                    "    ...userDisplay" +
+                    "  }" +
+                    "}\"}"));
+            HttpResponse response = client.execute(post);
+
+            String json = EntityUtils.toString(response.getEntity());
+            JSONObject object = new JSONObject(json);
+
+            JSONArray users = object.getJSONObject("data").getJSONArray("users");
+            if (users.length() == 0)
+                return null;
+            else {
+                List<String> displayNames = new ArrayList<>();
+                for (int i = 0; i < users.length(); i++) {
+                    displayNames.add(users.getJSONObject(i).getString("connectCode"));
+                }
+
+                return displayNames;
+            }
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+    public static List<String> getCodesWithActualName(String name) {
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+
+            HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
+            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
                     "  displayName" +
                     "  connectCode" +
                     "}" +
