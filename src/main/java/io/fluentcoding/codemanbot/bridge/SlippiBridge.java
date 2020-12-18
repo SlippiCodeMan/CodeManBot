@@ -44,17 +44,11 @@ public class SlippiBridge {
 
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
-                    "  uid" +
-                    "  displayName" +
                     "  connectCode" +
-                    "  status" +
-                    "  __typename" +
                     "}" +
                     "query fetch($name: String!) {" +
                     "  users(where: { displayName: { _eq: $name } }) {" +
-                    "    uid" +
                     "    ...userDisplay" +
-                    "    __typename" +
                     "  }" +
                     "}\"}"));
             HttpResponse response = client.execute(post);
