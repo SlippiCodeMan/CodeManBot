@@ -54,7 +54,7 @@ public class CodeCommand extends CodeManCommandWithArgs {
                 return;
             }
 
-            List<String> codes = SlippiBridge.getCode(name);
+            List<String> codes = SlippiBridge.getCodes(name);
 
             if (codes == null) {
                 builder.setDescription("This person hasn't set their code yet!");

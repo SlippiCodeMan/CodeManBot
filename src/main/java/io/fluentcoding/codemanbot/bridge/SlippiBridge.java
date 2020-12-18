@@ -38,12 +38,13 @@ public class SlippiBridge {
         }
     }
 
-    public static List<String> getCode(String name) {
+    public static List<String> getCodes(String name) {
         try {
             DefaultHttpClient client = new DefaultHttpClient();
 
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
+                    "  displayName" +
                     "  connectCode" +
                     "}" +
                     "query fetch($name: String!) {" +
@@ -62,9 +63,16 @@ public class SlippiBridge {
             else {
                 List<String> displayNames = new ArrayList<>();
                 for (int i = 0; i < users.length(); i++) {
-                    String connectCode = users.getJSONObject(i).getString("connectCode");
-                    if (!connectCode.equals("null"))
-                        displayNames.add(connectCode);
+                    JSONObject user = users.getJSONObject(i);
+                    String connectCode = user.getString("connectCode");
+                    if (!connectCode.equals("null")) {
+                        String displayName = user.getString("displayName");
+                        if (displayName.equals("null") || displayName.equals(name)) {
+                            displayNames.add(connectCode);
+                        } else {
+                            displayNames.add(connectCode + " ***(" + displayName + ")***");
+                        }
+                    }
                 }
 
                 return displayNames;

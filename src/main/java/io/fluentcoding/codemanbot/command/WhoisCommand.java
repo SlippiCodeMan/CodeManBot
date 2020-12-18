@@ -41,7 +41,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 builder.setColor(GlobalVar.SUCCESS);
             }
         } else if (PatternChecker.isSlippiUsername(user)) {
-            List<String> codes = SlippiBridge.getCode(user);
+            List<String> codes = SlippiBridge.getCodes(user);
 
             // ERROR
             if (codes == null) {
