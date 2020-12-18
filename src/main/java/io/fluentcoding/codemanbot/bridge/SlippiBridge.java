@@ -48,7 +48,7 @@ public class SlippiBridge {
                     "  connectCode" +
                     "}" +
                     "query fetch($name: String!) {" +
-                    "  users(where: { displayName: { _eq: $name } }) {" +
+                    "  users(where: { displayName: { _ilike: $name } }) {" +
                     "    ...userDisplay" +
                     "  }" +
                     "}\"}"));
