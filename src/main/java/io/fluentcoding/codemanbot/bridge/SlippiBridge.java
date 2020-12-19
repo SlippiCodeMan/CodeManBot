@@ -1,5 +1,8 @@
 package io.fluentcoding.codemanbot.bridge;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -20,17 +23,11 @@ public class SlippiBridge {
 
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"fragment userDisplay on User {" +
-                    "  uid" +
                     "  displayName" +
-                    "  connectCode" +
-                    "  status" +
-                    "  __typename" +
                     "}" +
                     "query fetch($code: String!) {" +
                     "  users(where: { connectCode: { _eq: $code } }) {" +
-                    "    uid" +
                     "    ...userDisplay" +
-                    "    __typename" +
                     "  }" +
                     "}\"}"));
             HttpResponse response = client.execute(post);
@@ -44,23 +41,18 @@ public class SlippiBridge {
         }
     }
 
-    public static List<String> getCode(String name) {
+    public static List<UserEntry> getCodesWithActualName(String name) {
         try {
             DefaultHttpClient client = new DefaultHttpClient();
 
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
-                    "  uid" +
                     "  displayName" +
                     "  connectCode" +
-                    "  status" +
-                    "  __typename" +
                     "}" +
                     "query fetch($name: String!) {" +
-                    "  users(where: { displayName: { _eq: $name } }) {" +
-                    "    uid" +
+                    "  users(where: { displayName: { _ilike: $name } }) {" +
                     "    ...userDisplay" +
-                    "    __typename" +
                     "  }" +
                     "}\"}"));
             HttpResponse response = client.execute(post);
@@ -72,11 +64,18 @@ public class SlippiBridge {
             if (users.length() == 0)
                 return null;
             else {
-                List<String> displayNames = new ArrayList<>();
+                List<UserEntry> displayNames = new ArrayList<>();
                 for (int i = 0; i < users.length(); i++) {
-                    String connectCode = users.getJSONObject(i).getString("connectCode");
-                    if (!connectCode.equals("null"))
-                        displayNames.add(connectCode);
+                    JSONObject user = users.getJSONObject(i);
+                    String connectCode = user.getString("connectCode");
+                    if (!connectCode.equals("null")) {
+                        String displayName = user.getString("displayName");
+                        if (displayName.equals("null") || displayName.equals(name)) {
+                            displayNames.add(new UserEntry(null, connectCode));
+                        } else {
+                            displayNames.add(new UserEntry(displayName, connectCode));
+                        }
+                    }
                 }
 
                 return displayNames;
@@ -86,4 +85,10 @@ public class SlippiBridge {
         }
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class UserEntry {
+        private String displayName;
+        private String code;
+    }
 }
