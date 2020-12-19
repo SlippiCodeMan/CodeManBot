@@ -24,6 +24,34 @@ public class SlippiBridge {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"fragment userDisplay on User {" +
                     "  displayName" +
+                    " status" +
+                    "}" +
+                    "query fetch($code: String!) {" +
+                    "  users(where: { connectCode: { _eq: $code } }) {" +
+                    "    ...userDisplay" +
+                    "  }" +
+                    "}\"}"));
+            HttpResponse response = client.execute(post);
+
+            String json = EntityUtils.toString(response.getEntity());
+            JSONObject object = new JSONObject(json).getJSONObject("data");
+            JSONObject user = object.getJSONArray("users").getJSONObject(0);
+
+            if (user.get("status").equals("active"))
+                return user.getString("displayName");
+            else
+                return null;
+        } catch(Exception e) {
+            return null;
+        }
+    }
+
+    public static boolean userWithCodeExists(String code) {
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+
+            HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
+            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"fragment userDisplay on User {" +
                     "}" +
                     "query fetch($code: String!) {" +
                     "  users(where: { connectCode: { _eq: $code } }) {" +
@@ -35,9 +63,11 @@ public class SlippiBridge {
             String json = EntityUtils.toString(response.getEntity());
             JSONObject object = new JSONObject(json);
 
-            return object.getJSONObject("data").getJSONArray("users").getJSONObject(0).getString("displayName");
+            JSONArray users = object.getJSONObject("data").getJSONArray("users");
+
+            return users.length() > 0;
         } catch(Exception e) {
-            return null;
+            return false;
         }
     }
 
@@ -49,6 +79,7 @@ public class SlippiBridge {
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
                     "  displayName" +
                     "  connectCode" +
+                    "  status" +
                     "}" +
                     "query fetch($name: String!) {" +
                     "  users(where: { displayName: { _ilike: $name } }) {" +
@@ -67,6 +98,9 @@ public class SlippiBridge {
                 List<UserEntry> displayNames = new ArrayList<>();
                 for (int i = 0; i < users.length(); i++) {
                     JSONObject user = users.getJSONObject(i);
+                    if (!user.getString("status").equals("active"))
+                        continue;
+
                     String connectCode = user.getString("connectCode");
                     if (!connectCode.equals("null")) {
                         String displayName = user.getString("displayName");
