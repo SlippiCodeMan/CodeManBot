@@ -32,20 +32,20 @@ public class WhoisCommand extends CodeManCommandWithArgs {
 
         if (PatternChecker.isConnectCode(user)) {
             user = user.toUpperCase();
-            if (SlippiBridge.userWithCodeExists(user)) {
-                long discordId = DatabaseBridge.getDiscordIdFromConnectCode(user);
+            long discordId = DatabaseBridge.getDiscordIdFromConnectCode(user);
 
-                if (discordId == -1L) {
-                    builder.setColor(GlobalVar.ERROR);
+            // ERROR
+            if (discordId == -1L) {
+                builder.setColor(GlobalVar.ERROR);
+                if (!SlippiBridge.userWithCodeExists(user)) {
                     builder.setDescription("This connect code has no discord user associated to it!");
                 } else {
-                    User discordUser = e.getJDA().retrieveUserById(discordId).complete();
-                    builder.setDescription("**" + user + "** is **" + discordUser.getAsTag() + "**.");
-                    builder.setColor(GlobalVar.SUCCESS);
+                    builder.setDescription("Nobody uses this username!");
                 }
             } else {
-                builder.setDescription("Nobody uses this connect code!");
-                builder.setColor(GlobalVar.ERROR);
+                User discordUser = e.getJDA().retrieveUserById(discordId).complete();
+                builder.setDescription("**" + user + "** is **" + discordUser.getAsTag() + "**.");
+                builder.setColor(GlobalVar.SUCCESS);
             }
         } else if (PatternChecker.isSlippiUsername(user)) {
             List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
