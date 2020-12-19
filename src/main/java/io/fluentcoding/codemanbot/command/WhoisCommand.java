@@ -68,7 +68,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 } else if (userEntries.size() == 1) {
                     UserDiscordEntry entry = userEntries.get(0);
                     User discordUser = e.getJDA().retrieveUserById(entry.getDiscordId()).complete();
-                    builder.setDescription("**" + entry.getDisplayName() + "** is **" + discordUser.getAsTag() + "**.");
+                    builder.setDescription("**" + (entry.getDisplayName() == null ? user : entry.getDisplayName()) + "** is **" + discordUser.getAsTag() + "**.");
                     builder.setColor(GlobalVar.SUCCESS);
                 } else {
                     builder.setDescription("**" + userEntries.size() + " players are using this username:**\n" +
