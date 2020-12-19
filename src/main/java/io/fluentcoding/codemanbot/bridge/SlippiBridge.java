@@ -46,6 +46,31 @@ public class SlippiBridge {
         }
     }
 
+    public static boolean userWithCodeExists(String code) {
+        try {
+            DefaultHttpClient client = new DefaultHttpClient();
+
+            HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
+            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"fragment userDisplay on User {" +
+                    "}" +
+                    "query fetch($code: String!) {" +
+                    "  users(where: { connectCode: { _eq: $code } }) {" +
+                    "    ...userDisplay" +
+                    "  }" +
+                    "}\"}"));
+            HttpResponse response = client.execute(post);
+
+            String json = EntityUtils.toString(response.getEntity());
+            JSONObject object = new JSONObject(json);
+
+            JSONArray users = object.getJSONObject("data").getJSONArray("users");
+
+            return users.length() > 0;
+        } catch(Exception e) {
+            return false;
+        }
+    }
+
     public static List<UserEntry> getCodesWithActualName(String name) {
         try {
             DefaultHttpClient client = new DefaultHttpClient();

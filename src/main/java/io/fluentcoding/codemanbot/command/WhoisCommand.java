@@ -32,22 +32,26 @@ public class WhoisCommand extends CodeManCommandWithArgs {
 
         if (PatternChecker.isConnectCode(user)) {
             user = user.toUpperCase();
-            long discordId = DatabaseBridge.getDiscordIdFromConnectCode(user);
+            if (SlippiBridge.userWithCodeExists(user)) {
+                long discordId = DatabaseBridge.getDiscordIdFromConnectCode(user);
 
-            // ERROR
-            if (discordId == -1L) {
-                builder.setDescription("This connect code has no discord user  associated to it!");
-                builder.setColor(GlobalVar.ERROR);
+                if (discordId == -1L) {
+                    builder.setColor(GlobalVar.ERROR);
+                    builder.setDescription("This connect code has no discord user associated to it!");
+                } else {
+                    User discordUser = e.getJDA().retrieveUserById(discordId).complete();
+                    builder.setDescription("**" + user + "** is **" + discordUser.getAsTag() + "**.");
+                    builder.setColor(GlobalVar.SUCCESS);
+                }
             } else {
-                User discordUser = e.getJDA().retrieveUserById(discordId).complete();
-                builder.setDescription("**" + user + "** is **" + discordUser.getAsTag() + "**.");
-                builder.setColor(GlobalVar.SUCCESS);
+                builder.setDescription("Nobody uses this connect code!");
+                builder.setColor(GlobalVar.ERROR);
             }
         } else if (PatternChecker.isSlippiUsername(user)) {
             List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
 
             // ERROR
-            if (codes == null) {
+            if (codes == null || codes.size() == 0) {
                 builder.setDescription("Nobody uses this username!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
