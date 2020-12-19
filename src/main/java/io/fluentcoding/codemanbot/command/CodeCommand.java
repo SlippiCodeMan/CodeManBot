@@ -54,18 +54,16 @@ public class CodeCommand extends CodeManCommandWithArgs {
 
             List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(name);
 
-            if (codes == null) {
+            if (codes == null || codes.size() == 0) {
                 builder.setDescription("This person hasn't set their code yet!");
                 builder.setColor(GlobalVar.ERROR);
+            } else if (codes.size() == 1) {
+                builder.addField("Their code", StringUtil.codeWithActualName(codes.get(0)), false);
+                builder.setColor(GlobalVar.SUCCESS);
             } else {
-                if (codes.size() == 1) {
-                    builder.addField("Their code", StringUtil.codeWithActualName(codes.get(0)), false);
-                    builder.setColor(GlobalVar.SUCCESS);
-                } else {
-                    builder.setDescription("**" + codes.size() + " players are using this name:**\n\n" +
-                            codes.stream().map(userEntry -> StringUtil.codeWithActualName(userEntry)).collect(Collectors.joining("\n")));
-                    builder.setColor(GlobalVar.SUCCESS);
-                }
+                builder.setDescription("**" + codes.size() + " players are using this name:**\n\n" +
+                        codes.stream().map(userEntry -> StringUtil.codeWithActualName(userEntry)).collect(Collectors.joining("\n")));
+                builder.setColor(GlobalVar.SUCCESS);
             }
         }
 
