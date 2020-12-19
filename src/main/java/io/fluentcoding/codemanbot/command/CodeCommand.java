@@ -3,15 +3,13 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
-import io.fluentcoding.codemanbot.util.CodeManCommandWithArgs;
-import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import io.fluentcoding.codemanbot.util.PatternChecker;
+import io.fluentcoding.codemanbot.util.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CodeCommand extends CodeManCommandWithArgs {
 
@@ -54,17 +52,18 @@ public class CodeCommand extends CodeManCommandWithArgs {
                 return;
             }
 
-            List<String> codes = SlippiBridge.getCodesWithActualName(name);
+            List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(name);
 
             if (codes == null) {
                 builder.setDescription("This person hasn't set their code yet!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
                 if (codes.size() == 1) {
-                    builder.addField("Their code", codes.get(0), false);
+                    builder.addField("Their code", StringUtil.codeWithActualName(codes.get(0)), false);
                     builder.setColor(GlobalVar.SUCCESS);
                 } else {
-                    builder.setDescription("**" + codes.size() + " players are using this name:**\n\n" + String.join("\n", codes));
+                    builder.setDescription("**" + codes.size() + " players are using this name:**\n\n" +
+                            codes.stream().map(userEntry -> StringUtil.codeWithActualName(userEntry)).collect(Collectors.joining("\n")));
                     builder.setColor(GlobalVar.SUCCESS);
                 }
             }

@@ -1,5 +1,8 @@
 package io.fluentcoding.codemanbot.bridge;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -38,41 +41,7 @@ public class SlippiBridge {
         }
     }
 
-    public static List<String> getCodes(String name) {
-        try {
-            DefaultHttpClient client = new DefaultHttpClient();
-
-            HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
-            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
-                    "  connectCode" +
-                    "}" +
-                    "query fetch($name: String!) {" +
-                    "  users(where: { displayName: { _ilike: $name } }) {" +
-                    "    ...userDisplay" +
-                    "  }" +
-                    "}\"}"));
-            HttpResponse response = client.execute(post);
-
-            String json = EntityUtils.toString(response.getEntity());
-            JSONObject object = new JSONObject(json);
-
-            JSONArray users = object.getJSONObject("data").getJSONArray("users");
-            if (users.length() == 0)
-                return null;
-            else {
-                List<String> displayNames = new ArrayList<>();
-                for (int i = 0; i < users.length(); i++) {
-                    displayNames.add(users.getJSONObject(i).getString("connectCode"));
-                }
-
-                return displayNames;
-            }
-        } catch(Exception e) {
-            return null;
-        }
-    }
-
-    public static List<String> getCodesWithActualName(String name) {
+    public static List<UserEntry> getCodesWithActualName(String name) {
         try {
             DefaultHttpClient client = new DefaultHttpClient();
 
@@ -95,16 +64,16 @@ public class SlippiBridge {
             if (users.length() == 0)
                 return null;
             else {
-                List<String> displayNames = new ArrayList<>();
+                List<UserEntry> displayNames = new ArrayList<>();
                 for (int i = 0; i < users.length(); i++) {
                     JSONObject user = users.getJSONObject(i);
                     String connectCode = user.getString("connectCode");
                     if (!connectCode.equals("null")) {
                         String displayName = user.getString("displayName");
                         if (displayName.equals("null") || displayName.equals(name)) {
-                            displayNames.add(connectCode);
+                            displayNames.add(new UserEntry(null, connectCode));
                         } else {
-                            displayNames.add(connectCode + " ***(" + displayName + ")***");
+                            displayNames.add(new UserEntry(displayName, connectCode));
                         }
                     }
                 }
@@ -116,4 +85,10 @@ public class SlippiBridge {
         }
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class UserEntry {
+        private String displayName;
+        private String code;
+    }
 }
