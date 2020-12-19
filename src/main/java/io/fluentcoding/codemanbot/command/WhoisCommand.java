@@ -36,7 +36,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
 
             // ERROR
             if (discordId == -1L) {
-                builder.setDescription("This connect code has no discord user associated to it!");
+                builder.setDescription("This connect code has no discord user  associated to it!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
                 User discordUser = e.getJDA().retrieveUserById(discordId).complete();
@@ -59,7 +59,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 }
 
                 if (userEntries.size() == 0) {
-                    builder.setDescription("This connect code has no discord user associated to it!");
+                    builder.setDescription("This username has no discord users associated to it!");
                     builder.setColor(GlobalVar.ERROR);
                 } else if (userEntries.size() == 1) {
                     UserDiscordEntry entry = userEntries.get(0);
