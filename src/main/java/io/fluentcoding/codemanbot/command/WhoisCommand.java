@@ -68,18 +68,21 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                     builder.setDescription("**" + (entry.getDisplayName() == null ? user : entry.getDisplayName()) + "** is **" + discordUser.getAsTag() + "**.");
                     builder.setColor(GlobalVar.SUCCESS);
                 } else {
+                    String first = userEntries.stream()
+                            .filter(entry -> entry.getDisplayName() == null)
+                            .map(entry -> e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag())
+                            .collect(Collectors.joining("\n"));
+                    String additional = userEntries.stream()
+                            .filter(entry -> entry.getDisplayName() != null)
+                            .map(entry -> StringUtil.stringWithSlippiUsername(
+                                    e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag(),
+                                    entry.getDisplayName()
+                            ))
+                            .collect(Collectors.joining("\n"));
+
                     builder.setDescription("**" + userEntries.size() + " players are using this username:**\n" +
-                            userEntries.stream()
-                                    .filter(entry -> entry.getDisplayName() == null)
-                                    .map(entry -> e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag())
-                                    .collect(Collectors.joining("\n")) +
-                            userEntries.stream()
-                                    .filter(entry -> entry.getDisplayName() != null)
-                                    .map(entry -> StringUtil.stringWithSlippiUsername(
-                                            e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag(),
-                                            entry.getDisplayName()
-                                    ))
-                                    .collect(Collectors.joining("\n")));
+                            first +
+                            (additional.length() != 0 ? (first.length() != 0 ? "\n" : "") + additional : ""));
                 }
             }
         } else {

@@ -62,9 +62,18 @@ public class CodeCommand extends CodeManCommandWithArgs {
                     SlippiBridge.UserEntry entry = codes.get(0);
                     builder.addField("Their code", entry.getDisplayName() == null ? entry.getCode() : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()), false);
                 } else {
+                    String first = codes.stream()
+                            .filter(entry -> entry.getDisplayName() == null)
+                            .map(entry -> entry.getCode())
+                            .collect(Collectors.joining("\n"));
+                    String additional = codes.stream()
+                            .filter(entry -> entry.getDisplayName() != null)
+                            .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
+                            .collect(Collectors.joining("\n"));
+
                     builder.setDescription("**" + codes.size() + " players are using this username:**\n\n" +
-                            codes.stream().filter(entry -> entry.getDisplayName() == null).map(entry -> entry.getCode()).collect(Collectors.joining("\n")) +
-                            codes.stream().filter(entry -> entry.getDisplayName() != null).map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName())).collect(Collectors.joining("\n")));
+                            first +
+                            (additional.length() != 0 ? (first.length() != 0 ? "\n" : "") + additional : ""));
                 }
                 builder.setColor(GlobalVar.SUCCESS);
             }
