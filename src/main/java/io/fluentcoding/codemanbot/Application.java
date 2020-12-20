@@ -30,7 +30,7 @@ public class Application {
         // EVENTS
         final CommandHandler handler = new CommandHandler(
                 new ConnectCommand(new CodeManArgumentSet().setNecessaryArguments("code"),
-                        "Connects through Slippi by using your connect code ", "connect"),
+                        "Connects your slippi account by using your connect code ", "connect"),
                 new CodeCommand(new CodeManArgumentSet().setOptionalArguments("name").setLastArgumentVarArg(),
                         "Shows the code based of a slippi username", "code", "c"),
                 new NameCommand(new CodeManArgumentSet().setOptionalArguments("code"),
@@ -38,7 +38,7 @@ public class Application {
                 new WhoisCommand(new CodeManArgumentSet().setNecessaryArguments("user"),
                         "Shows the discord username based of a slippi username/connect code", "whois", "wi"),
                 new AskCommand("Asks for you if someone wants you to play", "ask", "a"),
-                new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect", "dq")
+                new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect")
         );
 
         handler.addCommand(new HelpCommand(handler, "Displays the help message", "help", "h"));

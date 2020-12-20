@@ -86,7 +86,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 }
             }
         } else {
-            builder.setDescription("This parameter could neither be recognized as a username nor as a connect code!");
+            builder.setDescription("This parameter could neither get recognized as a username nor as a connect code!");
             builder.setColor(GlobalVar.ERROR);
         }
 
