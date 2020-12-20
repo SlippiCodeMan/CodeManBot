@@ -2,10 +2,7 @@ package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
-import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
-import io.fluentcoding.codemanbot.util.CodeManCommandWithArgs;
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import io.fluentcoding.codemanbot.util.PatternChecker;
+import io.fluentcoding.codemanbot.util.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -72,8 +69,17 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                     builder.setColor(GlobalVar.SUCCESS);
                 } else {
                     builder.setDescription("**" + userEntries.size() + " players are using this username:**\n" +
-                            userEntries.stream().map(entry -> e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag() +
-                                    (entry.getDisplayName() != null ? " ***(" + entry.getDisplayName() + ")***" : "")).collect(Collectors.joining("\n")));
+                            userEntries.stream()
+                                    .filter(entry -> entry.getDisplayName() == null)
+                                    .map(entry -> e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag())
+                                    .collect(Collectors.joining("\n")) +
+                            userEntries.stream()
+                                    .filter(entry -> entry.getDisplayName() != null)
+                                    .map(entry -> StringUtil.stringWithSlippiUsername(
+                                            e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag(),
+                                            entry.getDisplayName()
+                                    ))
+                                    .collect(Collectors.joining("\n")));
                 }
             }
         } else {
