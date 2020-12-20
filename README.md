@@ -45,7 +45,7 @@ gradle docker
 
 To start your container:
 ```bash
-gradle dockerStart
+gradle dockerRun
 ```
 
 To stop your container:
