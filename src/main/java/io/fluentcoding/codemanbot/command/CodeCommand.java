@@ -57,12 +57,24 @@ public class CodeCommand extends CodeManCommandWithArgs {
             if (codes == null || codes.size() == 0) {
                 builder.setDescription("This person hasn't set their code yet!");
                 builder.setColor(GlobalVar.ERROR);
-            } else if (codes.size() == 1) {
-                builder.addField("Their code", StringUtil.codeWithActualName(codes.get(0)), false);
-                builder.setColor(GlobalVar.SUCCESS);
             } else {
-                builder.setDescription("**" + codes.size() + " players are using this name:**\n\n" +
-                        codes.stream().map(userEntry -> StringUtil.codeWithActualName(userEntry)).collect(Collectors.joining("\n")));
+                if (codes.size() == 1) {
+                    SlippiBridge.UserEntry entry = codes.get(0);
+                    builder.addField("Their code", entry.getDisplayName() == null ? entry.getCode() : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()), false);
+                } else {
+                    String first = codes.stream()
+                            .filter(entry -> entry.getDisplayName() == null)
+                            .map(entry -> entry.getCode())
+                            .collect(Collectors.joining("\n"));
+                    String additional = codes.stream()
+                            .filter(entry -> entry.getDisplayName() != null)
+                            .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
+                            .collect(Collectors.joining("\n"));
+
+                    builder.setDescription("**" + codes.size() + " players are using this username:**\n\n" +
+                            first +
+                            (additional.length() != 0 ? (first.length() != 0 ? "\n" : "") + additional : ""));
+                }
                 builder.setColor(GlobalVar.SUCCESS);
             }
         }
