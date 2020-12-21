@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 public class PatternChecker {
     private static Pattern connectCodePattern  = Pattern.compile("^([A-Za-z])+#[0-9]{1,3}$"),
-                            slippiUsernamePattern = Pattern.compile("^[A-Za-z0-9$&+,:;=?@#|'<>.^*()%! -]{1,15}$");
+                            slippiUsernamePattern = Pattern.compile("^[A-Za-z0-9$&+,:;=?@#|'<>.^*()%!_ -]{1,15}$");
 
     public static boolean isConnectCode(String input) {
         return input.length() <= 8 && is(input, connectCodePattern);
