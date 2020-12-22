@@ -65,4 +65,5 @@ dockerRun {
     image "${project.name}${execmode}:${project.version}"
     clean true
     daemonize true
+    arguments "--net=host"
 }
