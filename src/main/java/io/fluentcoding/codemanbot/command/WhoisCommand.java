@@ -3,12 +3,12 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
+import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.internal.utils.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 }
             }
         } else {
-            builder.setDescription("This parameter could neither get recognized as a username nor as a connect code!");
+            builder.setDescription("This parameter could neither get recognized as an username nor as a connect code!");
             builder.setColor(GlobalVar.ERROR);
         }
 

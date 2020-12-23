@@ -1,5 +1,6 @@
-package io.fluentcoding.codemanbot.util;
+package io.fluentcoding.codemanbot.util.codemancommand;
 
+import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
 import lombok.Getter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 

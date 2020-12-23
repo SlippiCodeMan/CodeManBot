@@ -1,4 +1,4 @@
-package io.fluentcoding.codemanbot.util;
+package io.fluentcoding.codemanbot.util.codemancommand;
 
 import io.fluentcoding.codemanbot.Application;
 import lombok.Getter;
@@ -18,8 +18,8 @@ public class CodeManCommand {
         this.aliases = Arrays.stream(aliases).map(original -> Application.EXEC_MODE.getCommandPrefix() + original).toArray(String[]::new);
     }
 
-    protected void handle(MessageReceivedEvent e) {
-        // Leave emply
+    public void handle(MessageReceivedEvent e) {
+        // Leave empty
     }
 
     public String getHelpTitle() {

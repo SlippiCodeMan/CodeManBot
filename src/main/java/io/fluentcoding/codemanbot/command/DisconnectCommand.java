@@ -2,7 +2,7 @@ package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
-import io.fluentcoding.codemanbot.util.CodeManCommand;
+import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
