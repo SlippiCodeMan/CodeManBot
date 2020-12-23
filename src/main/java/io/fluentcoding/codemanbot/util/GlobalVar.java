@@ -8,7 +8,7 @@ public class GlobalVar {
 
     public static Color SUCCESS = new Color(68, 169, 99),
             ERROR = new Color(168, 67, 104),
-            LOADING = new Color(125, 100, 0);
+            LOADING = new Color(47, 49, 54);
 
     public static Dotenv dotenv = Dotenv.load();
 }
