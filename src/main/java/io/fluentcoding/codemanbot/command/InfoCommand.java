@@ -25,8 +25,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
         EmbedBuilder builder = new EmbedBuilder();
 
-        Member mentionedMember = e.getMessage().getMentionedMembers().get(0);
-        boolean mentionedMemberIsAuthor = mentionedMember.getIdLong() == e.getAuthor().getIdLong();
+        boolean mentionedMemberIsAuthor = e.getMessage().getMentionedMembers().size() > 0 && e.getMessage().getMentionedMembers().get(0).getIdLong() == e.getAuthor().getIdLong();
         if (user == null || mentionedMemberIsAuthor) {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
@@ -40,6 +39,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setColor(GlobalVar.SUCCESS);
             }
         } else if (e.getMessage().getMentionedMembers().size() > 0) {
+            Member mentionedMember = e.getMessage().getMentionedMembers().get(0);
             String retrievedCode = DatabaseBridge.getCode(mentionedMember.getIdLong());
 
             if (retrievedCode == null) {
