@@ -39,12 +39,12 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setColor(GlobalVar.LOADING);
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     EmbedBuilder newBuilder = new EmbedBuilder();
-                    builder.addField("Your code", retrievedCode, true);
+                    newBuilder.addField("Your code", retrievedCode, true);
 
                     String name = SlippiBridge.getName(retrievedCode);
-                    builder.addField("Your name", name, true);
+                    newBuilder.addField("Your name", name, true);
 
-                    builder.setColor(GlobalVar.SUCCESS);
+                    newBuilder.setColor(GlobalVar.SUCCESS);
                     msg.editMessage(newBuilder.build()).queue();
                 });
 
@@ -64,12 +64,12 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setColor(GlobalVar.LOADING);
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     EmbedBuilder newBuilder = new EmbedBuilder();
-                    builder.addField("Their code", retrievedCode, true);
+                    newBuilder.addField("Their code", retrievedCode, true);
 
                     String name = SlippiBridge.getName(retrievedCode);
-                    builder.addField("Their name", name, true);
+                    newBuilder.addField("Their name", name, true);
 
-                    builder.setColor(GlobalVar.SUCCESS);
+                    newBuilder.setColor(GlobalVar.SUCCESS);
                     msg.editMessage(newBuilder.build()).queue();
                 });
 
@@ -82,11 +82,11 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 EmbedBuilder newBuilder = new EmbedBuilder();
                 String name = SlippiBridge.getName(user.toUpperCase());
                 if (name == null) {
-                    builder.setDescription("This person doesn't exist!");
-                    builder.setColor(GlobalVar.ERROR);
+                    newBuilder.setDescription("This person doesn't exist!");
+                    newBuilder.setColor(GlobalVar.ERROR);
                 } else {
-                    builder.addField("Their name", name, true);
-                    builder.setColor(GlobalVar.SUCCESS);
+                    newBuilder.addField("Their name", name, true);
+                    newBuilder.setColor(GlobalVar.SUCCESS);
                 }
 
                 msg.editMessage(newBuilder.build()).queue();
