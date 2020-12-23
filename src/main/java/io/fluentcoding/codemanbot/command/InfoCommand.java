@@ -34,7 +34,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setColor(GlobalVar.ERROR);
             } else {
                 builder.addField("Your code", retrievedCode, true);
-                String name = SlippiBridge.getName(DatabaseBridge.getCode(e.getAuthor().getIdLong()));
+                String name = SlippiBridge.getName(retrievedCode);
                 builder.addField("Your name", name, true);
                 builder.setColor(GlobalVar.SUCCESS);
             }
