@@ -18,7 +18,7 @@ public class CodeManCommand {
         this.aliases = Arrays.stream(aliases).map(original -> Application.EXEC_MODE.getCommandPrefix() + original).toArray(String[]::new);
     }
 
-    protected void handle(MessageReceivedEvent e) {
+    public void handle(MessageReceivedEvent e) {
         // Leave empty
     }
 

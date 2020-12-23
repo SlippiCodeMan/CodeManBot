@@ -19,7 +19,7 @@ public class DeprecatedCodeManCommand extends CodeManCommand {
         this.newCommand = newCommand;
     }
 
-    protected void handle(MessageReceivedEvent e) {
+    public void handle(MessageReceivedEvent e) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(GlobalVar.ERROR);
         builder.setDescription("This command is deprecated! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + newCommand + "**!");
