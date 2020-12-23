@@ -4,58 +4,70 @@ import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
+import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class CodeCommand extends CodeManCommandWithArgs {
+public class InfoCommand extends CodeManCommandWithArgs {
 
-    public CodeCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
+    public InfoCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
         super(argSet, description, name, aliases);
     }
 
     @Override
     public void handle(MessageReceivedEvent e, Map<String, String> args) {
-        String name = args.get("name");
+        String user = args.get("user");
 
         EmbedBuilder builder = new EmbedBuilder();
 
-        /* NO NAME SPECIFIED */
-        if (e.getMessage().getMentionedMembers().size() > 0) {
-            String code = DatabaseBridge.getCode(e.getMessage().getMentionedMembers().get(0).getIdLong());
+        Member mentionedMember = e.getMessage().getMentionedMembers().get(0);
+        boolean mentionedMemberIsAuthor = mentionedMember.getIdLong() == e.getAuthor().getIdLong();
+        if (user == null || mentionedMemberIsAuthor) {
+            String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
-            if (code == null) {
-                builder.setDescription("This person hasn't set their code yet!");
+            if (retrievedCode == null) {
+                builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
-                builder.addField("Their code", code, false);
+                builder.addField("Your code", retrievedCode, true);
+                String name = SlippiBridge.getName(DatabaseBridge.getCode(e.getAuthor().getIdLong()));
+                builder.addField("Your name", name, true);
                 builder.setColor(GlobalVar.SUCCESS);
             }
-        } else if (name == null) {
-            String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
+        } else if (e.getMessage().getMentionedMembers().size() > 0) {
+            String retrievedCode = DatabaseBridge.getCode(mentionedMember.getIdLong());
 
-            if (code == null) {
-                builder.setDescription("You haven't set your code yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
+            if (retrievedCode == null) {
+                builder.setDescription("This person didn't connect to CodeMan yet!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
-                builder.addField("Your code", code, false);
+                String name = SlippiBridge.getName(retrievedCode);
+                builder.addField("Their code", retrievedCode, true);
+                builder.addField("Their name", name, true);
                 builder.setColor(GlobalVar.SUCCESS);
             }
-        } else {
-            if (!PatternChecker.isSlippiUsername(name)) {
-                builder.setDescription("Your specified username is invalid!");
-                builder.setColor(GlobalVar.ERROR);
-                e.getChannel().sendMessage(builder.build()).queue();
-                return;
-            }
+        } else if (PatternChecker.isConnectCode(user)) {
+            user = user.toUpperCase();
 
-            List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(name);
+            String name = SlippiBridge.getName(user);
+
+            if (name == null) {
+                builder.setDescription("This person doesn't exist!");
+                builder.setColor(GlobalVar.ERROR);
+            } else {
+                builder.addField("Their name", name, false);
+                builder.setColor(GlobalVar.SUCCESS);
+            }
+        } else if (PatternChecker.isSlippiUsername(user)) {
+            List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
 
             if (codes == null || codes.size() == 0) {
-                builder.setDescription("This person hasn't set their code yet!");
+                builder.setDescription("This person didn't connect to CodeMan yet!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
                 if (codes.size() == 1) {
@@ -77,6 +89,9 @@ public class CodeCommand extends CodeManCommandWithArgs {
                 }
                 builder.setColor(GlobalVar.SUCCESS);
             }
+        } else {
+            builder.setDescription("This parameter could neither get recognized as an username nor as a connect code!");
+            builder.setColor(GlobalVar.ERROR);
         }
 
         e.getChannel().sendMessage(builder.build()).queue();

@@ -1,6 +1,6 @@
 package io.fluentcoding.codemanbot.command;
 
-import io.fluentcoding.codemanbot.util.CodeManCommand;
+import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.CommandHandler;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,7 +22,10 @@ public class HelpCommand extends CodeManCommand {
         builder.setColor(GlobalVar.SUCCESS);
 
         for (CodeManCommand command : handler.getCommands()) {
-            builder.addField(command.getHelpTitle(), command.getDescription(), false);
+            String helpTitle = command.getHelpTitle();
+
+            if (helpTitle != null)
+                builder.addField(helpTitle, command.getDescription(), false);
         }
 
         builder.setFooter("Ananas#5903 (founder, ideas, prototype), FluentCoding#3314 (code cleaning, improvements, hosting)");

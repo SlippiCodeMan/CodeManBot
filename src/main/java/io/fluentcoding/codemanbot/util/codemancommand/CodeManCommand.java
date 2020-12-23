@@ -1,4 +1,4 @@
-package io.fluentcoding.codemanbot.util;
+package io.fluentcoding.codemanbot.util.codemancommand;
 
 import io.fluentcoding.codemanbot.Application;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class CodeManCommand {
     }
 
     protected void handle(MessageReceivedEvent e) {
-        // Leave emply
+        // Leave empty
     }
 
     public String getHelpTitle() {
