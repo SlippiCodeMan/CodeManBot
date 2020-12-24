@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class WhoisCommand extends CodeManCommandWithArgs {
@@ -78,24 +79,45 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                         newBuilder.setColor(GlobalVar.ERROR);
                     } else if (userEntries.size() == 1) {
                         UserDiscordEntry entry = userEntries.get(0);
-                        User discordUser = e.getJDA().retrieveUserById(entry.getDiscordId()).complete();
-                        newBuilder.addField(
-                                "Their discord tag",
-                                entry.getDisplayName() == null ? discordUser.getAsTag() : StringUtil.stringWithSlippiUsername(discordUser.getAsTag(), entry.getDisplayName()),
-                                false
-                        );
-                        newBuilder.setColor(GlobalVar.SUCCESS);
+                        e.getJDA().retrieveUserById(entry.getDiscordId()).queue(discordUser -> {
+                            newBuilder.addField(
+                                    "Their discord tag",
+                                    entry.getDisplayName() == null ? discordUser.getAsTag() : StringUtil.stringWithSlippiUsername(discordUser.getAsTag(), entry.getDisplayName()),
+                                    false
+                            );
+                            newBuilder.setColor(GlobalVar.SUCCESS);
+                            msg.editMessage(newBuilder.build()).queue();
+                        });
+
+                        return;
                     } else {
                         List<String> result = userEntries.stream()
                                 .filter(entry -> entry.getDisplayName() == null)
-                                .map(entry -> e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag())
+                                .map(entry -> {
+                                    try {
+                                        return e.getJDA().retrieveUserById(entry.getDiscordId()).submit().get().getAsTag();
+                                    } catch (InterruptedException interruptedException) {
+                                        interruptedException.printStackTrace();
+                                    } catch (ExecutionException executionException) {
+                                        executionException.printStackTrace();
+                                    }
+                                    return null;
+                                })
                                 .collect(Collectors.toList());
                         result.addAll(userEntries.stream()
                                 .filter(entry -> entry.getDisplayName() != null)
-                                .map(entry -> StringUtil.stringWithSlippiUsername(
-                                        e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag(),
-                                        entry.getDisplayName()
-                                ))
+                                .map(entry -> {
+                                    try {
+                                        return StringUtil.stringWithSlippiUsername(
+                                                e.getJDA().retrieveUserById(entry.getDiscordId()).submit().get().getAsTag(),
+                                                entry.getDisplayName());
+                                    } catch (InterruptedException interruptedException) {
+                                        interruptedException.printStackTrace();
+                                    } catch (ExecutionException executionException) {
+                                        executionException.printStackTrace();
+                                    }
+                                    return null;
+                                })
                                 .collect(Collectors.toList()));
 
                         String title = "**" + codes.size() + " players are using this username:**\n\n";
