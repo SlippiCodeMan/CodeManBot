@@ -130,9 +130,10 @@ public class InfoCommand extends CodeManCommandWithArgs {
                         } else {
                             newBuilder.setDescription(title + content);
                             newBuilder.setColor(GlobalVar.SUCCESS);
-                            msg.editMessage(newBuilder.build()).queue();
                         }
                     }
+
+                    msg.editMessage(newBuilder.build()).queue();
                 }
             });
         } else {
