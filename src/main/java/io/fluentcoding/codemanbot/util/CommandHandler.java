@@ -6,6 +6,7 @@ import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
@@ -38,7 +39,11 @@ public class CommandHandler extends ListenerAdapter {
                     builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
                     builder.setColor(GlobalVar.ERROR);
 
-                    event.getChannel().sendMessage(builder.build()).queue();
+                    try {
+                        event.getMessage().delete().queue();
+                    } catch(ErrorResponseException e) {}
+
+                    event.getAuthor().openPrivateChannel().queue(channel -> channel.sendMessage(builder.build()).queue());
                     return;
                 }
                 if (command instanceof CodeManCommandWithArgs) {
