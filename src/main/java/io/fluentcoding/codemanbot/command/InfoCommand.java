@@ -121,13 +121,12 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
                         String title = "**" + codes.size() + " players are using this username:**\n\n";
 
-                        String content = String.join("\n", result);
-
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage,
                                     new PagingContainer.PageableContent(title, result.stream().toArray(String[]::new), e.getAuthor().getIdLong()));
                             return;
                         } else {
+                            String content = String.join("\n", result);
                             newBuilder.setDescription(title + content);
                             newBuilder.setColor(GlobalVar.SUCCESS);
                         }

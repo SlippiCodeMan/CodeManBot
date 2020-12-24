@@ -4,6 +4,7 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
+import io.fluentcoding.codemanbot.util.paging.PagingContainer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -68,21 +69,28 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                     builder.setDescription("**" + (entry.getDisplayName() == null ? user : entry.getDisplayName()) + "** is **" + discordUser.getAsTag() + "**.");
                     builder.setColor(GlobalVar.SUCCESS);
                 } else {
-                    String first = userEntries.stream()
+                    List<String> result = userEntries.stream()
                             .filter(entry -> entry.getDisplayName() == null)
                             .map(entry -> e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag())
-                            .collect(Collectors.joining("\n"));
-                    String additional = userEntries.stream()
+                            .collect(Collectors.toList());
+                    result.addAll(userEntries.stream()
                             .filter(entry -> entry.getDisplayName() != null)
                             .map(entry -> StringUtil.stringWithSlippiUsername(
                                     e.getJDA().retrieveUserById(entry.getDiscordId()).complete().getAsTag(),
                                     entry.getDisplayName()
                             ))
-                            .collect(Collectors.joining("\n"));
+                            .collect(Collectors.toList()));
 
-                    builder.setDescription("**" + userEntries.size() + " players are using this username:**\n" +
-                            first +
-                            (additional.length() != 0 ? (first.length() != 0 ? "\n" : "") + additional : ""));
+                    String title = "**" + codes.size() + " players are using this username:**\n\n";
+
+                    if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
+                        PagingContainer.INSTANCE.pageableMessageHandler(e.getChannel()::sendMessage,
+                                new PagingContainer.PageableContent(title, result.stream().toArray(String[]::new), e.getAuthor().getIdLong()));
+                        return;
+                    } else {
+                        String content = String.join("\n", result);
+                        builder.setDescription(title + content);
+                    }
                 }
             }
         } else {
