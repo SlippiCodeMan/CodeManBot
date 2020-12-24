@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.Arrays;
 
 @Getter
-public class CodeManCommand {
+public abstract class CodeManCommand {
     private final String name;
     private final String description;
     private final String[] aliases;
@@ -18,9 +18,7 @@ public class CodeManCommand {
         this.aliases = Arrays.stream(aliases).map(original -> Application.EXEC_MODE.getCommandPrefix() + original).toArray(String[]::new);
     }
 
-    public void handle(MessageReceivedEvent e) {
-        // Leave empty
-    }
+    public abstract void handle(MessageReceivedEvent e);
 
     public String getHelpTitle() {
         return aliases.length == 0 ? name :

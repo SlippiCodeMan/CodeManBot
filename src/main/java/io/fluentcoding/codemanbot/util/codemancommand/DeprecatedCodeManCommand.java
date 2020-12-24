@@ -13,8 +13,8 @@ import java.util.Arrays;
 public class DeprecatedCodeManCommand extends CodeManCommand {
     String newCommand;
 
-    public DeprecatedCodeManCommand(String newCommand, String description, String name, String... aliases) {
-        super(description, name, aliases);
+    public DeprecatedCodeManCommand(String newCommand, String name, String... aliases) {
+        super(null, name, aliases);
 
         this.newCommand = newCommand;
     }

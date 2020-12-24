@@ -15,4 +15,9 @@ public class GlobalVar {
     public static int MAX_ITEMS_PER_PAGE = 10;
 
     public static Dotenv dotenv = Dotenv.load();
+
+    public static long[] owners = new long[]{
+            582645006100201485L, // ANANAS
+            522871749667323956L // FLUENTCODING
+    };
 }
