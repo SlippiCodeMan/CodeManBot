@@ -17,8 +17,10 @@ public enum AntiSpamContainer {
     public boolean userAllowedToAction(Long userId) {
         Bucket bucket = userBuckets.get(userId);
 
-        if (bucket == null)
-            bucket = userBuckets.put(userId, Bucket4j.builder().addLimit(limit).build());
+        if (bucket == null) {
+            bucket = Bucket4j.builder().addLimit(limit).build();
+            userBuckets.put(userId, bucket);
+        }
 
         return bucket.tryConsume(1);
     }
