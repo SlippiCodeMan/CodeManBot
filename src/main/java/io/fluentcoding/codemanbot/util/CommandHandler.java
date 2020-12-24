@@ -29,19 +29,18 @@ public class CommandHandler extends ListenerAdapter {
         if (event.getAuthor().isBot())
             return;
 
-        if (!AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
-            builder.setColor(GlobalVar.ERROR);
-
-            event.getChannel().sendMessage(builder.build()).queue();
-            return;
-        }
-
         String msg = event.getMessage().getContentStripped();
         for (CodeManCommand command : commands) {
             if (isCommand(msg, command.getName()) ||
                     Arrays.stream(command.getAliases()).anyMatch(alias -> isCommand(msg, alias))) {
+                if (!AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
+                    EmbedBuilder builder = new EmbedBuilder();
+                    builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
+                    builder.setColor(GlobalVar.ERROR);
+
+                    event.getChannel().sendMessage(builder.build()).queue();
+                    return;
+                }
                 if (command instanceof CodeManCommandWithArgs) {
                     CodeManCommandWithArgs argsCommand = (CodeManCommandWithArgs) command;
                     Optional<Map<String, String>> args = argsCommand.getArgumentSet().toMap(msg);
