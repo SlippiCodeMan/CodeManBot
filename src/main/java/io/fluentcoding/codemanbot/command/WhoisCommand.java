@@ -120,7 +120,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                                 })
                                 .collect(Collectors.toList()));
 
-                        String title = "**" + codes.size() + " players are using this username:**\n\n";
+                        String title = "**" + result.size() + " players are using this username:**\n\n";
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(e.getChannel()::sendMessage,
@@ -129,6 +129,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                         } else {
                             String content = String.join("\n", result);
                             newBuilder.setDescription(title + content);
+                            newBuilder.setColor(GlobalVar.SUCCESS);
                         }
                     }
                 }
