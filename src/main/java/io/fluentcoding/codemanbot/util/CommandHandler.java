@@ -26,6 +26,14 @@ public class CommandHandler extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+        if (!AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
+            builder.setColor(GlobalVar.ERROR);
+
+            event.getChannel().sendMessage(builder.build()).queue();
+        }
+
         String msg = event.getMessage().getContentStripped();
         for (CodeManCommand command : commands) {
             if (isCommand(msg, command.getName()) ||
@@ -35,15 +43,7 @@ public class CommandHandler extends ListenerAdapter {
                     Optional<Map<String, String>> args = argsCommand.getArgumentSet().toMap(msg);
 
                     if (args.isPresent()) {
-                        if (AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
-                            argsCommand.handle(event, args.get());
-                        } else {
-                            EmbedBuilder builder = new EmbedBuilder();
-                            builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
-                            builder.setColor(GlobalVar.ERROR);
-
-                            event.getChannel().sendMessage(builder.build()).queue();
-                        }
+                        argsCommand.handle(event, args.get());
                     } else {
                         // SHOW SYNTAX ERROR
                         EmbedBuilder builder = new EmbedBuilder();
@@ -56,6 +56,7 @@ public class CommandHandler extends ListenerAdapter {
                     }
                 }
                 command.handle(event);
+                return;
             }
         }
     }
