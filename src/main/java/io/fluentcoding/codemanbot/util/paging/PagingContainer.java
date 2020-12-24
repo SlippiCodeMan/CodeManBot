@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public enum PagingContainer {
@@ -20,6 +21,9 @@ public enum PagingContainer {
     public void pageableMessageHandler(Function<MessageEmbed, MessageAction> action, PageableContent content) {
         action.apply(content.render()).queue(msg -> {
             content.react(msg, () -> container.put(msg.getIdLong(), content));
+            msg.clearReactions().queueAfter(1, TimeUnit.HOURS, (unused) -> {
+                container.remove(msg.getIdLong(), content);
+            });
         });
     }
 
@@ -37,13 +41,13 @@ public enum PagingContainer {
 
     public static class PageableContent {
         private final String prefix;
-        private final String[] pagableContent;
+        private final String[] pageableContent;
         @Getter(AccessLevel.NONE)
         private int page = 0;
 
-        public PageableContent(String prefix, String[] pagableContent) {
+        public PageableContent(String prefix, String[] pageableContent) {
             this.prefix = prefix;
-            this.pagableContent = pagableContent;
+            this.pageableContent = pageableContent;
         }
 
         public void previousPage() {
@@ -64,39 +68,31 @@ public enum PagingContainer {
         }
 
         public MessageEmbed render() {
+            int toPage = page * GlobalVar.MAX_ITEMS_PER_PAGE + GlobalVar.MAX_ITEMS_PER_PAGE;
+
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(GlobalVar.SUCCESS);
             builder.setDescription(prefix +
                     String.join("\n", Arrays.copyOfRange(
-                            pagableContent,
+                            pageableContent,
                             page * GlobalVar.MAX_ITEMS_PER_PAGE,
-                            page * GlobalVar.MAX_ITEMS_PER_PAGE + GlobalVar.MAX_ITEMS_PER_PAGE)));
+                            toPage > pageableContent.length ? pageableContent.length : toPage)));
             builder.setFooter("Page " + (page + 1) + "/" + (maxPages() + 1));
 
             return builder.build();
         }
 
         public void react(Message msg, Runnable onDone) {
-            List<CompletableFuture> futures = new ArrayList<>();
-            if (canGoToPreviousPage() && !reactionContains(msg, GlobalVar.ARROW_LEFT))
-                futures.add(msg.addReaction(GlobalVar.ARROW_LEFT).submit());
-            else if (!canGoToPreviousPage() && reactionContains(msg, GlobalVar.ARROW_LEFT))
-                futures.add(msg.removeReaction(GlobalVar.ARROW_LEFT).submit());
-            if (canGoToNextPage() && !reactionContains(msg, GlobalVar.ARROW_RIGHT))
-                futures.add(msg.addReaction(GlobalVar.ARROW_RIGHT).submit());
-            else if (!canGoToNextPage() && reactionContains(msg, GlobalVar.ARROW_RIGHT))
-                futures.add(msg.removeReaction(GlobalVar.ARROW_RIGHT).submit());
+            CompletableFuture[] futures = new CompletableFuture[] {
+                    msg.addReaction(GlobalVar.ARROW_LEFT).submit(),
+                    msg.addReaction(GlobalVar.ARROW_RIGHT).submit()
+            };
 
-            CompletableFuture.allOf(futures.stream().toArray(CompletableFuture[]::new))
-                    .thenAccept(unused -> onDone.run());
-        }
-
-        private boolean reactionContains(Message msg, String unicode) {
-            return msg.getReactions().stream().anyMatch(reaction -> reaction.getReactionEmote().getEmoji().equals(unicode));
+            CompletableFuture.allOf(futures).thenAccept(unused -> onDone.run());
         }
 
         private int maxPages() {
-            return (pagableContent.length - 1) / GlobalVar.MAX_ITEMS_PER_PAGE;
+            return (pageableContent.length - 1) / GlobalVar.MAX_ITEMS_PER_PAGE;
         }
     }
 }

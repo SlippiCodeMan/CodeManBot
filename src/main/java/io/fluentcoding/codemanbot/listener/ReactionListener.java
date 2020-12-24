@@ -27,18 +27,14 @@ public class ReactionListener extends ListenerAdapter {
                 return;
 
             content.previousPage();
-            event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue(msg -> {
-                content.react(msg, () -> PagingContainer.INSTANCE.addPageableContent(event.getMessageIdLong(), content));
-            });
+            event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
         } else if (emoji.equals(GlobalVar.ARROW_RIGHT)) {
             PagingContainer.INSTANCE.removePageableContent(event.getMessageIdLong());
             if (!content.canGoToNextPage())
                 return;
 
             content.nextPage();
-            event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue(msg -> {
-                content.react(msg, () -> PagingContainer.INSTANCE.addPageableContent(event.getMessageIdLong(), content));
-            });
+            event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
         }
     }
 }
