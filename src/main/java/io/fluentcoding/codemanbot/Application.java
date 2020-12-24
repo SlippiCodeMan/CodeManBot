@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot;
 import javax.security.auth.login.LoginException;
 
 import io.fluentcoding.codemanbot.command.*;
+import io.fluentcoding.codemanbot.listener.ReactionListener;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
 import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
 import io.fluentcoding.codemanbot.util.CommandHandler;
@@ -30,14 +31,17 @@ public class Application {
                         "Shows the info based of a slippi username/connect code", "info", "i"),
                 new DeprecatedCodeManCommand("info","Shows the code based of a slippi username", "code", "c"),
                 new DeprecatedCodeManCommand("info","Shows the name based of a slippi connect code", "name", "n"),
-                new WhoisCommand(new CodeManArgumentSet().setNecessaryArguments("user"),
+                new WhoisCommand(new CodeManArgumentSet().setNecessaryArguments("user").setLastArgumentVarArg(),
                         "Shows the discord username based of a slippi username/connect code", "whois", "wi"),
                 new AskCommand("Asks for you if someone wants you to play", "ask", "a"),
                 new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect")
         );
 
         handler.addCommand(new HelpCommand(handler, "Displays the help message", "help", "h"));
-        builder.addEventListeners(handler);
+        builder.addEventListeners(
+                handler,
+                new ReactionListener()
+        );
 
         builder.build();
     }

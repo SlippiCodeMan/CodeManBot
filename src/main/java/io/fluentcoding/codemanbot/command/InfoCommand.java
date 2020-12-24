@@ -5,6 +5,7 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
+import io.fluentcoding.codemanbot.util.paging.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -105,31 +106,38 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     if (codes.size() == 1) {
                         SlippiBridge.UserEntry entry = codes.get(0);
                         newBuilder.addField("Their code", entry.getDisplayName() == null ? entry.getCode() : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()), false);
+                        newBuilder.setColor(GlobalVar.SUCCESS);
                     } else {
-                        String first = codes.stream()
+                        List<String> result = codes.stream()
                                 .filter(entry -> entry.getDisplayName() == null)
                                 .map(entry -> entry.getCode())
-                                .collect(Collectors.joining("\n"));
-                        String additional = codes.stream()
-                                .filter(entry -> entry.getDisplayName() != null)
-                                .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
-                                .collect(Collectors.joining("\n"));
+                                .collect(Collectors.toList());
+                        result.addAll(
+                                codes.stream()
+                                        .filter(entry -> entry.getDisplayName() != null)
+                                        .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
+                                        .collect(Collectors.toList())
+                        );
 
-                        newBuilder.setDescription("**" + codes.size() + " players are using this username:**\n\n" +
-                                first +
-                                (additional.length() != 0 ? (first.length() != 0 ? "\n" : "") + additional : ""));
+                        String title = "**" + codes.size() + " players are using this username:**\n\n";
+
+                        if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
+                            PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage,
+                                    new PagingContainer.PageableContent(title, result.stream().toArray(String[]::new), e.getAuthor().getIdLong()));
+                            return;
+                        } else {
+                            String content = String.join("\n", result);
+                            newBuilder.setDescription(title + content);
+                            newBuilder.setColor(GlobalVar.SUCCESS);
+                        }
                     }
-                    newBuilder.setColor(GlobalVar.SUCCESS);
                 }
 
                 msg.editMessage(newBuilder.build()).queue();
             });
-            return;
         } else {
             builder.setDescription("This parameter could neither get recognized as an username nor as a connect code!");
             builder.setColor(GlobalVar.ERROR);
         }
-
-        e.getChannel().sendMessage(builder.build()).queue();
     }
 }

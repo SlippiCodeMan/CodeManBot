@@ -16,10 +16,12 @@ jobs:
         java-version: 15
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Test building the project
-      uses: eskatos/gradle-command-action@v1
+    - uses: burrunan/gradle-cache-action@v1
+      name: Build CodeMan
       with:
-        arguments: shadowjar
+          job-id: jdk15
+          arguments: shadowjar
+          gradle-version: wrapper
         
   deploy:
     name: Deploy
