@@ -111,7 +111,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                     }
                 }
 
-                msg.editMessage(newBuilder.build());
+                msg.editMessage(newBuilder.build()).queue();
             });
 
             return;
