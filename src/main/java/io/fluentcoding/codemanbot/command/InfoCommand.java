@@ -34,9 +34,21 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setColor(GlobalVar.ERROR);
             } else {
                 builder.addField("Your code", retrievedCode, true);
-                String name = SlippiBridge.getName(DatabaseBridge.getCode(e.getAuthor().getIdLong()));
-                builder.addField("Your name", name, true);
-                builder.setColor(GlobalVar.SUCCESS);
+                builder.addField("Your name", "*Loading...*", true);
+
+                builder.setColor(GlobalVar.LOADING);
+                e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                    EmbedBuilder newBuilder = new EmbedBuilder();
+                    newBuilder.addField("Your code", retrievedCode, true);
+
+                    String name = SlippiBridge.getName(retrievedCode);
+                    newBuilder.addField("Your name", name, true);
+
+                    newBuilder.setColor(GlobalVar.SUCCESS);
+                    msg.editMessage(newBuilder.build()).queue();
+                });
+
+                return;
             }
         } else if (e.getMessage().getMentionedMembers().size() > 0) {
             Member mentionedMember = e.getMessage().getMentionedMembers().get(0);
@@ -46,49 +58,73 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setDescription("This person didn't connect to CodeMan yet!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
-                String name = SlippiBridge.getName(retrievedCode);
                 builder.addField("Their code", retrievedCode, true);
-                builder.addField("Their name", name, true);
-                builder.setColor(GlobalVar.SUCCESS);
+                builder.addField("Their name", "*Loading...*", true);
+
+                builder.setColor(GlobalVar.LOADING);
+                e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                    EmbedBuilder newBuilder = new EmbedBuilder();
+                    newBuilder.addField("Their code", retrievedCode, true);
+
+                    String name = SlippiBridge.getName(retrievedCode);
+                    newBuilder.addField("Their name", name, true);
+
+                    newBuilder.setColor(GlobalVar.SUCCESS);
+                    msg.editMessage(newBuilder.build()).queue();
+                });
+                return;
             }
         } else if (PatternChecker.isConnectCode(user)) {
-            user = user.toUpperCase();
-
-            String name = SlippiBridge.getName(user);
-
-            if (name == null) {
-                builder.setDescription("This person doesn't exist!");
-                builder.setColor(GlobalVar.ERROR);
-            } else {
-                builder.addField("Their name", name, false);
-                builder.setColor(GlobalVar.SUCCESS);
-            }
-        } else if (PatternChecker.isSlippiUsername(user)) {
-            List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
-
-            if (codes == null || codes.size() == 0) {
-                builder.setDescription("This person didn't connect to CodeMan yet!");
-                builder.setColor(GlobalVar.ERROR);
-            } else {
-                if (codes.size() == 1) {
-                    SlippiBridge.UserEntry entry = codes.get(0);
-                    builder.addField("Their code", entry.getDisplayName() == null ? entry.getCode() : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()), false);
+            builder.addField("Their name", "*Loading...*", false);
+            builder.setColor(GlobalVar.LOADING);
+            e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                EmbedBuilder newBuilder = new EmbedBuilder();
+                String name = SlippiBridge.getName(user.toUpperCase());
+                if (name == null) {
+                    newBuilder.setDescription("This person doesn't exist!");
+                    newBuilder.setColor(GlobalVar.ERROR);
                 } else {
-                    String first = codes.stream()
-                            .filter(entry -> entry.getDisplayName() == null)
-                            .map(entry -> entry.getCode())
-                            .collect(Collectors.joining("\n"));
-                    String additional = codes.stream()
-                            .filter(entry -> entry.getDisplayName() != null)
-                            .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
-                            .collect(Collectors.joining("\n"));
-
-                    builder.setDescription("**" + codes.size() + " players are using this username:**\n\n" +
-                            first +
-                            (additional.length() != 0 ? (first.length() != 0 ? "\n" : "") + additional : ""));
+                    newBuilder.addField("Their name", name, true);
+                    newBuilder.setColor(GlobalVar.SUCCESS);
                 }
-                builder.setColor(GlobalVar.SUCCESS);
-            }
+
+                msg.editMessage(newBuilder.build()).queue();
+            });
+            return;
+        } else if (PatternChecker.isSlippiUsername(user)) {
+            builder.addField("Their code", "*Loading...*", false);
+            builder.setColor(GlobalVar.LOADING);
+            e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
+
+                EmbedBuilder newBuilder = new EmbedBuilder();
+                if (codes == null || codes.size() == 0) {
+                    newBuilder.setDescription("This person didn't connect to CodeMan yet!");
+                    newBuilder.setColor(GlobalVar.ERROR);
+                } else {
+                    if (codes.size() == 1) {
+                        SlippiBridge.UserEntry entry = codes.get(0);
+                        newBuilder.addField("Their code", entry.getDisplayName() == null ? entry.getCode() : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()), false);
+                    } else {
+                        String first = codes.stream()
+                                .filter(entry -> entry.getDisplayName() == null)
+                                .map(entry -> entry.getCode())
+                                .collect(Collectors.joining("\n"));
+                        String additional = codes.stream()
+                                .filter(entry -> entry.getDisplayName() != null)
+                                .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
+                                .collect(Collectors.joining("\n"));
+
+                        newBuilder.setDescription("**" + codes.size() + " players are using this username:**\n\n" +
+                                first +
+                                (additional.length() != 0 ? (first.length() != 0 ? "\n" : "") + additional : ""));
+                    }
+                    newBuilder.setColor(GlobalVar.SUCCESS);
+                }
+
+                msg.editMessage(newBuilder.build()).queue();
+            });
+            return;
         } else {
             builder.setDescription("This parameter could neither get recognized as an username nor as a connect code!");
             builder.setColor(GlobalVar.ERROR);
