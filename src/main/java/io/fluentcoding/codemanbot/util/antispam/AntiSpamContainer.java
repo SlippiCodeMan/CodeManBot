@@ -5,7 +5,6 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Bucket4j;
 
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,6 +21,8 @@ public enum AntiSpamContainer {
             bucket = Bucket4j.builder().addLimit(limit).build();
             userBuckets.put(userId, bucket);
         }
+
+        System.out.println(bucket.getAvailableTokens());
 
         return bucket.tryConsume(1);
     }
