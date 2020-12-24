@@ -21,7 +21,6 @@ public class ReactionListener extends ListenerAdapter {
         String emoji = event.getReactionEmote().getEmoji();
         event.getReaction().removeReaction(event.getUser()).queue();
         if (emoji.equals(GlobalVar.ARROW_LEFT)) {
-            PagingContainer.INSTANCE.removePageableContent(event.getMessageIdLong());
             event.getReaction().removeReaction(event.getUser()).queue();
             if (!content.canGoToPreviousPage())
                 return;
@@ -29,7 +28,6 @@ public class ReactionListener extends ListenerAdapter {
             content.previousPage();
             event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
         } else if (emoji.equals(GlobalVar.ARROW_RIGHT)) {
-            PagingContainer.INSTANCE.removePageableContent(event.getMessageIdLong());
             if (!content.canGoToNextPage())
                 return;
 
