@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.util;
 
+import io.fluentcoding.codemanbot.util.antispam.AntiSpamContainer;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import lombok.Getter;
@@ -31,15 +32,21 @@ public class CommandHandler extends ListenerAdapter {
                     Arrays.stream(command.getAliases()).anyMatch(alias -> isCommand(msg, alias))) {
                 if (command instanceof CodeManCommandWithArgs) {
                     CodeManCommandWithArgs argsCommand = (CodeManCommandWithArgs) command;
-
                     Optional<Map<String, String>> args = argsCommand.getArgumentSet().toMap(msg);
 
                     if (args.isPresent()) {
-                        argsCommand.handle(event, args.get());
+                        if (AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
+                            argsCommand.handle(event, args.get());
+                        } else {
+                            EmbedBuilder builder = new EmbedBuilder();
+                            builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
+                            builder.setColor(GlobalVar.ERROR);
+
+                            event.getChannel().sendMessage(builder.build()).queue();
+                        }
                     } else {
                         // SHOW SYNTAX ERROR
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setTitle("CodeMan");
                         builder.setDescription("Syntax Error!");
                         builder.addField("Input", msg, false);
                         builder.addField("Correct Usage - () = Aliases | <> = Necessary Argument | [] = Optional Argument", argsCommand.getHelpTitle(), false);

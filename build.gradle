@@ -21,6 +21,7 @@ group 'io.fluentcoding'
 version '1.0-SNAPSHOT'
 
 dependencies {
+    compile 'com.github.vladimir-bukhtoyarov:bucket4j-core:6.0.0'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     implementation ('net.dv8tion:JDA:4.2.0_223') {
