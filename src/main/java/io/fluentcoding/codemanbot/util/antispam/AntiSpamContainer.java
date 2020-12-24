@@ -22,6 +22,7 @@ public enum AntiSpamContainer {
             userBuckets.put(userId, bucket);
         }
 
+        System.out.println(bucket.getAvailableTokens());
         return bucket.tryConsume(1);
     }
 }
