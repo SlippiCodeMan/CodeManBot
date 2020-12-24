@@ -32,6 +32,7 @@ public class CommandHandler extends ListenerAdapter {
             builder.setColor(GlobalVar.ERROR);
 
             event.getChannel().sendMessage(builder.build()).queue();
+            return;
         }
 
         String msg = event.getMessage().getContentStripped();
