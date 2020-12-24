@@ -26,6 +26,9 @@ public class CommandHandler extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+        if (event.getAuthor().isBot())
+            return;
+
         if (!AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
