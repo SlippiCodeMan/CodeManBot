@@ -125,7 +125,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage,
-                                    new PagingContainer.PageableContent(title, result.toArray(String[]::new)));
+                                    new PagingContainer.PageableContent(title, result.stream().toArray(String[]::new)));
                             return;
                         } else {
                             newBuilder.setDescription(title + content);
