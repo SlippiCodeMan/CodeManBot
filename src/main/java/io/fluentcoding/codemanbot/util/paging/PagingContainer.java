@@ -20,9 +20,21 @@ public enum PagingContainer {
 
     public void pageableMessageHandler(Function<MessageEmbed, MessageAction> action, PageableContent content) {
         action.apply(content.render()).queue(msg -> {
-            container.put(msg.getIdLong(), content);
             content.react(msg);
+            container.put(msg.getIdLong(), content);
         });
+    }
+
+    public PageableContent getPageableContent(Long messageId) {
+        return container.get(messageId);
+    }
+
+    public void addPageableContent(Long messageId, PageableContent content) {
+        container.put(messageId, content);
+    }
+
+    public void removePageableContent(Long messageId) {
+        container.remove(messageId);
     }
 
     public static class PageableContent {
@@ -45,6 +57,14 @@ public enum PagingContainer {
                 page++;
         }
 
+        public boolean canGoToPreviousPage() {
+            return page != 0;
+        }
+
+        public boolean canGoToNextPage() {
+            return page != maxPages();
+        }
+
         public MessageEmbed render() {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(GlobalVar.SUCCESS);
@@ -60,25 +80,17 @@ public enum PagingContainer {
 
         public void react(Message msg) {
             if (canGoToPreviousPage() && !reactionContains(msg, GlobalVar.ARROW_LEFT))
-                msg.addReaction(GlobalVar.ARROW_LEFT).queue();
+                msg.addReaction(GlobalVar.ARROW_LEFT).complete();
             else if (!canGoToPreviousPage() && reactionContains(msg, GlobalVar.ARROW_LEFT))
-                msg.removeReaction(GlobalVar.ARROW_LEFT).queue();
+                msg.removeReaction(GlobalVar.ARROW_LEFT).complete();
             if (canGoToNextPage() && !reactionContains(msg, GlobalVar.ARROW_RIGHT))
-                msg.addReaction(GlobalVar.ARROW_RIGHT).queue();
+                msg.addReaction(GlobalVar.ARROW_RIGHT).complete();
             else if (!canGoToNextPage() && reactionContains(msg, GlobalVar.ARROW_RIGHT))
-                msg.removeReaction(GlobalVar.ARROW_RIGHT).queue();
+                msg.removeReaction(GlobalVar.ARROW_RIGHT).complete();
         }
 
         private boolean reactionContains(Message msg, String unicode) {
             return msg.getReactions().stream().anyMatch(reaction -> reaction.getReactionEmote().getEmoji().equals(unicode));
-        }
-
-        private boolean canGoToPreviousPage() {
-            return page != 0;
-        }
-
-        private boolean canGoToNextPage() {
-            return page != maxPages();
         }
 
         private int maxPages() {

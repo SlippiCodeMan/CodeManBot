@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot;
 import javax.security.auth.login.LoginException;
 
 import io.fluentcoding.codemanbot.command.*;
+import io.fluentcoding.codemanbot.listener.ReactionListener;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
 import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
 import io.fluentcoding.codemanbot.util.CommandHandler;
@@ -37,7 +38,10 @@ public class Application {
         );
 
         handler.addCommand(new HelpCommand(handler, "Displays the help message", "help", "h"));
-        builder.addEventListeners(handler);
+        builder.addEventListeners(
+                handler,
+                new ReactionListener()
+        );
 
         builder.build();
     }
