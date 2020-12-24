@@ -18,8 +18,12 @@ public class ReactionListener extends ListenerAdapter {
         if (content == null)
             return;
 
-        String emoji = event.getReactionEmote().getEmoji();
         event.getReaction().removeReaction(event.getUser()).queue();
+        if (event.getUser().getIdLong() != content.getAuthorId())
+            return;
+
+        String emoji = event.getReactionEmote().getEmoji();
+
         if (emoji.equals(GlobalVar.ARROW_LEFT)) {
             event.getReaction().removeReaction(event.getUser()).queue();
             if (!content.canGoToPreviousPage())

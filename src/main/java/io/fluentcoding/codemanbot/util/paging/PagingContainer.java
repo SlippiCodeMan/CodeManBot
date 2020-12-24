@@ -42,12 +42,14 @@ public enum PagingContainer {
     public static class PageableContent {
         private final String prefix;
         private final String[] pageableContent;
-        @Getter(AccessLevel.NONE)
+        @Getter
+        private final long authorId;
         private int page = 0;
 
-        public PageableContent(String prefix, String[] pageableContent) {
+        public PageableContent(String prefix, String[] pageableContent, long authorId) {
             this.prefix = prefix;
             this.pageableContent = pageableContent;
+            this.authorId = authorId;
         }
 
         public void previousPage() {
