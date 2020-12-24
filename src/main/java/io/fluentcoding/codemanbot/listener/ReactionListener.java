@@ -28,8 +28,7 @@ public class ReactionListener extends ListenerAdapter {
 
             content.previousPage();
             event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue(msg -> {
-                content.react(msg);
-                PagingContainer.INSTANCE.addPageableContent(event.getMessageIdLong(), content);
+                content.react(msg, () -> PagingContainer.INSTANCE.addPageableContent(event.getMessageIdLong(), content));
             });
         } else if (emoji.equals(GlobalVar.ARROW_RIGHT)) {
             PagingContainer.INSTANCE.removePageableContent(event.getMessageIdLong());
@@ -38,8 +37,7 @@ public class ReactionListener extends ListenerAdapter {
 
             content.nextPage();
             event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue(msg -> {
-                content.react(msg);
-                PagingContainer.INSTANCE.addPageableContent(event.getMessageIdLong(), content);
+                content.react(msg, () -> PagingContainer.INSTANCE.addPageableContent(event.getMessageIdLong(), content));
             });
         }
     }

@@ -8,9 +8,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public enum PagingContainer {
@@ -20,8 +19,7 @@ public enum PagingContainer {
 
     public void pageableMessageHandler(Function<MessageEmbed, MessageAction> action, PageableContent content) {
         action.apply(content.render()).queue(msg -> {
-            content.react(msg);
-            container.put(msg.getIdLong(), content);
+            content.react(msg, () -> container.put(msg.getIdLong(), content));
         });
     }
 
@@ -78,15 +76,19 @@ public enum PagingContainer {
             return builder.build();
         }
 
-        public void react(Message msg) {
+        public void react(Message msg, Runnable onDone) {
+            List<CompletableFuture> futures = new ArrayList<>();
             if (canGoToPreviousPage() && !reactionContains(msg, GlobalVar.ARROW_LEFT))
-                msg.addReaction(GlobalVar.ARROW_LEFT).complete();
+                futures.add(msg.addReaction(GlobalVar.ARROW_LEFT).submit());
             else if (!canGoToPreviousPage() && reactionContains(msg, GlobalVar.ARROW_LEFT))
-                msg.removeReaction(GlobalVar.ARROW_LEFT).complete();
+                futures.add(msg.removeReaction(GlobalVar.ARROW_LEFT).submit());
             if (canGoToNextPage() && !reactionContains(msg, GlobalVar.ARROW_RIGHT))
-                msg.addReaction(GlobalVar.ARROW_RIGHT).complete();
+                futures.add(msg.addReaction(GlobalVar.ARROW_RIGHT).submit());
             else if (!canGoToNextPage() && reactionContains(msg, GlobalVar.ARROW_RIGHT))
-                msg.removeReaction(GlobalVar.ARROW_RIGHT).complete();
+                futures.add(msg.removeReaction(GlobalVar.ARROW_RIGHT).submit());
+
+            CompletableFuture.allOf(futures.stream().toArray(CompletableFuture[]::new))
+                    .thenAccept(unused -> onDone.run());
         }
 
         private boolean reactionContains(Message msg, String unicode) {
