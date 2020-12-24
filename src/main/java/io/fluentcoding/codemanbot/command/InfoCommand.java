@@ -108,29 +108,32 @@ public class InfoCommand extends CodeManCommandWithArgs {
                         newBuilder.addField("Their code", entry.getDisplayName() == null ? entry.getCode() : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()), false);
                         newBuilder.setColor(GlobalVar.SUCCESS);
                     } else {
-                        String first = codes.stream()
+                        List<String> result = codes.stream()
                                 .filter(entry -> entry.getDisplayName() == null)
                                 .map(entry -> entry.getCode())
-                                .collect(Collectors.joining("\n"));
-                        String[] resultArray = codes.stream()
-                                .filter(entry -> entry.getDisplayName() != null)
-                                .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
-                                .toArray(String[]::new);
-                        String additional = String.join("\n", resultArray);
+                                .collect(Collectors.toList());
+                        result.addAll(
+                                codes.stream()
+                                        .filter(entry -> entry.getDisplayName() != null)
+                                        .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
+                                        .collect(Collectors.toList())
+                        );
 
                         String title = "**" + codes.size() + " players are using this username:**\n\n";
 
-                        String content = first +
-                                (additional.length() != 0 ? (first.length() != 0 ? "\n" : "") + additional : "");
+                        String content = String.join("\n", result);
 
-                        newBuilder.setDescription(title + content);
-                        newBuilder.setColor(GlobalVar.SUCCESS);
-                        PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage, new PagingContainer.PageableContent(title, resultArray));
-                        return;
+                        if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
+                            PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage,
+                                    new PagingContainer.PageableContent(title, result.toArray(String[]::new)));
+                            return;
+                        } else {
+                            newBuilder.setDescription(title + content);
+                            newBuilder.setColor(GlobalVar.SUCCESS);
+                            msg.editMessage(newBuilder.build()).queue();
+                        }
                     }
                 }
-
-                msg.editMessage(newBuilder.build()).queue();
             });
         } else {
             builder.setDescription("This parameter could neither get recognized as an username nor as a connect code!");
