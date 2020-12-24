@@ -110,6 +110,8 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                         }
                     }
                 }
+
+                msg.editMessage(newBuilder.build());
             });
 
             return;
