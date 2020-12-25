@@ -2,6 +2,7 @@ package io.fluentcoding.codemanbot.util.codemancommand;
 
 import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.SystemUtil;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Getter
 public abstract class AdminCodeManCommand extends CodeManCommand {
@@ -29,15 +31,17 @@ public abstract class AdminCodeManCommand extends CodeManCommand {
                             )
                     )
                 || e.getTextChannel().getRolePermissionOverrides().stream()
-                    .anyMatch(permissionOverride ->
-                            permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
-                            ( // WHEN ITS NOT A BOT AND NOT AN OWNER
-                                    e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(member ->
-                                            !member.getUser().isBot() &&
-                                            Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() != owner)
-                                    )
-                            )
-                    )
+                    .anyMatch(permissionOverride -> {
+                        System.out.println(permissionOverride.getRole().getName());
+                        return permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
+                                ( // WHEN ITS NOT A BOT AND NOT AN OWNER
+                                        e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(member -> {
+                                            System.out.println(member.getUser().getAsTag() + " " + member.getIdLong());
+                                            return !member.getUser().isBot() &&
+                                                    Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() != owner);
+                                        })
+                                );
+                    })
             ) {
                 e.getMessage().delete().queue();
 
