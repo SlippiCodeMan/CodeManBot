@@ -38,7 +38,7 @@ public class DatabaseBridge {
             }
 
             BasicDBObject filter = new BasicDBObject("discord_id", discordId);
-            codeManCollection.updateOne(filter, Updates.set("mains", mains));
+            codeManCollection.updateOne(filter, Updates.set("mains", mains.stream().map(ssbmCharacter -> ssbmCharacter.ordinal()).collect(Collectors.toList())));
             return ToggleMainResult.accepted(mains);
         }
     }
