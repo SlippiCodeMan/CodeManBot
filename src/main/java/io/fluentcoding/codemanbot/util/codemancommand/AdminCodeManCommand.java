@@ -21,20 +21,26 @@ public abstract class AdminCodeManCommand extends CodeManCommand {
     public void handle(MessageReceivedEvent e) {
         if (Arrays.stream(GlobalVar.owners).anyMatch(owner -> e.getAuthor().getIdLong() == owner)) {
             if (e.getTextChannel().getMemberPermissionOverrides().stream()
-                    .anyMatch(permissionOverride -> permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) &&
-                            Arrays.stream(GlobalVar.owners).anyMatch(
-                                    owner -> !permissionOverride.getMember().getUser().isBot() && permissionOverride.getMember().getIdLong() != owner
+                    .anyMatch(permissionOverride ->
+                            permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
+                            ( // WHEN ITS NOT A BOT OR AN OWNER
+                                    !permissionOverride.getMember().getUser().isBot() ||
+                                    Arrays.stream(GlobalVar.owners).anyMatch(owner -> permissionOverride.getMember().getIdLong() != owner)
                             )
                     )
                 || e.getTextChannel().getRolePermissionOverrides().stream()
-                    .anyMatch(permissionOverride -> permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) &&
-                            Arrays.stream(GlobalVar.owners).anyMatch(
-                                owner -> e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(
-                                        member -> !member.getUser().isBot() && member.getIdLong() != owner
-                                )
+                    .anyMatch(permissionOverride ->
+                            permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
+                            ( // WHEN ITS NOT A BOT OR AN OWNER
+                                    e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(
+                                            member -> !member.getUser().isBot() ||
+                                            Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() != owner)
+                                    )
                             )
                     )
             ) {
+                e.getMessage().delete().queue();
+
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(GlobalVar.ERROR);
                 builder.setDescription("You aren't allowed to send admin only commands in a public channel!");
