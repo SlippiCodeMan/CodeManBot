@@ -51,7 +51,8 @@ public class MainCommand extends CodeManCommandWithArgs {
                 if (result.isAccepted()) {
                     builder.setColor(GlobalVar.SUCCESS);
                     builder.setDescription("Operation done!");
-                    builder.addField("Old mains", result.getOldMains().stream().map(main -> main.getName()).collect(Collectors.joining(", ")), false);
+                    builder.addField("Old mains", result.getOldMains() == null ? "" :
+                            result.getOldMains().stream().map(main -> main.getName()).collect(Collectors.joining(", ")), false);
                     builder.addField("New mains", result.getNewMains().stream().map(main -> main.getName()).collect(Collectors.joining(", ")), false);
                 } else {
                     builder.setColor(GlobalVar.ERROR);
