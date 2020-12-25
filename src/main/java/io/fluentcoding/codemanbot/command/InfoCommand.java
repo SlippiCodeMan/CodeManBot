@@ -53,7 +53,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     String name = SlippiBridge.getName(retrievedCode);
                     newBuilder.addField("Your name", name, true);
 
-                    if (mains != null) {
+                    if (!mains.isEmpty()) {
                         newBuilder.addField("Your mains", mains, true);
                     }
 
@@ -77,7 +77,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             } else {
                 builder.addField("Their code", retrievedCode, true);
                 builder.addField("Their name", "*Loading...*", true);
-                if (mains != null) {
+                if (!mains.isEmpty()) {
                     builder.addField("Their mains", mains, true);
                 }
 
