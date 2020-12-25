@@ -7,6 +7,7 @@ import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.IPermissionHolder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Arrays;
@@ -23,35 +24,19 @@ public abstract class AdminCodeManCommand extends CodeManCommand {
 
     public void handle(MessageReceivedEvent e) {
         if (Arrays.stream(GlobalVar.owners).anyMatch(owner -> e.getAuthor().getIdLong() == owner)) {
-            if (e.getTextChannel().getMemberPermissionOverrides().stream()
-                    .anyMatch(permissionOverride ->
-                            permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
-                            ( // WHEN ITS NOT A BOT AND NOT AN OWNER
-                                    !permissionOverride.getMember().getUser().isBot() &&
-                                    !Arrays.stream(GlobalVar.owners).anyMatch(owner -> permissionOverride.getMember().getIdLong() == owner)
-                            )
-                    )
-                || e.getTextChannel().getRolePermissionOverrides().stream()
-                    .anyMatch(permissionOverride -> {
-                        System.out.println(permissionOverride.getRole().getName() + permissionOverride.getRole().hasPermission(e.getTextChannel(), Permission.MESSAGE_READ));
-                        return !permissionOverride.getRole().isPublicRole() &&
-                                permissionOverride.getRole().hasPermission(e.getTextChannel(), Permission.MESSAGE_READ) &&
-                        e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(member ->
-                                !member.getUser().isBot() &&
-                                        !Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() == owner)
-                        );
-                    })
-            ) {
-                e.getMessage().delete().queue();
+            for (Member member : e.getTextChannel().getMembers()) {
+                if (!member.getUser().isBot() && !Arrays.stream(GlobalVar.owners).anyMatch(owner -> owner == member.getIdLong())) {
+                    e.getMessage().delete().queue();
 
-                EmbedBuilder builder = new EmbedBuilder();
-                builder.setColor(GlobalVar.ERROR);
-                builder.setDescription("You aren't allowed to send admin only commands in a public channel!");
-                e.getAuthor().openPrivateChannel().queue(channel ->
-                   channel.sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES))
-                );
+                    EmbedBuilder builder = new EmbedBuilder();
+                    builder.setColor(GlobalVar.ERROR);
+                    builder.setDescription("You aren't allowed to send admin only commands in a public channel!");
+                    e.getAuthor().openPrivateChannel().queue(channel ->
+                            channel.sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES))
+                    );
 
-                return;
+                    return;
+                }
             }
             handleOnSuccess(e);
         }
