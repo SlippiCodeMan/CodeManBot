@@ -99,12 +99,14 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 return;
             }
         } else if (PatternChecker.isConnectCode(user)) {
-/*             String mains = DatabaseBridge.getMains(mentionedMember.getIdLong()).stream()
+            String mains = DatabaseBridge.getMains(DatabaseBridge.getDiscordIdFromConnectCode(user)).stream()
                     .map(main -> "<:" + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
                             + ":" + main.getEmoteId() + ">")
                     .collect(Collectors.joining(" "));
- */
             builder.addField("Their name", "*Loading...*", false);
+            if (!mains.isEmpty()) {
+                builder.addField("Their mains", mains, false);
+            }
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 EmbedBuilder newBuilder = new EmbedBuilder();
@@ -114,6 +116,9 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     newBuilder.setColor(GlobalVar.ERROR);
                 } else {
                     newBuilder.addField("Their name", name, true);
+                    if (!mains.isEmpty()) {
+                        builder.addField("Their mains", mains, false);
+                    }
                     newBuilder.setColor(GlobalVar.SUCCESS);
                 }
 
