@@ -117,7 +117,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 } else {
                     newBuilder.addField("Their name", name, true);
                     if (!mains.isEmpty()) {
-                        builder.addField("Their mains", mains, false);
+                        newBuilder.addField("Their mains", mains, false);
                     }
                     newBuilder.setColor(GlobalVar.SUCCESS);
                 }
