@@ -25,6 +25,7 @@ public class Application {
 
         // EVENTS
         final CommandHandler handler = new CommandHandler(
+                // USER COMMANDS
                 new ConnectCommand(new CodeManArgumentSet().setNecessaryArguments("code"),
                         "Connects your slippi account by using your connect code ", "connect"),
                 new InfoCommand(new CodeManArgumentSet().setOptionalArguments("user").setLastArgumentVarArg(),
@@ -32,11 +33,15 @@ public class Application {
                 new WhoisCommand(new CodeManArgumentSet().setNecessaryArguments("user").setLastArgumentVarArg(),
                         "Shows the discord username based of a slippi username/connect code", "whois", "wi"),
                 new MainCommand(new CodeManArgumentSet().setOptionalArguments("char").setLastArgumentVarArg(),
-                        "Toggle a character main", "main", "m"),
+                        "Toggle a character main", "main", "mains", "m"),
                 new AskCommand("Asks for you if someone wants you to play", "ask", "a"),
                 new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect"),
+
+                // DEPRECATED COMMANDS
                 new DeprecatedCodeManCommand("info","code", "c"),
                 new DeprecatedCodeManCommand("info","name", "n"),
+
+                // ADMIN COMMANDS
                 new StatsCommand("stats")
         );
 
