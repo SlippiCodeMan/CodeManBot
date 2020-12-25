@@ -4,6 +4,7 @@ import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
+import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import io.fluentcoding.codemanbot.util.paging.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -44,6 +45,18 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
                     String name = SlippiBridge.getName(retrievedCode);
                     newBuilder.addField("Your name", name, true);
+
+                    String mains = DatabaseBridge.getMains(e.getAuthor().getIdLong())
+                                        .stream()
+                                        .map(main -> "<:" + main.getName()
+                                                .replaceAll("\\s+", "_")
+                                                .replaceAll("[&.-]", "").toLowerCase() +
+                                                ":" + main.getEmoteId() + ">")
+                                        .collect(Collectors.joining(" "));
+
+                    if (mains != null) {
+                        newBuilder.addField("Your mains", mains, true);
+                    }
 
                     newBuilder.setColor(GlobalVar.SUCCESS);
                     msg.editMessage(newBuilder.build()).queue();
