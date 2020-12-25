@@ -71,7 +71,7 @@ public class MainCommand extends CodeManCommandWithArgs {
                                         ":" + main.getEmoteId() + ">")
                                 .collect(Collectors.joining(" ")), false);
                     if (result.isAdding()) {
-                        builder.setFooter(Application.EXEC_MODE.getCommandPrefix() + "main " + characterInput +  " to remove this main");
+                        builder.setFooter(Application.EXEC_MODE.getCommandPrefix() + "main " + args.get("char") +  " to remove this main");
                     }
 
                 } else {
