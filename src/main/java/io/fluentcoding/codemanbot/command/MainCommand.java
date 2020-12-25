@@ -1,10 +1,8 @@
 package io.fluentcoding.codemanbot.command;
 
+import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
-import io.fluentcoding.codemanbot.util.ActivityUpdater;
-import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import io.fluentcoding.codemanbot.util.PatternChecker;
+import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -55,26 +53,31 @@ public class MainCommand extends CodeManCommandWithArgs {
                 DatabaseBridge.ToggleMainResult result = DatabaseBridge.toggleMain(e.getAuthor().getIdLong(), character);
 
                 if (result.isAccepted()) {
-                    builder.setColor(GlobalVar.SUCCESS);
-                    builder.setDescription("Operation done!");
-                    builder.addField("Old mains", result.getOldMains() == null ? "" :
-                            result.getOldMains()
-                                    .stream()
-                                    .map(main -> "<:" + main.getName()
-                                            .replaceAll("\\s+", "_")
-                                            .replaceAll("[&.-]", "").toLowerCase() +
-                                            ":" + main.getEmoteId() + ">")
-                                    .collect(Collectors.joining(" ")), false);
-                    builder.addField("New mains", result.getNewMains()
-                            .stream()
-                            .map(main -> "<:" + main.getName()
-                                    .replaceAll("\\s+", "_")
-                                    .replaceAll("[&.-]", "").toLowerCase() +
-                                    ":" + main.getEmoteId() + ">")
-                            .collect(Collectors.joining(" ")), false);
+                        builder.setColor(GlobalVar.SUCCESS);
+                        builder.setDescription("Operation done!");
+                        builder.addField("Old mains", result.getOldMains() == null ? "" :
+                                result.getOldMains()
+                                        .stream()
+                                        .map(main -> "<:" + main.getName()
+                                                .replaceAll("\\s+", "_")
+                                                .replaceAll("[&.-]", "").toLowerCase() +
+                                                ":" + main.getEmoteId() + ">")
+                                        .collect(Collectors.joining(" ")), false);
+                        builder.addField("New mains", result.getNewMains()
+                                .stream()
+                                .map(main -> "<:" + main.getName()
+                                        .replaceAll("\\s+", "_")
+                                        .replaceAll("[&.-]", "").toLowerCase() +
+                                        ":" + main.getEmoteId() + ">")
+                                .collect(Collectors.joining(" ")), false);
+                                if (!result.isAdding()) {
+                                    builder.setFooter("use " + Application.EXEC_MODE.getCommandPrefix() + "main " + character +  " to remove this main");
+                                }
+
                 } else {
                     builder.setColor(GlobalVar.ERROR);
                     builder.setDescription("Operation failed! You aren't allowed to have more than 3 mains!");
+                    builder.setFooter("use " + Application.EXEC_MODE.getCommandPrefix() + "main <character> to remove one of your mains");
                     builder.addField("Your mains", result.getOldMains()
                             .stream()
                             .map(main -> "<:" + main.getName()

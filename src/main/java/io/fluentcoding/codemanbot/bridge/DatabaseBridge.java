@@ -28,20 +28,22 @@ public class DatabaseBridge {
             if (oldMains == null) {
                 newMains = new ArrayList<>();
                 newMains.add(main);
+                return ToggleMainResult.acceptedAndFirstCreation(newMains);
             } else {
                 newMains = new ArrayList<>(oldMains);
                 if (newMains.contains(main)) {
                     newMains.remove(main);
+                    return ToggleMainResult.acceptedAndRemoved(oldMains, newMains);
                 } else {
                     if (newMains.size() >= 3)
-                        return ToggleMainResult.listFull(oldMains);
+                        return ToggleMainResult.DeclinedAndlistFull(oldMains);
                     newMains.add(main);
                 }
             }
 
             BasicDBObject filter = new BasicDBObject("discord_id", discordId);
             codeManCollection.updateOne(filter, Updates.set("mains", newMains.stream().map(ssbmCharacter -> ssbmCharacter.ordinal()).collect(Collectors.toList())));
-            return ToggleMainResult.accepted(oldMains, newMains);
+            return ToggleMainResult.acceptedAndAdded(oldMains, newMains);
         }
     }
 
@@ -156,12 +158,19 @@ public class DatabaseBridge {
         private final List<SSBMCharacter> oldMains;
         private final List<SSBMCharacter> newMains;
         private final boolean isAccepted;
+        private final boolean isAdding;
 
-        public static ToggleMainResult listFull(List<SSBMCharacter> oldMains) {
-            return new ToggleMainResult(oldMains, null, false);
+        public static ToggleMainResult DeclinedAndlistFull(List<SSBMCharacter> oldMains) {
+            return new ToggleMainResult(oldMains, null, false, false);
         }
-        public static ToggleMainResult accepted(List<SSBMCharacter> oldMains, List<SSBMCharacter> newMains) {
-            return new ToggleMainResult(oldMains, newMains, true);
+        public static ToggleMainResult acceptedAndAdded(List<SSBMCharacter> oldMains, List<SSBMCharacter> newMains) {
+            return new ToggleMainResult(oldMains, newMains, true, true);
+        }
+        public static ToggleMainResult acceptedAndRemoved(List<SSBMCharacter> oldMains, List<SSBMCharacter> newMains) {
+            return new ToggleMainResult(oldMains, newMains, true, false);
+        }
+        public static ToggleMainResult acceptedAndFirstCreation(List<SSBMCharacter> newMains) {
+            return new ToggleMainResult(null, newMains, true, true);
         }
     }
 }
