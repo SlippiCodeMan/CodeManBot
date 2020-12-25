@@ -28,11 +28,11 @@ public class MainCommand extends CodeManCommandWithArgs {
 
             builder.setColor(GlobalVar.SUCCESS);
             String mains = result.stream()
-                                 .map(main -> "<:" + main.getName()
-                                       .replaceAll("\\s+", "_")
-                                       .replaceAll("[&.-]", "").toLowerCase()
-                                       + ":" + main.getEmoteId() + ">")
-                                  .collect(Collectors.joining(" "));
+                    .map(main -> "<:" + main.getName()
+                            .replaceAll("\\s+", "_")
+                            .replaceAll("[&.-]", "").toLowerCase()
+                            + ":" + main.getEmoteId() + ">")
+                    .collect(Collectors.joining(" "));
             builder.addField("Your mains", mains.isEmpty() ? "*None*" : mains, false);
         }
         else {
@@ -56,19 +56,19 @@ public class MainCommand extends CodeManCommandWithArgs {
                         builder.setColor(GlobalVar.SUCCESS);
                         builder.setDescription("Operation done!");
                         String oldMains = result.getOldMains()
-                                                .stream()
-                                                .map(main -> "<:" + main.getName()
-                                                        .replaceAll("\\s+", "_")
-                                                        .replaceAll("[&.-]", "").toLowerCase() +
-                                                        ":" + main.getEmoteId() + ">")
-                                                .collect(Collectors.joining(" "));
+                                .stream()
+                                .map(main -> "<:" + main.getName()
+                                        .replaceAll("\\s+", "_")
+                                        .replaceAll("[&.-]", "").toLowerCase() +
+                                        ":" + main.getEmoteId() + ">")
+                                .collect(Collectors.joining(" "));
                         String newMains = result.getNewMains()
-                                                .stream()
-                                                .map(main -> "<:" + main.getName()
-                                                        .replaceAll("\\s+", "_")
-                                                        .replaceAll("[&.-]", "").toLowerCase() +
-                                                        ":" + main.getEmoteId() + ">")
-                                                .collect(Collectors.joining(" "));
+                                .stream()
+                                .map(main -> "<:" + main.getName()
+                                        .replaceAll("\\s+", "_")
+                                        .replaceAll("[&.-]", "").toLowerCase() +
+                                        ":" + main.getEmoteId() + ">")
+                                .collect(Collectors.joining(" "));
 
                         builder.addField("Old mains", oldMains.isEmpty() ? "*None*" : oldMains, false);
                         builder.addField("New mains", newMains.isEmpty() ? "*None*" : newMains, false);
@@ -83,10 +83,10 @@ public class MainCommand extends CodeManCommandWithArgs {
                     builder.addField("Your mains", result.getOldMains()
                             .stream()
                             .map(main -> "<:" + main.getName()
-                                                    .replaceAll("\\s+", "_")
-                                                    .replaceAll("[&.-]", "").toLowerCase()
-                                                    + ":" + main.getEmoteId() + ">")
-                                                    .collect(Collectors.joining(" ")), false);
+                                    .replaceAll("\\s+", "_")
+                                    .replaceAll("[&.-]", "").toLowerCase()
+                                    + ":" + main.getEmoteId() + ">")
+                            .collect(Collectors.joining(" ")), false);
                 }
             } else {
                 builder.setColor(GlobalVar.ERROR);
