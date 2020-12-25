@@ -23,17 +23,17 @@ public abstract class AdminCodeManCommand extends CodeManCommand {
             if (e.getTextChannel().getMemberPermissionOverrides().stream()
                     .anyMatch(permissionOverride ->
                             permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
-                            ( // WHEN ITS NOT A BOT OR AN OWNER
-                                    !permissionOverride.getMember().getUser().isBot() ||
+                            ( // WHEN ITS NOT A BOT AND NOT AN OWNER
+                                    !permissionOverride.getMember().getUser().isBot() &&
                                     Arrays.stream(GlobalVar.owners).anyMatch(owner -> permissionOverride.getMember().getIdLong() != owner)
                             )
                     )
                 || e.getTextChannel().getRolePermissionOverrides().stream()
                     .anyMatch(permissionOverride ->
                             permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
-                            ( // WHEN ITS NOT A BOT OR AN OWNER
-                                    e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(
-                                            member -> !member.getUser().isBot() ||
+                            ( // WHEN ITS NOT A BOT AND NOT AN OWNER
+                                    e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(member ->
+                                            !member.getUser().isBot() &&
                                             Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() != owner)
                                     )
                             )
