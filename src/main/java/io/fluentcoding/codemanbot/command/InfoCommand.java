@@ -4,7 +4,6 @@ import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
-import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import io.fluentcoding.codemanbot.util.paging.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
