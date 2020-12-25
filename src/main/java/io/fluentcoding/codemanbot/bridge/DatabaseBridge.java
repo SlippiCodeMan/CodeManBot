@@ -22,24 +22,26 @@ public class DatabaseBridge {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
-            List<SSBMCharacter> mains = getMains(discordId);
+            List<SSBMCharacter> oldMains = getMains(discordId);
+            List<SSBMCharacter> newMains;
 
-            if (mains == null) {
-                mains = new ArrayList<>();
-                mains.add(main);
+            if (oldMains == null) {
+                newMains = new ArrayList<>();
+                newMains.add(main);
             } else {
-                if (mains.contains(main)) {
-                    mains.remove(main);
+                newMains = new ArrayList<>(oldMains);
+                if (newMains.contains(main)) {
+                    newMains.remove(main);
                 } else {
-                    if (mains.size() >= 3)
-                        return ToggleMainResult.listFull(mains);
-                    mains.add(main);
+                    if (newMains.size() >= 3)
+                        return ToggleMainResult.listFull(oldMains);
+                    newMains.add(main);
                 }
             }
 
             BasicDBObject filter = new BasicDBObject("discord_id", discordId);
-            codeManCollection.updateOne(filter, Updates.set("mains", mains.stream().map(ssbmCharacter -> ssbmCharacter.ordinal()).collect(Collectors.toList())));
-            return ToggleMainResult.accepted(mains);
+            codeManCollection.updateOne(filter, Updates.set("mains", newMains.stream().map(ssbmCharacter -> ssbmCharacter.ordinal()).collect(Collectors.toList())));
+            return ToggleMainResult.accepted(oldMains, newMains);
         }
     }
 
@@ -151,14 +153,15 @@ public class DatabaseBridge {
 
     @Data
     public static class ToggleMainResult {
-        private final List<SSBMCharacter> mains;
+        private final List<SSBMCharacter> oldMains;
+        private final List<SSBMCharacter> newMains;
         private final boolean isAccepted;
 
         public static ToggleMainResult listFull(List<SSBMCharacter> oldMains) {
-            return new ToggleMainResult(oldMains, false);
+            return new ToggleMainResult(oldMains, null, false);
         }
-        public static ToggleMainResult accepted(List<SSBMCharacter> oldMains) {
-            return new ToggleMainResult(oldMains, true);
+        public static ToggleMainResult accepted(List<SSBMCharacter> oldMains, List<SSBMCharacter> newMains) {
+            return new ToggleMainResult(oldMains, newMains, true);
         }
     }
 }

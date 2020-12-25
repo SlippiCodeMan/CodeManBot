@@ -40,10 +40,12 @@ public class MainCommand extends CodeManCommandWithArgs {
             if (result.isAccepted()) {
                 builder.setColor(GlobalVar.SUCCESS);
                 builder.setDescription("Operation done!");
+                builder.addField("Old mains", result.getOldMains().stream().map(main -> main.getName()).collect(Collectors.joining(", ")), true);
+                builder.addField("New mains", result.getNewMains().stream().map(main -> main.getName()).collect(Collectors.joining(", ")), true);
             } else {
                 builder.setColor(GlobalVar.ERROR);
                 builder.setDescription("Operation failed! You aren't allowed to have more than 3 mains!");
-                builder.addField("Your mains", result.getMains().stream().map(main -> main.getName()).collect(Collectors.joining(" ")), true);
+                builder.addField("Your mains", result.getOldMains().stream().map(main -> main.getName()).collect(Collectors.joining(", ")), true);
             }
         } else {
             builder.setColor(GlobalVar.ERROR);
