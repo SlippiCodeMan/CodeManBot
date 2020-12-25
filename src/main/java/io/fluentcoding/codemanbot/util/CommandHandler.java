@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class CommandHandler extends ListenerAdapter {
@@ -43,7 +44,9 @@ public class CommandHandler extends ListenerAdapter {
                         event.getMessage().delete().queue();
                     } catch(ErrorResponseException e) {}
 
-                    event.getAuthor().openPrivateChannel().queue(channel -> channel.sendMessage(builder.build()).queue());
+                    event.getAuthor().openPrivateChannel().queue(channel -> channel.sendMessage(builder.build()).queue(temp -> {
+                        temp.delete().queueAfter(1, TimeUnit.MINUTES);
+                    }));
                     return;
                 }
                 command.handle(event);
