@@ -17,11 +17,11 @@ public class StatsCommand extends AdminCodeManCommand {
         SystemUtil.MemoryStats memoryStats = SystemUtil.memoryStats();
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.addField("Total memory", "**" + memoryStats.getTotalMemory() + "**MiB", true);
-        builder.addField("Maximum memory", "**" + memoryStats.getMaxMemory() + "**MiB", true);
-        builder.addField("Free memory", "**" + memoryStats.getFreeMemory() + "**MiB", true);
-        builder.addField("Used memory", "**" + memoryStats.getUsedMemory() + "**MiB", true);
-        builder.addField("Ping Discord API", "**" + e.getJDA().getGatewayPing() + "**Ms", true);
+        builder.addField("Total memory", "**" + memoryStats.getTotalMemory() + "**MiB", false);
+        builder.addField("Maximum memory", "**" + memoryStats.getMaxMemory() + "**MiB", false);
+        builder.addField("Free memory", "**" + memoryStats.getFreeMemory() + "**MiB", false);
+        builder.addField("Used memory", "**" + memoryStats.getUsedMemory() + "**MiB", false);
+        builder.addField("Discord API latency", "**" + e.getJDA().getGatewayPing() + "**ms", false);
         builder.setColor(GlobalVar.SUCCESS);
 
         e.getChannel().sendMessage(builder.build()).queue();
