@@ -36,7 +36,7 @@ public abstract class AdminCodeManCommand extends CodeManCommand {
                         return permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
                                 ( // WHEN ITS NOT A BOT AND NOT AN OWNER
                                         e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(member -> {
-                                            System.out.println(member.getUser().getAsTag());
+                                            System.out.println(member.getUser().getAsTag() + " " + !Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() == owner));
                                             return !member.getUser().isBot() &&
                                                     !Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() == owner);
                                         })
