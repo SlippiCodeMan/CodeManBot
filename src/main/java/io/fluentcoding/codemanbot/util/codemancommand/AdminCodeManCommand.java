@@ -27,21 +27,19 @@ public abstract class AdminCodeManCommand extends CodeManCommand {
                             permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
                             ( // WHEN ITS NOT A BOT AND NOT AN OWNER
                                     !permissionOverride.getMember().getUser().isBot() &&
-                                    Arrays.stream(GlobalVar.owners).anyMatch(owner -> permissionOverride.getMember().getIdLong() != owner)
+                                    !Arrays.stream(GlobalVar.owners).anyMatch(owner -> permissionOverride.getMember().getIdLong() == owner)
                             )
                     )
                 || e.getTextChannel().getRolePermissionOverrides().stream()
-                    .anyMatch(permissionOverride -> {
-                        System.out.println(permissionOverride.getRole().getName());
-                        return permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
+                    .anyMatch(permissionOverride ->
+                        permissionOverride.getAllowed().contains(Permission.MESSAGE_READ) && // WHEN MESSAGES READABLE
                                 ( // WHEN ITS NOT A BOT AND NOT AN OWNER
-                                        e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(member -> {
-                                            System.out.println(member.getUser().getAsTag() + " " + member.getIdLong());
-                                            return !member.getUser().isBot() &&
-                                                    Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() != owner);
-                                        })
-                                );
-                    })
+                                        e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(member ->
+                                            !member.getUser().isBot() &&
+                                                    !Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() == owner)
+                                        )
+                                )
+                    )
             ) {
                 e.getMessage().delete().queue();
 
