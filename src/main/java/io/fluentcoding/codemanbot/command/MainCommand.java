@@ -70,7 +70,7 @@ public class MainCommand extends CodeManCommandWithArgs {
                                         .replaceAll("[&.-]", "").toLowerCase() +
                                         ":" + main.getEmoteId() + ">")
                                 .collect(Collectors.joining(" ")), false);
-                    if (!result.isAdding()) {
+                    if (result.isAdding()) {
                         builder.setFooter(Application.EXEC_MODE.getCommandPrefix() + "main " + character.getName() +  " to remove this main");
                     }
 
