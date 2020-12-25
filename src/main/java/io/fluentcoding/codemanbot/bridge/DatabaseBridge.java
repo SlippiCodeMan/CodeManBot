@@ -40,28 +40,33 @@ public class DatabaseBridge {
         }
     }
 
-    public static boolean toggleMain(long discordId, SSBMCharacter main) {
+    public static ToogleMainResult toggleMain(long discordId, SSBMCharacter main) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             if (codeManCollection.countDocuments(new BasicDBObject("main", main)) > 0) {
-                return false;
+                return ToogleMainResult.declined();
             }
 
             BasicDBObject filter = new BasicDBObject("discord_id", discordId);
             FindIterable<Document> result = codeManCollection.find(filter);
             List<SSBMCharacter> oldMains = getMains(discordId);
             if (oldMains != null) {
-                if (oldMains.contains(main)) {
-                    codeManCollection.updateOne(filter, Updates.set("mains", oldMains.remove(main)));
+                if (oldMains.size() <= 3) {
+                    if (oldMains.contains(main)) {
+                        codeManCollection.updateOne(filter, Updates.set("mains", oldMains.remove(main)));
+                    } else {
+                        codeManCollection.updateOne(filter, Updates.set("mains", oldMains.add(main)));
+                    }
+                    return ToogleMainResult.accepted(oldMains);
                 } else {
-                    codeManCollection.updateOne(filter, Updates.set("mains", oldMains.add(main)));
+                    return ToogleMainResult.listFull(oldMains);
                 }
             } else {
                 List<SSBMCharacter> newMain = new ArrayList<>();
                 codeManCollection.insertOne(new Document("discord_id", discordId).append("slippi_code", newMain.add(main)));
+                return ToogleMainResult.acceptedAndFirstCreation();
             }
-            return true;
         }
     }
 
@@ -150,19 +155,22 @@ public class DatabaseBridge {
     }
 
     @Data
-    public static class InsertMainResult {
+    public static class ToogleMainResult {
         private final List<SSBMCharacter> oldMains;
         private final boolean isAccepted;
         private final boolean firstCreation;
 
-        public static InsertMainResult declined() {
-            return new InsertMainResult(null, false, false);
+        public static ToogleMainResult declined() {
+            return new ToogleMainResult(null, false, false);
         }
-        public static InsertMainResult accepted(List<SSBMCharacter> oldMains) {
-            return new InsertMainResult(oldMains, true, false);
+        public static ToogleMainResult listFull(List<SSBMCharacter> oldMains) {
+            return new ToogleMainResult(oldMains, false, false);
         }
-        public static InsertCodeResult acceptedAndFirstCreation() {
-            return new InsertCodeResult(null, true, true);
+        public static ToogleMainResult accepted(List<SSBMCharacter> oldMains) {
+            return new ToogleMainResult(oldMains, true, false);
+        }
+        public static ToogleMainResult acceptedAndFirstCreation() {
+            return new ToogleMainResult(null, true, true);
         }
     }
 }
