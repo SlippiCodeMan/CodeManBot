@@ -40,7 +40,7 @@ public class DatabaseBridge {
                     if (newMains.size() >= 3)
                         return ToggleMainResult.DeclinedAndlistFull(oldMains);
                     newMains.add(main);
-                    result = ToggleMainResult.acceptedAndRemoved(oldMains, newMains);
+                    result = ToggleMainResult.acceptedAndAdded(oldMains, newMains);
                 }
             }
 
