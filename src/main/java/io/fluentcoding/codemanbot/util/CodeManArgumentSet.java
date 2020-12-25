@@ -12,7 +12,7 @@ public class CodeManArgumentSet {
     private String[] optionalArguments = new String[0];
     private boolean lastArgumentVarArgs = false;
 
-    protected Optional<Map<String, String>> toMap(String input) {
+    public Optional<Map<String, String>> toMap(String input) {
         Map<String, String> result = new HashMap<>();
 
         String lastArgument = null;
