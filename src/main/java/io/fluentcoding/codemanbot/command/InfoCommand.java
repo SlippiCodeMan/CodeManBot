@@ -99,7 +99,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 return;
             }
         } else if (PatternChecker.isConnectCode(user)) {
-            String mains = DatabaseBridge.getMains(DatabaseBridge.getDiscordIdFromConnectCode(user)).stream()
+            String mains = DatabaseBridge.getMains(DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase())).stream()
                     .map(main -> "<:" + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
                             + ":" + main.getEmoteId() + ">")
                     .collect(Collectors.joining(" "));
