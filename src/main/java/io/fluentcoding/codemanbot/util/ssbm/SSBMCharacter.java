@@ -8,36 +8,36 @@ import java.util.List;
 
 @Getter
 public enum SSBMCharacter {
-    DOCTOR_MARIO("Dr. Mario", 792019249329078273L, "doctormario", "doc", "drmario", "drm"),
-    MARIO("Mario", 792019249329078273L, "maria"),
-    LUIGI("Luigi", 792019249329078273L, "lugi", "luggi", "mariosbro"),
-    BOWSER("Bowser", 792019249329078273L, "bowser", "bowsa", "bowza", "bw"),
-    PEACH("Peach", 792013225696428052L, "peach", "marioswife"),
+    DOCTOR_MARIO("Dr. Mario", 791703555580100608L, "doctormario", "doc", "drmario", "drm"),
+    MARIO("Mario", 791703555220045826L, "maria"),
+    LUIGI("Luigi", 791703555567779852L, "lugi", "luggi", "mariosbro"),
+    BOWSER("Bowser", 791703555517055016L, "bowser", "bowsa", "bowza", "bw"),
+    PEACH("Peach", 791703555471310858L, "peach", "marioswife"),
     YOSHI("Yoshi", 791703555136421889L, "egg"),
-    DK("Donkey Kong", 792019249329078273L, "dk"),
-    CAPTAIN_FALCON("Captain Falcon", 792019249329078273L, "cptfalcon", "falcon"),
-    GANONDORF("Ganondorf", 792019249329078273L, "ganon", "dorf", "falconbutbad"),
-    FALCO("Falco", 792019249329078273L, "bird", "birdo", "falcolombardi"),
-    FOX("Fox", 791703555463053332L, "focks", "foxmccloud", "nojohns", "salt", "lilbeach"),
-    NESS("Ness", 792019249329078273L),
-    ICE_CLIMBERS("Ice Climbers", 792019249329078273L, "iceclimber", "icies", "ics", "ice", "climbers", "climber", "icec", "iclimbers", "iclimber"),
-    KIRBY("Kirby", 792019249329078273L, "kirbo", "puyo"),
+    DK("Donkey Kong", 791703555631218731L, "dk"),
+    CAPTAIN_FALCON("Captain Falcon", 791703555455189022L, "cptfalcon", "falcon"),
+    GANONDORF("Ganondorf", 791703555349807125L, "ganon", "dorf", "falconbutbad"),
+    FALCO("Falco", 791703555794403338L, "bird", "birdo", "falcolombardi"),
+    FOX("Fox", 791703556121034762L, "focks", "foxmccloud", "nojohns", "salt", "lilbeach"),
+    NESS("Ness", 791703555601989682L),
+    ICE_CLIMBERS("Ice Climbers", 791703555551133736L, "iceclimber", "icies", "ics", "ice", "climbers", "climber", "icec", "iclimbers", "iclimber"),
+    KIRBY("Kirby", 791703555572498432L, "kirbo", "puyo"),
     SAMUS("Samus", 791703555349676033L),
     ZELDA("Zelda", 791703555362258944L, "sheikbutbad"),
     SHEIK("Sheik", 791703555416260638L),
-    LINK("Link", 792019249329078273L, "biglink"),
-    YOUNG_LINK("Young Link", 792012968526217216L, "yl", "young", "ylink"),
+    LINK("Link", 791703555450863666L, "biglink"),
+    YOUNG_LINK("Young Link", 791703555463053332L, "yl", "young", "ylink"),
     PICHU("Pichu", 791703555358195714L, "pikabutbad"),
     PIKACHU("Pikachu", 791703555445882920L, "pika", "chu", "pikapika"),
-    JIGGLYPUFF("Jigglypuff", 792019249329078273L, "pummeluff", "puff", "overpowered", "jpuff", "jigglyp"),
-    MEWTWO("Mewtwo", 792019249329078273L, "m2", "jason"),
-    MRGAMEWATCH("Mr. Game & Watch", 792019249329078273L, "gnw", "gw", "mgnw", "mrgnw", "mrgw", "gameandwatch", "mrgameandwatch", "mrgamewatch", "gamewatch", "mrgamenwatch", "gamenwatch"),
-    MARTH("Marth", 792019249329078273L, "longgrab"),
+    JIGGLYPUFF("Jigglypuff", 791703555446800394L, "pummeluff", "puff", "overpowered", "jpuff", "jigglyp"),
+    MEWTWO("Mewtwo", 791703555462922251L, "m2", "jason"),
+    MRGAMEWATCH("Mr. Game & Watch", 791703555492544582L, "gnw", "gw", "mgnw", "mrgnw", "mrgw", "gameandwatch", "mrgameandwatch", "mrgamewatch", "gamewatch", "mrgamenwatch", "gamenwatch"),
+    MARTH("Marth", 791703555437756426L, "longgrab"),
     ROY("Roy", 791703555529900033L, "marthbutbad");
 
-    private String name;
-    private long emoteId;
-    private List<String> identifiers = new ArrayList<>();
+    private final String name;
+    private final long emoteId;
+    private final List<String> identifiers = new ArrayList<>();
 
     SSBMCharacter(String name, long emoteId, String... identifiers) {
         this.name = name;
