@@ -22,28 +22,31 @@ public class DatabaseBridge {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
+            ToggleMainResult result;
+
             List<SSBMCharacter> oldMains = getMains(discordId);
             List<SSBMCharacter> newMains;
 
             if (oldMains == null) {
                 newMains = new ArrayList<>();
                 newMains.add(main);
-                return ToggleMainResult.acceptedAndFirstCreation(newMains);
+                result = ToggleMainResult.acceptedAndFirstCreation(newMains);
             } else {
                 newMains = new ArrayList<>(oldMains);
                 if (newMains.contains(main)) {
                     newMains.remove(main);
-                    return ToggleMainResult.acceptedAndRemoved(oldMains, newMains);
+                    result = ToggleMainResult.acceptedAndRemoved(oldMains, newMains);
                 } else {
                     if (newMains.size() >= 3)
                         return ToggleMainResult.DeclinedAndlistFull(oldMains);
                     newMains.add(main);
+                    result = ToggleMainResult.acceptedAndRemoved(oldMains, newMains);
                 }
             }
 
             BasicDBObject filter = new BasicDBObject("discord_id", discordId);
             codeManCollection.updateOne(filter, Updates.set("mains", newMains.stream().map(ssbmCharacter -> ssbmCharacter.ordinal()).collect(Collectors.toList())));
-            return ToggleMainResult.acceptedAndAdded(oldMains, newMains);
+            return result;
         }
     }
 
