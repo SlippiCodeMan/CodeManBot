@@ -30,6 +30,10 @@ public class InfoCommand extends CodeManCommandWithArgs {
         boolean mentionedMemberIsAuthor = e.getMessage().getMentionedMembers().size() > 0 && e.getMessage().getMentionedMembers().get(0).getIdLong() == e.getAuthor().getIdLong();
         if (user == null || mentionedMemberIsAuthor) {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
+            String mains = DatabaseBridge.getMains(e.getAuthor().getIdLong()).stream()
+                    .map(main -> "<:" + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
+                            + ":" + main.getEmoteId() + ">")
+                    .collect(Collectors.joining(" "));
 
             if (retrievedCode == null) {
                 builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
@@ -37,6 +41,9 @@ public class InfoCommand extends CodeManCommandWithArgs {
             } else {
                 builder.addField("Your code", retrievedCode, true);
                 builder.addField("Your name", "*Loading...*", true);
+                if (mains != null) {
+                    builder.addField("Your mains", mains, true);
+                }
 
                 builder.setColor(GlobalVar.LOADING);
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
@@ -45,14 +52,6 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
                     String name = SlippiBridge.getName(retrievedCode);
                     newBuilder.addField("Your name", name, true);
-
-                    String mains = DatabaseBridge.getMains(e.getAuthor().getIdLong())
-                                        .stream()
-                                        .map(main -> "<:" + main.getName()
-                                                .replaceAll("\\s+", "_")
-                                                .replaceAll("[&.-]", "").toLowerCase() +
-                                                ":" + main.getEmoteId() + ">")
-                                        .collect(Collectors.joining(" "));
 
                     if (mains != null) {
                         newBuilder.addField("Your mains", mains, true);
@@ -67,6 +66,10 @@ public class InfoCommand extends CodeManCommandWithArgs {
         } else if (e.getMessage().getMentionedMembers().size() > 0) {
             Member mentionedMember = e.getMessage().getMentionedMembers().get(0);
             String retrievedCode = DatabaseBridge.getCode(mentionedMember.getIdLong());
+            String mains = DatabaseBridge.getMains(mentionedMember.getIdLong()).stream()
+                    .map(main -> "<:" + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
+                            + ":" + main.getEmoteId() + ">")
+                    .collect(Collectors.joining(" "));
 
             if (retrievedCode == null) {
                 builder.setDescription("This person didn't connect to CodeMan yet!");
@@ -74,6 +77,9 @@ public class InfoCommand extends CodeManCommandWithArgs {
             } else {
                 builder.addField("Their code", retrievedCode, true);
                 builder.addField("Their name", "*Loading...*", true);
+                if (mains != null) {
+                    builder.addField("Their mains", mains, true);
+                }
 
                 builder.setColor(GlobalVar.LOADING);
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
@@ -82,6 +88,10 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
                     String name = SlippiBridge.getName(retrievedCode);
                     newBuilder.addField("Their name", name, true);
+
+                    if (mains != null) {
+                        newBuilder.addField("Your mains", mains, true);
+                    }
 
                     newBuilder.setColor(GlobalVar.SUCCESS);
                     msg.editMessage(newBuilder.build()).queue();
