@@ -29,7 +29,13 @@ public class MainCommand extends CodeManCommandWithArgs {
             List<SSBMCharacter> result = DatabaseBridge.getMains(e.getAuthor().getIdLong());
 
             builder.setColor(GlobalVar.SUCCESS);
-            builder.addField("Your mains", result.stream().map(main -> main.getName()).collect(Collectors.joining(", ")), false);
+            builder.addField("Your mains", result
+                    .stream()
+                    .map(main -> "<:" + main.getName()
+                            .replaceAll("\\s+", "_")
+                            .replaceAll("[&.-]", "").toLowerCase() +
+                            ":" + main.getEmoteId() + ">")
+                    .collect(Collectors.joining(" ")), false);
         }
         else {
             characterInput = characterInput.replaceAll("[\\s-'.&]", "").toLowerCase();
