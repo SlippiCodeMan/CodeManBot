@@ -32,13 +32,15 @@ public abstract class AdminCodeManCommand extends CodeManCommand {
                             )
                     )
                 || e.getTextChannel().getRolePermissionOverrides().stream()
-                    .anyMatch(permissionOverride ->
-                            permissionOverride.getRole().hasPermission(e.getTextChannel(), Permission.MESSAGE_READ) &&
+                    .anyMatch(permissionOverride -> {
+                        System.out.println(permissionOverride.getRole().getName());
+                        return !permissionOverride.getRole().isPublicRole() &&
+                                permissionOverride.getRole().hasPermission(e.getTextChannel(), Permission.MESSAGE_READ) &&
                         e.getGuild().getMembersWithRoles(permissionOverride.getRole()).stream().anyMatch(member ->
-                            !member.getUser().isBot() &&
-                            !Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() == owner)
-                        )
-                    )
+                                !member.getUser().isBot() &&
+                                        !Arrays.stream(GlobalVar.owners).anyMatch(owner -> member.getIdLong() == owner)
+                        );
+                    })
             ) {
                 e.getMessage().delete().queue();
 
