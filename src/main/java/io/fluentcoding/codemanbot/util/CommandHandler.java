@@ -34,7 +34,6 @@ public class CommandHandler extends ListenerAdapter {
         for (CodeManCommand command : commands) {
             if (isCommand(msg, command.getName()) ||
                     Arrays.stream(command.getAliases()).anyMatch(alias -> isCommand(msg, alias))) {
-                System.out.println(msg);
                 if (!AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
