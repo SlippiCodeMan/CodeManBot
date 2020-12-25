@@ -41,7 +41,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             } else {
                 builder.addField("Your code", retrievedCode, true);
                 builder.addField("Your name", "*Loading...*", true);
-                if (mains != null) {
+                if (!mains.isEmpty()) {
                     builder.addField("Your mains", mains, true);
                 }
 
@@ -89,8 +89,8 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     String name = SlippiBridge.getName(retrievedCode);
                     newBuilder.addField("Their name", name, true);
 
-                    if (mains != null) {
-                        newBuilder.addField("Your mains", mains, true);
+                    if (!mains.isEmpty()) {
+                        newBuilder.addField("Their mains", mains, true);
                     }
 
                     newBuilder.setColor(GlobalVar.SUCCESS);
@@ -99,6 +99,11 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 return;
             }
         } else if (PatternChecker.isConnectCode(user)) {
+/*             String mains = DatabaseBridge.getMains(mentionedMember.getIdLong()).stream()
+                    .map(main -> "<:" + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
+                            + ":" + main.getEmoteId() + ">")
+                    .collect(Collectors.joining(" "));
+ */
             builder.addField("Their name", "*Loading...*", false);
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
