@@ -34,6 +34,7 @@ public class CommandHandler extends ListenerAdapter {
         for (CodeManCommand command : commands) {
             if (isCommand(msg, command.getName()) ||
                     Arrays.stream(command.getAliases()).anyMatch(alias -> isCommand(msg, alias))) {
+                System.out.println(msg);
                 if (!AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
@@ -45,23 +46,6 @@ public class CommandHandler extends ListenerAdapter {
 
                     event.getAuthor().openPrivateChannel().queue(channel -> channel.sendMessage(builder.build()).queue());
                     return;
-                }
-                if (command instanceof CodeManCommandWithArgs) {
-                    CodeManCommandWithArgs argsCommand = (CodeManCommandWithArgs) command;
-                    Optional<Map<String, String>> args = argsCommand.getArgumentSet().toMap(msg);
-
-                    if (args.isPresent()) {
-                        argsCommand.handle(event, args.get());
-                    } else {
-                        // SHOW SYNTAX ERROR
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.setDescription("Syntax Error!");
-                        builder.addField("Input", msg, false);
-                        builder.addField("Correct Usage - () = Aliases | <> = Necessary Argument | [] = Optional Argument", argsCommand.getHelpTitle(), false);
-                        builder.setColor(GlobalVar.ERROR);
-
-                        event.getChannel().sendMessage(builder.build()).queue();
-                    }
                 }
                 command.handle(event);
                 return;
