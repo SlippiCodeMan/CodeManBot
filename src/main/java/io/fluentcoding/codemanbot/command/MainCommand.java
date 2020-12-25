@@ -27,12 +27,12 @@ public class MainCommand extends CodeManCommandWithArgs {
             List<SSBMCharacter> result = DatabaseBridge.getMains(e.getAuthor().getIdLong());
 
             builder.setColor(GlobalVar.SUCCESS);
-            builder.addField("Your mains", result
-                    .stream()
+            builder.addField("Your mains", result == null ? "*None*" :
+                    result.stream()
                     .map(main -> "<:" + main.getName()
                             .replaceAll("\\s+", "_")
-                            .replaceAll("[&.-]", "").toLowerCase() +
-                            ":" + main.getEmoteId() + ">")
+                            .replaceAll("[&.-]", "").toLowerCase()
+                            + ":" + main.getEmoteId() + ">")
                     .collect(Collectors.joining(" ")), false);
         }
         else {
@@ -55,7 +55,7 @@ public class MainCommand extends CodeManCommandWithArgs {
                 if (result.isAccepted()) {
                         builder.setColor(GlobalVar.SUCCESS);
                         builder.setDescription("Operation done!");
-                        builder.addField("Old mains", result.getOldMains() == null ? "" :
+                        builder.addField("Old mains", result.getOldMains() == null ? "*None*" :
                                 result.getOldMains()
                                         .stream()
                                         .map(main -> "<:" + main.getName()
@@ -63,13 +63,14 @@ public class MainCommand extends CodeManCommandWithArgs {
                                                 .replaceAll("[&.-]", "").toLowerCase() +
                                                 ":" + main.getEmoteId() + ">")
                                         .collect(Collectors.joining(" ")), false);
-                        builder.addField("New mains", result.getNewMains()
-                                .stream()
-                                .map(main -> "<:" + main.getName()
-                                        .replaceAll("\\s+", "_")
-                                        .replaceAll("[&.-]", "").toLowerCase() +
-                                        ":" + main.getEmoteId() + ">")
-                                .collect(Collectors.joining(" ")), false);
+                        builder.addField("New mains", result.getNewMains() == null ? "*None*" :
+                                result.getNewMains()
+                                    .stream()
+                                    .map(main -> "<:" + main.getName()
+                                            .replaceAll("\\s+", "_")
+                                            .replaceAll("[&.-]", "").toLowerCase()
+                                            + ":" + main.getEmoteId() + ">")
+                                    .collect(Collectors.joining(" ")), false);
                     if (result.isAdding()) {
                         builder.setFooter(Application.EXEC_MODE.getCommandPrefix() + "main " + args.get("char") +  " to remove this main");
                     }
@@ -82,8 +83,8 @@ public class MainCommand extends CodeManCommandWithArgs {
                             .stream()
                             .map(main -> "<:" + main.getName()
                                     .replaceAll("\\s+", "_")
-                                    .replaceAll("[&.-]", "").toLowerCase() +
-                                    ":" + main.getEmoteId() + ">")
+                                    .replaceAll("[&.-]", "").toLowerCase()
+                                    + ":" + main.getEmoteId() + ">")
                             .collect(Collectors.joining(" ")), false);
                 }
             } else {
