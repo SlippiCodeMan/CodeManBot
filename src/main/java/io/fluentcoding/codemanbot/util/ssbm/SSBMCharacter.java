@@ -2,6 +2,7 @@ package io.fluentcoding.codemanbot.util.ssbm;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public enum SSBMCharacter {
     ROY("Roy", "marthbutbad");
 
     private String name;
-    private List<String> identifiers;
+    private List<String> identifiers = new ArrayList<>();
 
     SSBMCharacter(String name, String... identifiers) {
         this.name = name;
