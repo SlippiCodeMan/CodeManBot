@@ -31,7 +31,9 @@ public class InfoCommand extends CodeManCommandWithArgs {
         if (user == null || mentionedMemberIsAuthor) {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
             String mains = DatabaseBridge.getMains(e.getAuthor().getIdLong()).stream()
-                    .map(main -> "<:" + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
+                    .map(main -> "<:" + main.getName()
+                            .replaceAll("\\s+", "_")
+                            .replaceAll("[&.-]", "").toLowerCase()
                             + ":" + main.getEmoteId() + ">")
                     .collect(Collectors.joining(" "));
 
@@ -67,7 +69,9 @@ public class InfoCommand extends CodeManCommandWithArgs {
             Member mentionedMember = e.getMessage().getMentionedMembers().get(0);
             String retrievedCode = DatabaseBridge.getCode(mentionedMember.getIdLong());
             String mains = DatabaseBridge.getMains(mentionedMember.getIdLong()).stream()
-                    .map(main -> "<:" + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
+                    .map(main -> "<:" + main.getName()
+                            .replaceAll("\\s+", "_")
+                            .replaceAll("[&.-]", "").toLowerCase()
                             + ":" + main.getEmoteId() + ">")
                     .collect(Collectors.joining(" "));
 
@@ -99,13 +103,22 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 return;
             }
         } else if (PatternChecker.isConnectCode(user)) {
-            String mains = DatabaseBridge.getMains(DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase())).stream()
-                    .map(main -> "<:" + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
-                            + ":" + main.getEmoteId() + ">")
-                    .collect(Collectors.joining(" "));
-            builder.addField("Their name", "*Loading...*", false);
-            if (!mains.isEmpty()) {
-                builder.addField("Their mains", mains, false);
+            long discordID = DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase());
+            builder.addField("Their name", "*Loading...*", true);
+            String mains;
+            if (discordID == -1) {
+                mains = "";
+            } else {
+                mains = DatabaseBridge.getMains(discordID)
+                        .stream()
+                        .map(main -> "<:" + main.getName()
+                                .replaceAll("\\s+", "_")
+                                .replaceAll("[&.-]", "").toLowerCase()
+                                + ":" + main.getEmoteId() + ">")
+                        .collect(Collectors.joining(" "));
+                if (!mains.isEmpty()) {
+                    builder.addField("Their mains", mains, true);
+                }
             }
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
@@ -117,7 +130,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 } else {
                     newBuilder.addField("Their name", name, true);
                     if (!mains.isEmpty()) {
-                        newBuilder.addField("Their mains", mains, false);
+                        newBuilder.addField("Their mains", mains, true);
                     }
                     newBuilder.setColor(GlobalVar.SUCCESS);
                 }
@@ -138,7 +151,16 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 } else {
                     if (codes.size() == 1) {
                         SlippiBridge.UserEntry entry = codes.get(0);
-                        newBuilder.addField("Their code", entry.getDisplayName() == null ? entry.getCode() : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()), false);
+                        String mains = DatabaseBridge
+                                .getMains(DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase())).stream()
+                                .map(main -> "<:"
+                                        + main.getName().replaceAll("\\s+", "_").replaceAll("[&.-]", "").toLowerCase()
+                                        + ":" + main.getEmoteId() + ">")
+                                .collect(Collectors.joining(" "));
+                        newBuilder.addField("Their code",
+                                entry.getDisplayName() == null ? entry.getCode()
+                                        : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()),
+                                false);
                         newBuilder.setColor(GlobalVar.SUCCESS);
                     } else {
                         List<String> result = codes.stream()
