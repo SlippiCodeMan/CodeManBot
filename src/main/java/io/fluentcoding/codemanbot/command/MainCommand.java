@@ -70,14 +70,14 @@ public class MainCommand extends CodeManCommandWithArgs {
                                         .replaceAll("[&.-]", "").toLowerCase() +
                                         ":" + main.getEmoteId() + ">")
                                 .collect(Collectors.joining(" ")), false);
-                                if (!result.isAdding()) {
-                                    builder.setFooter("use " + Application.EXEC_MODE.getCommandPrefix() + "main " + character +  " to remove this main");
-                                }
+                    if (!result.isAdding()) {
+                        builder.setFooter(Application.EXEC_MODE.getCommandPrefix() + "main " + character.getName() +  " to remove this main");
+                    }
 
                 } else {
                     builder.setColor(GlobalVar.ERROR);
                     builder.setDescription("Operation failed! You aren't allowed to have more than 3 mains!");
-                    builder.setFooter("use " + Application.EXEC_MODE.getCommandPrefix() + "main <character> to remove one of your mains");
+                    builder.setFooter(Application.EXEC_MODE.getCommandPrefix() + "main <character> to remove one of your mains");
                     builder.addField("Your mains", result.getOldMains()
                             .stream()
                             .map(main -> "<:" + main.getName()
