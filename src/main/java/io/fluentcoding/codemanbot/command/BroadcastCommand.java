@@ -20,20 +20,22 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BroadcastCommand extends AdminCodeManCommand {
-    private List<BroadcastMode> broadcastModes = new ArrayList<>();
+    public static List<BroadcastMode> broadcastModes = new ArrayList<>();
+
+    static {
+        broadcastModes.add(new BroadcastMode("To all owners", (jda) ->
+                jda.getGuilds().stream().map(guild -> guild.getOwner().getUser()).collect(Collectors.toList())
+        ));
+        broadcastModes.add(new BroadcastMode("To all connected members", (jda) ->
+                DatabaseBridge.getAllDiscordIds().stream().map(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
+        ));
+        broadcastModes.add(new BroadcastMode("To devs", (jda) ->
+                Arrays.stream(GlobalVar.owners).mapToObj(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
+        ));
+    }
 
     public BroadcastCommand(String name, String... aliases) {
         super(name, aliases);
-
-        broadcastModes.add(new BroadcastMode(StringUtil.getNumberedEmoji(1), "To all owners", (jda) ->
-            jda.getGuilds().stream().map(guild -> guild.getOwner().getUser()).collect(Collectors.toList())
-        ));
-        broadcastModes.add(new BroadcastMode(StringUtil.getNumberedEmoji(2), "To all connected members", (jda) ->
-            DatabaseBridge.getAllDiscordIds().stream().map(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
-        ));
-        broadcastModes.add(new BroadcastMode(StringUtil.getNumberedEmoji(3), "To devs", (jda) ->
-            Arrays.stream(GlobalVar.owners).mapToObj(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
-        ));
     }
 
     @Override
@@ -57,17 +59,29 @@ public class BroadcastCommand extends AdminCodeManCommand {
                 broadcastModes.stream().map(mode -> mode.getEmote() + " " + mode.getDescription()).collect(Collectors.joining("\n")));
         builder.appendDescription("\n" + GlobalVar.CANCEL_EMOJI + " Cancel broadcast");
         e.getChannel().sendMessage(builder.build()).queue(msg -> {
-            BroadcastContainer.INSTANCE.broadcastHandler(e.getMessage().getIdLong(), msg.getIdLong());
+            BroadcastContainer.INSTANCE.broadcastHandler(e.getChannel().getIdLong(), e.getMessage().getIdLong(), msg.getIdLong());
             broadcastModes.stream().forEachOrdered(mode -> msg.addReaction(mode.emote).queue());
             msg.addReaction(GlobalVar.CANCEL_EMOJI).queue();
         });
     }
 
-    @AllArgsConstructor
     @Getter
     public static class BroadcastMode {
+        private static int lastDigit = 0;
+
         private String emote;
         private String description;
         private Function<JDA, List<User>> fetcher;
+
+        public BroadcastMode(String description, Function<JDA, List<User>> fetcher) {
+            this.emote = nextAvailableDigit();
+            this.description = description;
+            this.fetcher = fetcher;
+        }
+
+        private String nextAvailableDigit() {
+            lastDigit++;
+            return StringUtil.getNumberedEmoji(lastDigit);
+        }
     }
 }
