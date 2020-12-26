@@ -5,14 +5,13 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
-import io.fluentcoding.codemanbot.util.paging.PagingContainer;
+import io.fluentcoding.codemanbot.container.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class InfoCommand extends CodeManCommandWithArgs {
