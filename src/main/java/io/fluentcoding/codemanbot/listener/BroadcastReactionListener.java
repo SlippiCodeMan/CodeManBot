@@ -42,7 +42,8 @@ public class BroadcastReactionListener extends ListenerAdapter {
             old.clearReactions().queue();
             old.editMessage(builder.build()).queue();
 
-            builder.setDescription("Write your message! Or " + Application.EXEC_MODE.getCommandPrefix() + "cancel to cancel it!");
+            builder.setDescription("Write your message! The last link specified in your message will be used as the thumbnail!\n");
+            builder.appendDescription("Or " + Application.EXEC_MODE.getCommandPrefix() + "cancel to cancel it!");
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 BroadcastContainer.INSTANCE.setWriteYourMessageId(msg.getIdLong());
             });

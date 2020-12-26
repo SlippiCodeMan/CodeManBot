@@ -4,6 +4,7 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.Application;
+import io.fluentcoding.codemanbot.util.PatternChecker;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class BroadcastMessageReceived extends ListenerAdapter {
 
@@ -58,6 +60,8 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     return;
                 }
 
+                String link = PatternChecker.fetchLastUrlFromInput(message);
+
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger();
                 List<User> users = BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA());
 
@@ -68,6 +72,8 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setDescription(message);
                             builder.setColor(GlobalVar.SUCCESS);
+                            if (!link.isEmpty())
+                                builder.setThumbnail(link);
                             builder.setFooter(
                                     "write " + Application.EXEC_MODE.getCommandPrefix() + "notify here to turn on/off notifications"
                             );
