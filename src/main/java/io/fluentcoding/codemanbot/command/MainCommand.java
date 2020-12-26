@@ -27,12 +27,7 @@ public class MainCommand extends CodeManCommandWithArgs {
             List<SSBMCharacter> result = DatabaseBridge.getMains(e.getAuthor().getIdLong());
 
             builder.setColor(GlobalVar.SUCCESS);
-            String mains = result.stream()
-                    .map(main -> "<:" + main.getName()
-                            .replaceAll("\\s+", "_")
-                            .replaceAll("[&.-]", "").toLowerCase()
-                            + ":" + main.getEmoteId() + ">")
-                    .collect(Collectors.joining(" "));
+            String mains = StringUtil.getMainsFormatted(result);
             builder.addField("Your mains", mains.isEmpty() ? "*None*" : mains, false);
         }
         else {
@@ -55,20 +50,8 @@ public class MainCommand extends CodeManCommandWithArgs {
                 if (result.isAccepted()) {
                         builder.setColor(GlobalVar.SUCCESS);
                         builder.setDescription("Operation done!");
-                        String oldMains = result.getOldMains()
-                                .stream()
-                                .map(main -> "<:" + main.getName()
-                                        .replaceAll("\\s+", "_")
-                                        .replaceAll("[&.-]", "").toLowerCase() +
-                                        ":" + main.getEmoteId() + ">")
-                                .collect(Collectors.joining(" "));
-                        String newMains = result.getNewMains()
-                                .stream()
-                                .map(main -> "<:" + main.getName()
-                                        .replaceAll("\\s+", "_")
-                                        .replaceAll("[&.-]", "").toLowerCase() +
-                                        ":" + main.getEmoteId() + ">")
-                                .collect(Collectors.joining(" "));
+                        String oldMains = StringUtil.getMainsFormatted(result.getOldMains());
+                        String newMains = StringUtil.getMainsFormatted(result.getNewMains());
 
                         builder.addField("Old mains", oldMains.isEmpty() ? "*None*" : oldMains, false);
                         builder.addField("New mains", newMains.isEmpty() ? "*None*" : newMains, false);
@@ -80,13 +63,7 @@ public class MainCommand extends CodeManCommandWithArgs {
                     builder.setColor(GlobalVar.ERROR);
                     builder.setDescription("Operation failed! You aren't allowed to have more than 3 mains!");
                     builder.setFooter(Application.EXEC_MODE.getCommandPrefix() + "main <character> to remove one of your mains");
-                    builder.addField("Your mains", result.getOldMains()
-                            .stream()
-                            .map(main -> "<:" + main.getName()
-                                    .replaceAll("\\s+", "_")
-                                    .replaceAll("[&.-]", "").toLowerCase()
-                                    + ":" + main.getEmoteId() + ">")
-                            .collect(Collectors.joining(" ")), false);
+                    builder.addField("Your mains", StringUtil.getMainsFormatted(result.getOldMains()), true);
                 }
             } else {
                 builder.setColor(GlobalVar.ERROR);
