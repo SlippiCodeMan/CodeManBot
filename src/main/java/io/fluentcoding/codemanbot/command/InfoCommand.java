@@ -36,7 +36,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
-                String mains = getMainsFormatted(e.getAuthor().getIdLong());
+                String mains = getMains(e.getAuthor().getIdLong());
 
                 builder.addField("Your code", retrievedCode, true);
                 builder.addField("Your name", "*Loading...*", true);
@@ -70,7 +70,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setDescription("This person didn't connect to CodeMan yet!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
-                String mains = getMainsFormatted(mentionedMember.getIdLong());
+                String mains = getMains(mentionedMember.getIdLong());
 
                 builder.addField("Their code", retrievedCode, true);
                 builder.addField("Their name", "*Loading...*", true);
@@ -102,7 +102,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             if (discordID == -1) {
                 mains = "";
             } else {
-                mains = getMainsFormatted(discordID);
+                mains = getMains(discordID);
                 if (!mains.isEmpty()) {
                     builder.addField("Their mains", mains, true);
                 }
@@ -132,7 +132,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             if (discordID == -1) {
                 mains = "";
             } else {
-                mains = getMainsFormatted(discordID);
+                mains = getMains(discordID);
                 if (!mains.isEmpty()) {
                     builder.addField("Their mains", mains, true);
                 }
@@ -195,13 +195,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
         e.getChannel().sendMessage(builder.build()).queue();
     }
 
-    private String getMainsFormatted(long discordId) {
-        List<SSBMCharacter> result = DatabaseBridge.getMains(discordId);
-        return result == null ? "" : result.stream()
-                .map(main -> "<:" + main.getName()
-                        .replaceAll("\\s+", "_")
-                        .replaceAll("[&.-]", "").toLowerCase()
-                        + ":" + main.getEmoteId() + ">")
-                .collect(Collectors.joining(" "));
+    private String getMains(long discordId) {
+        return StringUtil.getMainsFormatted(DatabaseBridge.getMains(discordId));
     }
 }
