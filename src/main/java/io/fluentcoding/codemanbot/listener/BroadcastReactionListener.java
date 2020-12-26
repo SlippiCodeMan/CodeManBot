@@ -24,17 +24,13 @@ public class BroadcastReactionListener extends ListenerAdapter {
         if (e.getUser().isBot())
             return;
 
-        if (e.getMessageIdLong() != BroadcastContainer.INSTANCE.getCurrentMessageId())
-            return;
-
-        e.getReaction().removeReaction(e.getUser()).queue();
-        String emoji = e.getReactionEmote().getEmoji();
-
         List<User> users = BroadcastContainer.INSTANCE.getCachedTarget();
         if (users != null) {
+            String emoji = e.getReactionEmote().getEmoji();
             if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
                 BroadcastContainer.INSTANCE.stopBroadcast();
-            } else if (e.getReaction().getCount() == GlobalVar.owners.length) {
+                e.getChannel().deleteMessageById(e.getMessageIdLong()).queue();
+            } else if (e.getReaction().getCount() >= GlobalVar.owners.length + 1) {
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger(0);
 
                 users.stream().forEachOrdered(user -> {
@@ -57,11 +53,19 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 builder.setColor(GlobalVar.SUCCESS);
                 builder.setDescription("Message got sent to **" + users.size() + "** people!\n");
                 builder.appendDescription("**" + (users.size() - notifiedPeopleAmount.get()) + "** of them blocked their notifications!");
+
+                BroadcastContainer.INSTANCE.stopBroadcast();
                 e.getChannel().sendMessage(builder.build()).queue();
             }
 
             return;
         }
+
+        if (e.getMessageIdLong() != BroadcastContainer.INSTANCE.getCurrentMessageId())
+            return;
+
+        e.getReaction().removeReaction(e.getUser()).queue();
+        String emoji = e.getReactionEmote().getEmoji();
 
         if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
             BroadcastContainer.INSTANCE.stopBroadcast();
