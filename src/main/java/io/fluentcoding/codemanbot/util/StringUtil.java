@@ -12,11 +12,11 @@ public class StringUtil {
     }
 
     public static String stringWithMains(String prefix, String mains) {
-        return prefix + " **[ " + mains + " ]**";
+        return prefix + " " + mains;
     }
 
     public static String stringWithSlippiUsernameAndMains(String prefix, String username, String mains) {
-        return prefix + " **(" + username + ") [ " + mains + " ]**";
+        return prefix + " **(" + username + ")** " + mains ;
     }
 
     public static String getMainsFormatted(List<SSBMCharacter> characters) {
