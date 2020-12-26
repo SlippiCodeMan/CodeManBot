@@ -38,6 +38,8 @@ public class BroadcastCommand extends AdminCodeManCommand {
     @Override
     public void handleOnSuccess(MessageReceivedEvent e) {
         if (BroadcastContainer.INSTANCE.broadcastAlreadyActive()) {
+            e.getMessage().delete().queue();
+
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(GlobalVar.SUCCESS);
             builder.setDescription("Someone already started a broadcast! Stop it before making a new one!");
@@ -54,7 +56,7 @@ public class BroadcastCommand extends AdminCodeManCommand {
                 broadcastModes.stream().map(mode -> mode.getEmote() + " " + mode.getDescription()).collect(Collectors.joining("\n")));
         builder.appendDescription(GlobalVar.CANCEL_EMOJI + " Cancel broadcast");
         e.getChannel().sendMessage(builder.build()).queue(msg -> {
-            BroadcastContainer.INSTANCE.broadcastHandler(msg.getIdLong());
+            BroadcastContainer.INSTANCE.broadcastHandler(e.getMessage().getIdLong(), msg.getIdLong());
             broadcastModes.stream().forEachOrdered(mode -> msg.addReaction(mode.emote).queue());
             msg.addReaction(GlobalVar.CANCEL_EMOJI).queue();
         });
