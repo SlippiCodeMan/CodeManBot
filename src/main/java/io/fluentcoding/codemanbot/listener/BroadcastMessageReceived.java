@@ -77,7 +77,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                         notifiedPeopleAmount.getAndIncrement();
                         user.openPrivateChannel().queue(channel -> {
                             EmbedBuilder builder = new EmbedBuilder();
-                            builder.setDescription(message);
+                            builder.setDescription(message + finalLink);
                             builder.setColor(GlobalVar.SUCCESS);
                             builder.setImage(finalLink);
                             builder.setFooter(
