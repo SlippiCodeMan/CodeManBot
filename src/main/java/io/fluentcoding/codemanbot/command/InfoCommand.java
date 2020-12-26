@@ -69,17 +69,18 @@ public class InfoCommand extends CodeManCommandWithArgs {
         } else if (e.getMessage().getMentionedMembers().size() > 0) {
             Member mentionedMember = e.getMessage().getMentionedMembers().get(0);
             String retrievedCode = DatabaseBridge.getCode(mentionedMember.getIdLong());
-            String mains = DatabaseBridge.getMains(mentionedMember.getIdLong()).stream()
-                    .map(main -> "<:" + main.getName()
-                            .replaceAll("\\s+", "_")
-                            .replaceAll("[&.-]", "").toLowerCase()
-                            + ":" + main.getEmoteId() + ">")
-                    .collect(Collectors.joining(" "));
 
             if (retrievedCode == null) {
                 builder.setDescription("This person didn't connect to CodeMan yet!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
+                String mains = DatabaseBridge.getMains(mentionedMember.getIdLong()).stream()
+                        .map(main -> "<:" + main.getName()
+                                .replaceAll("\\s+", "_")
+                                .replaceAll("[&.-]", "").toLowerCase()
+                                + ":" + main.getEmoteId() + ">")
+                        .collect(Collectors.joining(" "));
+
                 builder.addField("Their code", retrievedCode, true);
                 builder.addField("Their name", "*Loading...*", true);
                 if (!mains.isEmpty()) {
