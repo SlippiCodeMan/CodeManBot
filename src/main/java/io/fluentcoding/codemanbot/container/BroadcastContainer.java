@@ -2,6 +2,10 @@ package io.fluentcoding.codemanbot.container;
 
 import io.fluentcoding.codemanbot.command.BroadcastCommand;
 import lombok.Getter;
+import lombok.Setter;
+import net.dv8tion.jda.api.entities.User;
+
+import java.util.List;
 
 @Getter
 public enum BroadcastContainer {
@@ -9,6 +13,12 @@ public enum BroadcastContainer {
 
     private long channelId = -1;
     private long currentMessageId = -1;
+    @Setter
+    private String message = null;
+    @Setter
+    private String imageLink = null;
+    @Setter
+    private List<User> cachedTarget = null;
     private BroadcastCommand.BroadcastMode mode = null;
 
     public void broadcastHandler(long channelId, long messageId) {
@@ -19,7 +29,9 @@ public enum BroadcastContainer {
         this.mode = mode;
     }
     public void stopBroadcast() {
-        currentMessageId = -1;
+        this.currentMessageId = -1;
+        this.message = null;
+        this.cachedTarget = null;
     }
     public boolean broadcastAlreadyActive() {return currentMessageId != -1;}
 }

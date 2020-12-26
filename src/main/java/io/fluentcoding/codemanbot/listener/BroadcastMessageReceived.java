@@ -60,37 +60,21 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     if (attachment.isImage())
                         link = attachment.getUrl();
                 }
-
-                AtomicInteger notifiedPeopleAmount = new AtomicInteger();
                 List<User> users = BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA());
 
-                final String finalLink = link;
-
-                users.stream().forEachOrdered(user -> {
-                    if (DatabaseBridge.notifiable(user.getIdLong())) {
-                        notifiedPeopleAmount.getAndIncrement();
-                        user.openPrivateChannel().queue(channel -> {
-                            EmbedBuilder builder = new EmbedBuilder();
-                            builder.setDescription(message);
-                            builder.setColor(GlobalVar.SUCCESS);
-                            builder.setImage(finalLink);
-                            builder.setFooter(
-                                    "write " + Application.EXEC_MODE.getCommandPrefix() + "notify here to turn on/off notifications"
-                            );
-                            channel.sendMessage(builder.build()).queue();
-                        });
-                    }
-                });
-
-                int notifiedPeopleAmountInt = notifiedPeopleAmount.get();
+                BroadcastContainer.INSTANCE.setMessage(message);
+                BroadcastContainer.INSTANCE.setImageLink(link);
+                BroadcastContainer.INSTANCE.setCachedTarget(users);
 
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(GlobalVar.SUCCESS);
-                builder.setDescription("Message got sent to **" + notifiedPeopleAmount.get() + "** person!");
-                if (users.size() != notifiedPeopleAmountInt) {
-                    builder.appendDescription("\n**" + (users.size() - notifiedPeopleAmountInt) + "** didn't get notified!");
-                }
-                e.getChannel().sendMessage(builder.build()).queue();
+                builder.setDescription("Message will get sent to **" + users.size() + "** person!\n");
+                builder.appendDescription("Are you sure to do it? Every owner has to accept it!");
+                e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                    msg.addReaction(GlobalVar.CHECKMARK_EMOJI).queue();
+                    msg.addReaction(GlobalVar.CANCEL_EMOJI).queue();
+                });
+
             }
         }
     }
