@@ -153,17 +153,17 @@ public class InfoCommand extends CodeManCommandWithArgs {
                         newBuilder.setColor(GlobalVar.SUCCESS);
                     } else {
                         List<String> result = codes.stream()
-                                .filter(entry -> entry.getDisplayName() == null && getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
-                                .map(entry -> entry.getCode())
+                                .filter(entry -> entry.getDisplayName() == null && !getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
+                                .map(entry -> StringUtil.stringWithMains(
+                                        entry.getCode(),
+                                        getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode()))
+                                    )
+                                )
                                 .collect(Collectors.toList());
                         result.addAll(
                                 codes.stream()
-                                        .filter(entry -> entry.getDisplayName() == null && !getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
-                                        .map(entry -> StringUtil.stringWithMains(
-                                                entry.getCode(),
-                                                getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode()))
-                                            )
-                                        )
+                                        .filter(entry -> entry.getDisplayName() == null && getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
+                                        .map(entry -> entry.getCode())
                                         .collect(Collectors.toList())
                         );
                         result.addAll(
