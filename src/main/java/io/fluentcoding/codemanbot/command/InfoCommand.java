@@ -30,17 +30,18 @@ public class InfoCommand extends CodeManCommandWithArgs {
         boolean mentionedMemberIsAuthor = e.getMessage().getMentionedMembers().size() > 0 && e.getMessage().getMentionedMembers().get(0).getIdLong() == e.getAuthor().getIdLong();
         if (user == null || mentionedMemberIsAuthor) {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
-            String mains = DatabaseBridge.getMains(e.getAuthor().getIdLong()).stream()
-                    .map(main -> "<:" + main.getName()
-                            .replaceAll("\\s+", "_")
-                            .replaceAll("[&.-]", "").toLowerCase()
-                            + ":" + main.getEmoteId() + ">")
-                    .collect(Collectors.joining(" "));
 
             if (retrievedCode == null) {
                 builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
+                String mains = DatabaseBridge.getMains(e.getAuthor().getIdLong()).stream()
+                        .map(main -> "<:" + main.getName()
+                                .replaceAll("\\s+", "_")
+                                .replaceAll("[&.-]", "").toLowerCase()
+                                + ":" + main.getEmoteId() + ">")
+                        .collect(Collectors.joining(" "));
+
                 builder.addField("Your code", retrievedCode, true);
                 builder.addField("Your name", "*Loading...*", true);
                 if (!mains.isEmpty()) {
