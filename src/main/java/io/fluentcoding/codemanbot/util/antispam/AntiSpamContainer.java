@@ -12,15 +12,15 @@ import java.util.Map;
 public enum AntiSpamContainer {
     INSTANCE;
 
-    private final Bandwidth minuteLimit = Bandwidth.classic(3, Refill.intervally(3, Duration.ofSeconds(10)));
-    private final Bandwidth limit = Bandwidth.classic(20, Refill.intervally(10, Duration.ofSeconds(60)));
+    private final Bandwidth limit = Bandwidth.classic(4, Refill.intervally(4, Duration.ofSeconds(10)));
+    private final Bandwidth minuteLimit = Bandwidth.classic(20, Refill.intervally(10, Duration.ofSeconds(60)));
     private Map<Long, Bucket> userBuckets = new HashMap<>();
 
     public boolean userAllowedToAction(Long userId) {
         Bucket bucket = userBuckets.get(userId);
 
         if (bucket == null) {
-            bucket = Bucket4j.builder().addLimit(minuteLimit).addLimit(limit).build();
+            bucket = Bucket4j.builder().addLimit(limit).addLimit(minuteLimit).build();
             userBuckets.put(userId, bucket);
         }
 
