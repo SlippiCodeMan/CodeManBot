@@ -78,7 +78,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setDescription(message);
                             builder.setColor(GlobalVar.SUCCESS);
-                            builder.setThumbnail(finalLink);
+                            builder.setImage(finalLink);
                             builder.setFooter(
                                     "write " + Application.EXEC_MODE.getCommandPrefix() + "notify here to turn on/off notifications"
                             );
