@@ -125,7 +125,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             });
             return;
         } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.addField("Their name", "*Loading...*", true);
+            builder.addField("Their code", "*Loading...*", true);
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
@@ -137,7 +137,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 } else {
                     if (codes.size() == 1) {
                         SlippiBridge.UserEntry entry = codes.get(0);
-                        long discordID = DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase());
+                        long discordID = DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode());
                         newBuilder.addField("Their code",
                                 entry.getDisplayName() == null ? entry.getCode()
                                         : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()),
