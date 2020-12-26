@@ -153,7 +153,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                         newBuilder.setColor(GlobalVar.SUCCESS);
                     } else {
                         List<String> result = codes.stream()
-                                .filter(entry -> entry.getDisplayName() == null)
+                                .filter(entry -> entry.getDisplayName() == null && getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
                                 .map(entry -> entry.getCode())
                                 .collect(Collectors.toList());
                         result.addAll(
