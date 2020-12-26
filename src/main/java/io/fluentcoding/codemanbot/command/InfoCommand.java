@@ -4,7 +4,6 @@ import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
-import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import io.fluentcoding.codemanbot.util.paging.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -126,18 +125,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             });
             return;
         } else if (PatternChecker.isSlippiUsername(user)) {
-            long discordID = DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase());
-            builder.addField("Their name", "*Loading...*", true);
-            String mains;
-            if (discordID == -1) {
-                mains = "";
-            } else {
-                mains = getMains(discordID);
-                if (!mains.isEmpty()) {
-                    builder.addField("Their mains", mains, true);
-                }
-            }
-
+            builder.setTitle("*Loading...*");
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
@@ -149,12 +137,19 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 } else {
                     if (codes.size() == 1) {
                         SlippiBridge.UserEntry entry = codes.get(0);
+                        long discordID = DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode());
                         newBuilder.addField("Their code",
                                 entry.getDisplayName() == null ? entry.getCode()
                                         : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()),
                                 false);
-                        if (!mains.isEmpty()) {
-                            newBuilder.addField("Their mains", mains, true);
+                        String mains;
+                        if (discordID == -1) {
+                            mains = "";
+                        } else {
+                            mains = getMains(discordID);
+                            if (!mains.isEmpty()) {
+                                newBuilder.addField("Their mains", mains, true);
+                            }
                         }
                         newBuilder.setColor(GlobalVar.SUCCESS);
                     } else {
