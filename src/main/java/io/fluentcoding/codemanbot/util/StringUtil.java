@@ -8,15 +8,15 @@ import java.util.stream.Collectors;
 public class StringUtil {
 
     public static String stringWithSlippiUsername(String prefix, String username) {
-        return prefix + " ***(" + username + ")***";
+        return prefix + " **(" + username + ")**";
     }
 
     public static String stringWithMains(String prefix, String mains) {
-        return prefix + " ***[ " + mains + " ]***";
+        return prefix + " **[ " + mains + " ]**";
     }
 
     public static String stringWithSlippiUsernameAndMains(String prefix, String username, String mains) {
-        return prefix + " ***(" + username + ") [ " + mains + " ]***";
+        return prefix + " **(" + username + ") [ " + mains + " ]**";
     }
 
     public static String getMainsFormatted(List<SSBMCharacter> characters) {
