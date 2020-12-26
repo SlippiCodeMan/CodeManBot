@@ -41,14 +41,15 @@ public class BroadcastCommand extends AdminCodeManCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(GlobalVar.SUCCESS);
         builder.setDescription("Broadcast started! Who do you want to send it to?\n\n" +
-                broadcastModes.stream().map(mode -> mode.getEmote() + " " + mode.getDescription()));
+                broadcastModes.stream().map(mode -> mode.getEmote() + " " + mode.getDescription()).collect(Collectors.joining("\n")));
         e.getChannel().sendMessage(builder.build()).queue(msg -> {
             broadcastModes.stream().forEachOrdered(mode -> msg.addReaction(mode.emote).queue());
         });
     }
 
     private String getNumberedEmoji(int digit) {
-        return "\\u003" + digit + "\uFE0F\u20E3";
+        char number = (char)('\u0030' + digit);
+        return number + "\uFE0F\u20E3";
     }
 
     @AllArgsConstructor
