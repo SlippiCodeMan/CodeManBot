@@ -6,6 +6,7 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.util.PatternChecker;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -60,7 +61,10 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     return;
                 }
 
-                String link = PatternChecker.fetchLastUrlFromInput(message);
+                Message.Attachment lastAttachment = e.getMessage().getAttachments().stream().reduce((first, second) -> second).orElse(null);
+                String link = "";
+                if (lastAttachment != null)
+                    link = lastAttachment.getUrl();
 
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger();
                 List<User> users = BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA());
