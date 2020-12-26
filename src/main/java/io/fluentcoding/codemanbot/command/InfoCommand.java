@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -152,34 +153,42 @@ public class InfoCommand extends CodeManCommandWithArgs {
                         }
                         newBuilder.setColor(GlobalVar.SUCCESS);
                     } else {
+                        Map<String, String> codesWithMains = new HashMap<>();
+                        for (SlippiBridge.UserEntry entry : codes) {
+                            long discordId = DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode());
+                            String mains = getMains(discordId);
+                            if (!mains.isEmpty())
+                                codesWithMains.put(entry.getCode(), mains);
+                        }
+                        
                         List<String> result = codes.stream()
-                                .filter(entry -> entry.getDisplayName() == null && !getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
+                                .filter(entry -> entry.getDisplayName() == null && codesWithMains.containsKey(entry.getCode()))
                                 .map(entry -> StringUtil.stringWithMains(
                                         entry.getCode(),
-                                        getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode()))
+                                        codesWithMains.get(entry.getCode())
                                     )
                                 )
                                 .collect(Collectors.toList());
                         result.addAll(
                                 codes.stream()
-                                        .filter(entry -> entry.getDisplayName() == null && getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
+                                        .filter(entry -> entry.getDisplayName() == null && !codesWithMains.containsKey(entry.getCode()))
                                         .map(entry -> entry.getCode())
                                         .collect(Collectors.toList())
                         );
                         result.addAll(
                                 codes.stream()
-                                        .filter(entry -> entry.getDisplayName() != null && !getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
+                                        .filter(entry -> entry.getDisplayName() != null && codesWithMains.containsKey(entry.getCode()))
                                         .map(entry -> StringUtil.stringWithSlippiUsernameAndMains(
                                                 entry.getCode(),
                                                 entry.getDisplayName(),
-                                                getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode()))
+                                                codesWithMains.get(entry.getCode())
                                             )
                                         )
                                         .collect(Collectors.toList())
                         );
                         result.addAll(
                                 codes.stream()
-                                        .filter(entry -> entry.getDisplayName() != null && getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
+                                        .filter(entry -> entry.getDisplayName() != null && !codesWithMains.containsKey(entry.getCode()))
                                         .map(entry -> StringUtil.stringWithSlippiUsername(
                                                 entry.getCode(),
                                                 entry.getDisplayName()
