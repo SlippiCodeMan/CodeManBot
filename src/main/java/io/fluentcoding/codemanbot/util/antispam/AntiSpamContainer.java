@@ -13,7 +13,7 @@ public enum AntiSpamContainer {
     INSTANCE;
 
     private final Bandwidth minuteLimit = Bandwidth.classic(3, Refill.intervally(3, Duration.ofSeconds(10)));
-    private final Bandwidth limit = Bandwidth.classic(20, Refill.intervally(20, Duration.ofSeconds(60)));
+    private final Bandwidth limit = Bandwidth.classic(20, Refill.intervally(10, Duration.ofSeconds(60)));
     private Map<Long, Bucket> userBuckets = new HashMap<>();
 
     public boolean userAllowedToAction(Long userId) {
