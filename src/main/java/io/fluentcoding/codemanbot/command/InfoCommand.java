@@ -192,9 +192,13 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
                 msg.editMessage(newBuilder.build()).queue();
             });
+
+            return;
         } else {
             builder.setDescription("This parameter could neither get recognized as an username nor as a connect code!");
             builder.setColor(GlobalVar.ERROR);
         }
+
+        e.getChannel().sendMessage(builder.build()).queue();
     }
 }
