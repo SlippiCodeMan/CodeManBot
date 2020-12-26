@@ -1,7 +1,6 @@
-package io.fluentcoding.codemanbot.util.paging;
+package io.fluentcoding.codemanbot.container;
 
 import io.fluentcoding.codemanbot.util.GlobalVar;
-import lombok.AccessLevel;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -86,8 +85,8 @@ public enum PagingContainer {
 
         public void react(Message msg, Runnable onDone) {
             CompletableFuture[] futures = new CompletableFuture[] {
-                    msg.addReaction(GlobalVar.ARROW_LEFT).submit(),
-                    msg.addReaction(GlobalVar.ARROW_RIGHT).submit()
+                    msg.addReaction(GlobalVar.ARROW_LEFT_EMOJI).submit(),
+                    msg.addReaction(GlobalVar.ARROW_RIGHT_EMOJI).submit()
             };
 
             CompletableFuture.allOf(futures).thenAccept(unused -> onDone.run());

@@ -1,12 +1,12 @@
 package io.fluentcoding.codemanbot.listener;
 
 import io.fluentcoding.codemanbot.util.GlobalVar;
-import io.fluentcoding.codemanbot.util.paging.PagingContainer;
+import io.fluentcoding.codemanbot.container.PagingContainer;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-public class ReactionListener extends ListenerAdapter {
+public class PagingReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
@@ -24,14 +24,13 @@ public class ReactionListener extends ListenerAdapter {
 
         String emoji = event.getReactionEmote().getEmoji();
 
-        if (emoji.equals(GlobalVar.ARROW_LEFT)) {
-            event.getReaction().removeReaction(event.getUser()).queue();
+        if (emoji.equals(GlobalVar.ARROW_LEFT_EMOJI)) {
             if (!content.canGoToPreviousPage())
                 return;
 
             content.previousPage();
             event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
-        } else if (emoji.equals(GlobalVar.ARROW_RIGHT)) {
+        } else if (emoji.equals(GlobalVar.ARROW_RIGHT_EMOJI)) {
             if (!content.canGoToNextPage())
                 return;
 

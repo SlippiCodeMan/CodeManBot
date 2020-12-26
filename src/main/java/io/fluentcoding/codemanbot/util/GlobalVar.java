@@ -5,8 +5,9 @@ import java.awt.Color;
 
 public class GlobalVar {
     public static String FROG_EMOJI = "\uD83D\uDC38",
-            ARROW_LEFT = "\u25C0\uFE0F",
-            ARROW_RIGHT ="\u25B6\uFE0F";
+            ARROW_LEFT_EMOJI = "\u25C0\uFE0F",
+            ARROW_RIGHT_EMOJI ="\u25B6\uFE0F",
+            CANCEL_EMOJI = "\u274C";
 
     public static Color SUCCESS = new Color(68, 169, 99),
             ERROR = new Color(168, 67, 104),
