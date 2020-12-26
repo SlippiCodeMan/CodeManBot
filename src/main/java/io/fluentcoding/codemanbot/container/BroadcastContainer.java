@@ -14,6 +14,7 @@ public enum BroadcastContainer {
     private BroadcastCommand.BroadcastMode mode = null;
 
     public void broadcastHandler(long channelId, long initiatorMessageId, long messageId) {
+        this.channelId = channelId;
         this.initiatorMessageId = initiatorMessageId;
         this.currentMessageId = messageId;
     }
