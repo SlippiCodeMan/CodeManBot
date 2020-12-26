@@ -36,7 +36,10 @@ public class BroadcastReactionListener extends ListenerAdapter {
             builder.setColor(GlobalVar.SUCCESS);
 
             builder.setDescription("**Mode:** " + mode.getDescription());
-            e.getChannel().editMessageById(e.getMessageIdLong(), builder.build()).queue();
+            e.getChannel().retrieveMessageById(e.getMessageIdLong()).queue(msg -> {
+                msg.clearReactions().queue();
+                msg.editMessage(builder.build()).queue();
+            });
 
             builder.setDescription("Write your message!");
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
