@@ -26,7 +26,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(GlobalVar.SUCCESS);
             builder.setDescription("Notifications turned **" + (newResult ? "on" : "off") + "**!");
-            e.getAuthor().openPrivateChannel().queue(channel -> channel.sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES)));
+            e.getAuthor().openPrivateChannel().queue(channel -> channel.sendMessage(builder.build()).queue());
         }
     }
 
