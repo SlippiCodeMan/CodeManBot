@@ -51,7 +51,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                             builder.setDescription(message);
                             builder.setColor(GlobalVar.SUCCESS);
                             builder.setFooter("Write **!notify** here to turn on/off notifications");
-                            channel.sendMessage(message).queue();
+                            channel.sendMessage(builder.build()).queue();
                         });
                 });
 
