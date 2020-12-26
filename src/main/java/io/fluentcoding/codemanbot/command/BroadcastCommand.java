@@ -62,7 +62,7 @@ public class BroadcastCommand extends AdminCodeManCommand {
                 broadcastModes.stream().map(mode -> mode.getEmote() + " " + mode.getDescription()).collect(Collectors.joining("\n")));
         builder.appendDescription("\n" + GlobalVar.CANCEL_EMOJI + " Cancel broadcast");
         e.getChannel().sendMessage(builder.build()).queue(msg -> {
-            BroadcastContainer.INSTANCE.broadcastHandler(e.getChannel().getIdLong(), e.getMessage().getIdLong(), msg.getIdLong());
+            BroadcastContainer.INSTANCE.broadcastHandler(e.getChannel().getIdLong(), msg.getIdLong());
             broadcastModes.stream().forEachOrdered(mode -> msg.addReaction(mode.emote).queue());
             msg.addReaction(GlobalVar.CANCEL_EMOJI).queue();
         });

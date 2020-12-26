@@ -27,8 +27,6 @@ public class BroadcastReactionListener extends ListenerAdapter {
 
         if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
             BroadcastContainer.INSTANCE.stopBroadcast();
-            e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getInitiatorMessageId()).queue();
-            e.getChannel().deleteMessageById(e.getMessageIdLong()).queue();
         } else {
             int digit = StringUtil.getDigitOfEmoji(emoji);
             BroadcastCommand.BroadcastMode mode = BroadcastCommand.broadcastModes.get(digit - 1);
@@ -44,9 +42,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
 
             builder.setDescription("Write your message! The last link specified in your message will be used as the thumbnail!\n");
             builder.appendDescription("Or " + Application.EXEC_MODE.getCommandPrefix() + "cancel to cancel it!");
-            e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                BroadcastContainer.INSTANCE.setWriteYourMessageId(msg.getIdLong());
-            });
+            e.getChannel().sendMessage(builder.build()).queue();
         }
     }
 }

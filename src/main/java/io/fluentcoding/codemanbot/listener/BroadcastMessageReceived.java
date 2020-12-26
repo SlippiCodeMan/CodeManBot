@@ -42,11 +42,6 @@ public class BroadcastMessageReceived extends ListenerAdapter {
 
         if (BroadcastContainer.INSTANCE.broadcastAlreadyActive()) {
             if (e.getChannel().getIdLong() == BroadcastContainer.INSTANCE.getChannelId()) {
-                e.getMessage().delete().queue();
-                e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getInitiatorMessageId()).queue();
-                e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getCurrentMessageId()).queue();
-                e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getWriteYourMessageId()).queue();
-
                 String message = e.getMessage().getContentRaw();
 
                 BroadcastContainer.INSTANCE.stopBroadcast();
@@ -54,11 +49,10 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setColor(GlobalVar.SUCCESS);
                     builder.setDescription("Broadcast got cancelled!");
-                    e.getChannel().sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES));
+                    e.getChannel().sendMessage(builder.build()).queue();
 
                     return;
                 }
-
 
                 String link = "";
                 if (e.getMessage().getAttachments().size() != 0) {
@@ -96,7 +90,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                 if (users.size() != notifiedPeopleAmountInt) {
                     builder.appendDescription("\n**" + (users.size() - notifiedPeopleAmountInt) + "** didn't get notified!");
                 }
-                e.getChannel().sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES));
+                e.getChannel().sendMessage(builder.build()).queue();
             }
         }
     }
