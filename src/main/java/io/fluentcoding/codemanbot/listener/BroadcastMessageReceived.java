@@ -11,6 +11,9 @@ public class BroadcastMessageReceived extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent e) {
+        if (e.getAuthor().isBot())
+            return;
+
         if (BroadcastContainer.INSTANCE.broadcastAlreadyActive()) {
             if (e.getChannel().getIdLong() == BroadcastContainer.INSTANCE.getChannelId()) {
                 e.getMessage().delete().queue();
