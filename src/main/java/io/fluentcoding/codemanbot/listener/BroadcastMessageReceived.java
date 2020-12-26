@@ -64,7 +64,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                 if (e.getMessage().getAttachments().size() != 0) {
                     Message.Attachment attachment = e.getMessage().getAttachments().get(0);
                     if (attachment.isImage())
-                        link = attachment.getProxyUrl();
+                        link = attachment.getUrl();
                 }
 
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger();
