@@ -69,6 +69,8 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger();
                 List<User> users = BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA());
 
+                final String finalLink = link;
+
                 users.stream().forEachOrdered(user -> {
                     if (DatabaseBridge.notifiable(user.getIdLong())) {
                         notifiedPeopleAmount.getAndIncrement();
@@ -76,8 +78,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setDescription(message);
                             builder.setColor(GlobalVar.SUCCESS);
-                            if (!link.isEmpty())
-                                builder.setThumbnail(link);
+                            builder.setThumbnail(finalLink);
                             builder.setFooter(
                                     "write " + Application.EXEC_MODE.getCommandPrefix() + "notify here to turn on/off notifications"
                             );
