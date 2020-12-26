@@ -5,6 +5,7 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -22,7 +23,7 @@ public abstract class CodeManCommandWithArgs extends CodeManCommand {
     }
 
     @Override
-    public void handle(MessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e) {
         String msg = e.getMessage().getContentStripped();
         Optional<Map<String, String>> args = argumentSet.toMap(msg);
 
@@ -46,7 +47,7 @@ public abstract class CodeManCommandWithArgs extends CodeManCommand {
         }
     }
 
-    public abstract void handle(MessageReceivedEvent e, Map<String, String> args);
+    public abstract void handle(GuildMessageReceivedEvent e, Map<String, String> args);
 
     @Override
     public String getHelpTitle() {

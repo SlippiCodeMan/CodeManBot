@@ -5,6 +5,7 @@ import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class ConnectCommand extends CodeManCommandWithArgs {
     }
 
     @Override
-    public void handle(MessageReceivedEvent e, Map<String, String> args) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         String code = args.get("code");
         boolean isValid = PatternChecker.isConnectCode(code);
 

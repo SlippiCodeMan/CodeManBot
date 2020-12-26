@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public class BroadcastCommand extends AdminCodeManCommand {
     }
 
     @Override
-    public void handleOnSuccess(MessageReceivedEvent e) {
+    public void handleOnSuccess(GuildMessageReceivedEvent e) {
         if (BroadcastContainer.INSTANCE.broadcastAlreadyActive()) {
             e.getMessage().delete().queue();
 
