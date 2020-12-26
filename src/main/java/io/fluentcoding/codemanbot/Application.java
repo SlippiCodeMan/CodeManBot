@@ -42,7 +42,8 @@ public class Application {
                 new DeprecatedCodeManCommand("info","name", "n"),
 
                 // ADMIN COMMANDS
-                new StatsCommand("stats")
+                new StatsCommand("stats"),
+                new BroadcastCommand("broadcast")
         );
 
         handler.addCommand(new HelpCommand(handler, "Displays the help message", "help", "h"));
