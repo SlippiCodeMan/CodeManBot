@@ -125,7 +125,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             });
             return;
         } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.setDescription(GlobalVar.LOADING_EMOJI);
+            builder.setTitle(GlobalVar.LOADING_EMOJI);
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
