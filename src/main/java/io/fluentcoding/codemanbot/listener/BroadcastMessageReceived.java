@@ -82,7 +82,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                 builder.setColor(GlobalVar.SUCCESS);
                 builder.setDescription("Message got sent to **" + notifiedPeopleAmount.get() + "** person!");
                 if (users.size() != notifiedPeopleAmountInt) {
-                    builder.appendDescription("\n" + (users.size() - notifiedPeopleAmountInt));
+                    builder.appendDescription("\n**" + (users.size() - notifiedPeopleAmountInt) + "** didn't get notified!");
                 }
                 e.getChannel().sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES));
             }
