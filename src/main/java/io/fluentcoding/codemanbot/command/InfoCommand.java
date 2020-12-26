@@ -158,11 +158,32 @@ public class InfoCommand extends CodeManCommandWithArgs {
                                 .collect(Collectors.toList());
                         result.addAll(
                                 codes.stream()
+                                        .filter(entry -> entry.getDisplayName() == null && !getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
+                                        .map(entry -> StringUtil.stringWithMains(
+                                                entry.getCode(),
+                                                getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode()))
+                                            )
+                                        )
+                                        .collect(Collectors.toList())
+                        );
+                        result.addAll(
+                                codes.stream()
                                         .filter(entry -> entry.getDisplayName() != null && !getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
                                         .map(entry -> StringUtil.stringWithSlippiUsernameAndMains(
-                                            entry.getCode(),
-                                            entry.getDisplayName(),
-                                            getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())))
+                                                entry.getCode(),
+                                                entry.getDisplayName(),
+                                                getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode()))
+                                            )
+                                        )
+                                        .collect(Collectors.toList())
+                        );
+                        result.addAll(
+                                codes.stream()
+                                        .filter(entry -> entry.getDisplayName() != null && getMains(DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode())).isEmpty())
+                                        .map(entry -> StringUtil.stringWithSlippiUsername(
+                                                entry.getCode(),
+                                                entry.getDisplayName()
+                                            )
                                         )
                                         .collect(Collectors.toList())
                         );
