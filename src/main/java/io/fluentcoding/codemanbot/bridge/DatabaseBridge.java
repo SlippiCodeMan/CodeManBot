@@ -11,12 +11,26 @@ import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import lombok.Data;
 import org.bson.Document;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DatabaseBridge {
     private final static String mongoUri = GlobalVar.dotenv.get("CODEMAN_DB_URI");
+
+    public static List<Long> getAllDiscordIds() {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+            List<Long> discordIds = new ArrayList<>();
+
+            for (Document result : codeManCollection.find()) {
+                discordIds.add(result.getLong("discord_id"));
+            }
+
+            return discordIds;
+        }
+    }
 
     public static ToggleMainResult toggleMain(long discordId, SSBMCharacter main) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
@@ -50,6 +64,7 @@ public class DatabaseBridge {
         }
     }
 
+    @Nullable
     public static List<SSBMCharacter> getMains(long discordId) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
@@ -89,6 +104,7 @@ public class DatabaseBridge {
         }
     }
 
+    @Nullable
     public static String getCode(long discordId) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
