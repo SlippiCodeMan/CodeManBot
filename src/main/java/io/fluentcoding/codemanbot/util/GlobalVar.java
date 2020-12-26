@@ -7,7 +7,7 @@ public class GlobalVar {
     public static String FROG_EMOJI = "\uD83D\uDC38",
             ARROW_LEFT_EMOJI = "\u25C0\uFE0F",
             ARROW_RIGHT_EMOJI ="\u25B6\uFE0F",
-            LOADING_EMOJI = "<a:spinner:792444831019302932>",
+            LOADING_EMOJI = "<a:loading:792463286951870496>",
             CANCEL_EMOJI = "\u274C";
 
     public static Color SUCCESS = new Color(68, 169, 99),
