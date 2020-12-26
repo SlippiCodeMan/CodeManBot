@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.listener;
 
+import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.command.BroadcastCommand;
 import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.container.PagingContainer;
@@ -41,7 +42,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 msg.editMessage(builder.build()).queue();
             });
 
-            builder.setDescription("Write your message!");
+            builder.setDescription("Write your message! Or " + Application.EXEC_MODE.getCommandPrefix() + "cancel to cancel it!");
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 BroadcastContainer.INSTANCE.setWriteYourMessageId(msg.getIdLong());
             });
