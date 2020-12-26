@@ -9,6 +9,7 @@ import io.fluentcoding.codemanbot.container.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
     }
 
     @Override
-    public void handle(MessageReceivedEvent e, Map<String, String> args) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         String user = args.get("user");
 
         EmbedBuilder builder = new EmbedBuilder();

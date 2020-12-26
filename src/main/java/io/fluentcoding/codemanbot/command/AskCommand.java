@@ -5,6 +5,7 @@ import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ public class AskCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(MessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e) {
         EmbedBuilder builder = new EmbedBuilder();
 
         builder.setTitle("Netplay Search");

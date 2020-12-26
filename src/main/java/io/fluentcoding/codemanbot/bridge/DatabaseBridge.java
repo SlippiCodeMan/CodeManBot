@@ -32,6 +32,36 @@ public class DatabaseBridge {
         }
     }
 
+    public static boolean notifiable(long discordId) {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
+            for (Document result : codeManCollection.find(filter)) {
+                if (result.containsKey("notify"))
+                    return result.getBoolean("notify");
+            }
+
+            return true;
+        }
+    }
+
+    public static boolean toggleNotifications(long discordId) {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            boolean oldValue = true;
+
+            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
+            for (Document result : codeManCollection.find(filter)) {
+                if (result.containsKey("notify"))
+                    oldValue = result.getBoolean("notify");
+            }
+            codeManCollection.updateOne(filter, Updates.set("notify", !oldValue));
+            return !oldValue;
+        }
+    }
+
     public static ToggleMainResult toggleMain(long discordId, SSBMCharacter main) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);

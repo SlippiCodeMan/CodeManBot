@@ -4,7 +4,7 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.AdminCodeManCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class StatsCommand extends AdminCodeManCommand {
 
@@ -13,7 +13,7 @@ public class StatsCommand extends AdminCodeManCommand {
     }
 
     @Override
-    public void handleOnSuccess(MessageReceivedEvent e) {
+    public void handleOnSuccess(GuildMessageReceivedEvent e) {
         SystemUtil.MemoryStats memoryStats = SystemUtil.memoryStats();
 
         EmbedBuilder builder = new EmbedBuilder();

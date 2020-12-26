@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot.util.codemancommand;
 import io.fluentcoding.codemanbot.Application;
 import lombok.Getter;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.Arrays;
 
@@ -18,7 +19,7 @@ public abstract class CodeManCommand {
         this.aliases = Arrays.stream(aliases).map(original -> Application.EXEC_MODE.getCommandPrefix() + original).toArray(String[]::new);
     }
 
-    public abstract void handle(MessageReceivedEvent e);
+    public abstract void handle(GuildMessageReceivedEvent e);
 
     public String getHelpTitle() {
         return aliases.length == 0 ? name :
