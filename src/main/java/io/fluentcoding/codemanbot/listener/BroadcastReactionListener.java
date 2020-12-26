@@ -1,9 +1,11 @@
 package io.fluentcoding.codemanbot.listener;
 
+import io.fluentcoding.codemanbot.command.BroadcastCommand;
 import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.container.PagingContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.StringUtil;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +28,14 @@ public class BroadcastReactionListener extends ListenerAdapter {
             e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getInitiatorMessageId()).queue();
             e.getChannel().deleteMessageById(e.getMessageIdLong()).queue();
         } else {
-            e.getChannel().sendMessage(String.valueOf(StringUtil.getDigitOfEmoji(emoji))).queue();
+            int digit = StringUtil.getDigitOfEmoji(emoji);
+            BroadcastCommand.BroadcastMode mode = BroadcastCommand.broadcastModes.get(digit - 1);
+            BroadcastContainer.INSTANCE.setBroadcastMode(mode);
+
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setColor(GlobalVar.SUCCESS);
+            builder.setDescription("Write your message!");
+            e.getChannel().sendMessage(builder.build()).queue();
         }
     }
 }

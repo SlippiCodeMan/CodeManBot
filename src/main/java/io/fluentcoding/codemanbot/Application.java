@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot;
 import javax.security.auth.login.LoginException;
 
 import io.fluentcoding.codemanbot.command.*;
+import io.fluentcoding.codemanbot.listener.BroadcastMessageReceived;
 import io.fluentcoding.codemanbot.listener.BroadcastReactionListener;
 import io.fluentcoding.codemanbot.listener.PagingReactionListener;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
@@ -51,7 +52,8 @@ public class Application {
         builder.addEventListeners(
                 handler,
                 new PagingReactionListener(),
-                new BroadcastReactionListener()
+                new BroadcastReactionListener(),
+                new BroadcastMessageReceived()
         );
 
         builder.build();

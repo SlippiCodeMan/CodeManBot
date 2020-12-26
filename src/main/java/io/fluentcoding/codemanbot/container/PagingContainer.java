@@ -30,14 +30,6 @@ public enum PagingContainer {
         return container.get(messageId);
     }
 
-    public void addPageableContent(Long messageId, PageableContent content) {
-        container.put(messageId, content);
-    }
-
-    public void removePageableContent(Long messageId) {
-        container.remove(messageId);
-    }
-
     public static class PageableContent {
         private final String prefix;
         private final String[] pageableContent;

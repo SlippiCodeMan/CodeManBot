@@ -35,6 +35,6 @@ public class StringUtil {
 
     public static int getDigitOfEmoji(String unicode) {
         String result = String.format("\\u%04x", (int) unicode.charAt(0));
-        return Character.codePointAt(result, 6);
+        return Character.codePointAt(result, 5);
     }
 }
