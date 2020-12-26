@@ -22,6 +22,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
 
         if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
             BroadcastContainer.INSTANCE.stopBroadcast();
+            event.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getInitiatorMessageId()).queue();
             event.getChannel().deleteMessageById(event.getMessageIdLong()).queue();
         }
     }
