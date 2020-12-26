@@ -7,6 +7,7 @@ import io.fluentcoding.codemanbot.container.PagingContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -37,10 +38,9 @@ public class BroadcastReactionListener extends ListenerAdapter {
             builder.setColor(GlobalVar.SUCCESS);
 
             builder.setDescription("**Mode:** " + mode.getDescription());
-            e.getChannel().retrieveMessageById(e.getMessageIdLong()).queue(msg -> {
-                msg.clearReactions().queue();
-                msg.editMessage(builder.build()).queue();
-            });
+            Message old = e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete();
+            old.clearReactions().queue();
+            old.editMessage(builder.build()).queue();
 
             builder.setDescription("Write your message! Or " + Application.EXEC_MODE.getCommandPrefix() + "cancel to cancel it!");
             e.getChannel().sendMessage(builder.build()).queue(msg -> {

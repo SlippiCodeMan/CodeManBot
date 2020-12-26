@@ -51,6 +51,8 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     builder.setColor(GlobalVar.SUCCESS);
                     builder.setDescription("Broadcast got cancelled!");
                     e.getChannel().sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES));
+
+                    return;
                 }
 
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger();
@@ -73,7 +75,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
 
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(GlobalVar.SUCCESS);
-                builder.setDescription("Message got sent to **" + notifiedPeopleAmount.get() + "!");
+                builder.setDescription("Message got sent to **" + notifiedPeopleAmount.get() + "** person!");
                 e.getChannel().sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES));
             }
         }
