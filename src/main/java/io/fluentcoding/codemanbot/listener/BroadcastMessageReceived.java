@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot.listener;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.Application;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -42,7 +43,8 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                 e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getCurrentMessageId()).queue();
                 e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getWriteYourMessageId()).queue();
 
-                String message = e.getMessage().getContentStripped();
+                String message = e.getMessage().getContentRaw();
+                //String thumbnail = e.getMessage().getContentStripped();
 
                 BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA()).stream().forEachOrdered(user -> {
                     if (DatabaseBridge.notifiable(user.getIdLong()))
@@ -50,7 +52,11 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                             EmbedBuilder builder = new EmbedBuilder();
                             builder.setDescription(message);
                             builder.setColor(GlobalVar.SUCCESS);
-                            builder.setFooter("Write **!notify** here to turn on/off notifications");
+                            builder.setFooter(
+                                "write "
+                                + Application.EXEC_MODE.getCommandPrefix()
+                                + "notify here to turn on/off notifications"
+                            );
                             channel.sendMessage(builder.build()).queue();
                         });
                 });
