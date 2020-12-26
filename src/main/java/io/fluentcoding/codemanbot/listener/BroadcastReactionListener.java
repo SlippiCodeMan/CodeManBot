@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot.listener;
 import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.container.PagingContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.StringUtil;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -10,20 +11,22 @@ import org.jetbrains.annotations.NotNull;
 public class BroadcastReactionListener extends ListenerAdapter {
 
     @Override
-    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
-        if (event.getUser().isBot())
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent e) {
+        if (e.getUser().isBot())
             return;
 
-        if (event.getMessageIdLong() != BroadcastContainer.INSTANCE.getCurrentMessageId())
+        if (e.getMessageIdLong() != BroadcastContainer.INSTANCE.getCurrentMessageId())
             return;
 
-        event.getReaction().removeReaction(event.getUser()).queue();
-        String emoji = event.getReactionEmote().getEmoji();
+        e.getReaction().removeReaction(e.getUser()).queue();
+        String emoji = e.getReactionEmote().getEmoji();
 
         if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
             BroadcastContainer.INSTANCE.stopBroadcast();
-            event.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getInitiatorMessageId()).queue();
-            event.getChannel().deleteMessageById(event.getMessageIdLong()).queue();
+            e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getInitiatorMessageId()).queue();
+            e.getChannel().deleteMessageById(e.getMessageIdLong()).queue();
+        } else {
+            e.getChannel().sendMessage(String.valueOf(StringUtil.getDigitOfEmoji(emoji))).queue();
         }
     }
 }

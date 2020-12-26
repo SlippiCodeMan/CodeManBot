@@ -27,4 +27,14 @@ public class StringUtil {
                         + ":" + main.getEmoteId() + ">")
                 .collect(Collectors.joining(" "));
     }
+
+    public static String getNumberedEmoji(int digit) {
+        char number = (char)('\u0030' + digit);
+        return number + "\uFE0F\u20E3";
+    }
+
+    public static int getDigitOfEmoji(String unicode) {
+        String result = String.format("\\u%04x", (int) unicode.charAt(0));
+        return Character.codePointAt(result, 6);
+    }
 }

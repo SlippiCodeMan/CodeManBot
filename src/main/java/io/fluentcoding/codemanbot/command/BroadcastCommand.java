@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.AdminCodeManCommand;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,13 +25,13 @@ public class BroadcastCommand extends AdminCodeManCommand {
     public BroadcastCommand(String name, String... aliases) {
         super(name, aliases);
 
-        broadcastModes.add(new BroadcastMode(getNumberedEmoji(1), "To all owners", (jda) ->
+        broadcastModes.add(new BroadcastMode(StringUtil.getNumberedEmoji(1), "To all owners", (jda) ->
             jda.getGuilds().stream().map(guild -> guild.getOwner().getUser()).collect(Collectors.toList())
         ));
-        broadcastModes.add(new BroadcastMode(getNumberedEmoji(2), "To all connected members", (jda) ->
+        broadcastModes.add(new BroadcastMode(StringUtil.getNumberedEmoji(2), "To all connected members", (jda) ->
             DatabaseBridge.getAllDiscordIds().stream().map(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
         ));
-        broadcastModes.add(new BroadcastMode(getNumberedEmoji(3), "To devs", (jda) ->
+        broadcastModes.add(new BroadcastMode(StringUtil.getNumberedEmoji(3), "To devs", (jda) ->
             Arrays.stream(GlobalVar.owners).mapToObj(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
         ));
     }
@@ -54,17 +55,12 @@ public class BroadcastCommand extends AdminCodeManCommand {
         builder.setColor(GlobalVar.SUCCESS);
         builder.setDescription("Broadcast started! Who do you want to send it to?\n\n" +
                 broadcastModes.stream().map(mode -> mode.getEmote() + " " + mode.getDescription()).collect(Collectors.joining("\n")));
-        builder.appendDescription(GlobalVar.CANCEL_EMOJI + " Cancel broadcast");
+        builder.appendDescription("\n" + GlobalVar.CANCEL_EMOJI + " Cancel broadcast");
         e.getChannel().sendMessage(builder.build()).queue(msg -> {
             BroadcastContainer.INSTANCE.broadcastHandler(e.getMessage().getIdLong(), msg.getIdLong());
             broadcastModes.stream().forEachOrdered(mode -> msg.addReaction(mode.emote).queue());
             msg.addReaction(GlobalVar.CANCEL_EMOJI).queue();
         });
-    }
-
-    private String getNumberedEmoji(int digit) {
-        char number = (char)('\u0030' + digit);
-        return number + "\uFE0F\u20E3";
     }
 
     @AllArgsConstructor
