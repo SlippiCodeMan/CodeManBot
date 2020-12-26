@@ -48,6 +48,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
 
                 String message = e.getMessage().getContentRaw();
 
+                BroadcastContainer.INSTANCE.stopBroadcast();
                 if (message.equals(Application.EXEC_MODE.getCommandPrefix() + "cancel")) {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setColor(GlobalVar.SUCCESS);
@@ -76,8 +77,6 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                 });
 
                 int notifiedPeopleAmountInt = notifiedPeopleAmount.get();
-
-                BroadcastContainer.INSTANCE.stopBroadcast();
 
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(GlobalVar.SUCCESS);
