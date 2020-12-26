@@ -12,8 +12,13 @@ public class BroadcastMessageReceived extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent e) {
         if (BroadcastContainer.INSTANCE.broadcastAlreadyActive()) {
-            if (e.getChannel().getIdLong() == BroadcastContainer.INSTANCE.getCurrentMessageId()) {
+            if (e.getChannel().getIdLong() == BroadcastContainer.INSTANCE.getChannelId()) {
                 String message = e.getMessage().getContentStripped();
+
+                e.getMessage().delete().queue();
+                e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getInitiatorMessageId()).queue();
+                e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getCurrentMessageId()).queue();
+                e.getChannel().deleteMessageById(BroadcastContainer.INSTANCE.getWriteYourMessageId()).queue();
 
                 BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA()).stream().forEachOrdered(user ->
                     user.openPrivateChannel().queue(channel -> channel.sendMessage(message))

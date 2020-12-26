@@ -35,7 +35,9 @@ public class BroadcastReactionListener extends ListenerAdapter {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(GlobalVar.SUCCESS);
             builder.setDescription("Write your message!");
-            e.getChannel().sendMessage(builder.build()).queue();
+            e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                BroadcastContainer.INSTANCE.setWriteYourMessageId(msg.getIdLong());
+            });
         }
     }
 }
