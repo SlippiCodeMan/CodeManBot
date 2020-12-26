@@ -4,11 +4,7 @@ import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-
-import java.awt.*;
-import java.util.Arrays;
 
 @Getter
 public class DeprecatedCodeManCommand extends CodeManCommand {
