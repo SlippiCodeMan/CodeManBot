@@ -4,7 +4,6 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.Application;
-import io.fluentcoding.codemanbot.util.PatternChecker;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -16,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 
 public class BroadcastMessageReceived extends ListenerAdapter {
 
@@ -61,10 +59,13 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     return;
                 }
 
-                Message.Attachment lastAttachment = e.getMessage().getAttachments().stream().reduce((first, second) -> second).orElse(null);
+
                 String link = "";
-                if (lastAttachment != null)
-                    link = lastAttachment.getUrl();
+                if (e.getMessage().getAttachments().size() != 0) {
+                    Message.Attachment attachment = e.getMessage().getAttachments().get(0);
+                    if (attachment.isImage())
+                        link = attachment.getProxyUrl();
+                }
 
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger();
                 List<User> users = BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA());
