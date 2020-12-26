@@ -5,11 +5,13 @@ import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.Application;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -56,7 +58,9 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                 }
 
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger();
-                BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA()).stream().forEachOrdered(user -> {
+                List<User> users = BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA());
+
+                users.stream().forEachOrdered(user -> {
                     if (DatabaseBridge.notifiable(user.getIdLong())) {
                         notifiedPeopleAmount.getAndIncrement();
                         user.openPrivateChannel().queue(channel -> {
@@ -71,11 +75,16 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     }
                 });
 
+                int notifiedPeopleAmountInt = notifiedPeopleAmount.get();
+
                 BroadcastContainer.INSTANCE.stopBroadcast();
 
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(GlobalVar.SUCCESS);
                 builder.setDescription("Message got sent to **" + notifiedPeopleAmount.get() + "** person!");
+                if (users.size() != notifiedPeopleAmountInt) {
+                    builder.appendDescription("\n" + (users.size() - notifiedPeopleAmountInt));
+                }
                 e.getChannel().sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES));
             }
         }
