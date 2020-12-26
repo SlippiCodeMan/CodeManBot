@@ -197,7 +197,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
     private String getMainsFormatted(long discordId) {
         List<SSBMCharacter> result = DatabaseBridge.getMains(discordId);
-        return result == null ? null : result.stream()
+        return result == null ? "" : result.stream()
                 .map(main -> "<:" + main.getName()
                         .replaceAll("\\s+", "_")
                         .replaceAll("[&.-]", "").toLowerCase()
