@@ -38,7 +38,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 String mains = getMains(e.getAuthor().getIdLong());
 
                 builder.addField("Your code", retrievedCode, true);
-                builder.addField("Your name", "*Loading...*", true);
+                builder.addField("Your name", GlobalVar.LOADING_EMOJI, true);
                 if (!mains.isEmpty()) {
                     builder.addField("Your mains", mains, true);
                 }
@@ -72,7 +72,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 String mains = getMains(mentionedMember.getIdLong());
 
                 builder.addField("Their code", retrievedCode, true);
-                builder.addField("Their name", "*Loading...*", true);
+                builder.addField("Their name", GlobalVar.LOADING_EMOJI, true);
                 if (!mains.isEmpty()) {
                     builder.addField("Their mains", mains, true);
                 }
@@ -96,7 +96,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             }
         } else if (PatternChecker.isConnectCode(user)) {
             long discordID = DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase());
-            builder.addField("Their name", "*Loading...*", true);
+            builder.addField("Their name", GlobalVar.LOADING_EMOJI, true);
             String mains;
             if (discordID == -1) {
                 mains = "";
@@ -125,7 +125,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             });
             return;
         } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.setDescription("*Loading...*");
+            builder.setDescription(GlobalVar.LOADING_EMOJI);
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);

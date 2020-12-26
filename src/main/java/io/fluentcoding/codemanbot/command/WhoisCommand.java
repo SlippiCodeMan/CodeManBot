@@ -35,7 +35,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
 
             // ERROR
             if (discordId == -1L) {
-                builder.setDescription("*Loading...*");
+                builder.setDescription(GlobalVar.LOADING_EMOJI);
                 builder.setColor(GlobalVar.ERROR);
 
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
@@ -55,7 +55,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 builder.setColor(GlobalVar.SUCCESS);
             }
         } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.addField("Their discord tag", "*Loading...*", false);
+            builder.addField("Their discord tag", GlobalVar.LOADING_EMOJI, false);
             builder.setColor(GlobalVar.LOADING);
 
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
