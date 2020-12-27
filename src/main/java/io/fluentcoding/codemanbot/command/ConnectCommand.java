@@ -29,7 +29,6 @@ public class ConnectCommand extends CodeManCommandWithArgs {
                 if (!SlippiBridge.userWithCodeExists(code)) {
                     newBuilder.setColor(GlobalVar.ERROR);
                     newBuilder.setDescription("This connect code doesn't exist!");
-                    return;
                 } else {
                     DatabaseBridge.InsertCodeResult result = DatabaseBridge.insertCode(e.getAuthor().getIdLong(), code);
 
