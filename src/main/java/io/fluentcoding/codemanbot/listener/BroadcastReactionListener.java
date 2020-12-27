@@ -74,13 +74,14 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 builder.setDescription("Message will get sent to **" + amount + "** people! Please wait a bit!\n");
                 builder.appendDescription("**" + (amount - notifiedPeopleAmount.get()) + "** of them blocked their notifications!");
 
-                Message old = e.getChannel().sendMessage(builder.build()).complete();
-                CompletableFuture.allOf(asyncActions.toArray(CompletableFuture[]::new)).thenAccept(unused -> {
-                    builder.setColor(GlobalVar.SUCCESS);
-                    builder.setDescription("Message got sent to **" + amount + "** people!\n");
-                    builder.appendDescription("**" + (amount - notifiedPeopleAmount.get()) + "** of them blocked their notifications!");
+                e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                    CompletableFuture.allOf(asyncActions.toArray(new CompletableFuture[asyncActions.size()])).thenAccept(unused -> {
+                        builder.setColor(GlobalVar.SUCCESS);
+                        builder.setDescription("Message got sent to **" + amount + "** people!\n");
+                        builder.appendDescription("**" + (amount - notifiedPeopleAmount.get()) + "** of them blocked their notifications!");
 
-                    e.getChannel().sendMessage(builder.build()).queue();
+                        e.getChannel().sendMessage(builder.build()).queue(newMsg -> msg.delete().queue());
+                    });
                 });
             }
 
