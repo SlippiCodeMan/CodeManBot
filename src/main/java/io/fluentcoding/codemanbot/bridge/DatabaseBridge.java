@@ -19,63 +19,6 @@ import java.util.stream.Collectors;
 public class DatabaseBridge {
     private final static String mongoUri = GlobalVar.dotenv.get("CODEMAN_DB_URI");
 
-    public static List<Long> getAllDiscordIds() {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
-            MongoCollection<Document> codeManCollection = getCollection(client);
-            List<Long> discordIds = new ArrayList<>();
-
-            for (Document result : codeManCollection.find()) {
-                discordIds.add(result.getLong("discord_id"));
-            }
-
-            return discordIds;
-        }
-    }
-
-    public static int deactivatedNotifies() {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
-            MongoCollection<Document> codeManCollection = getCollection(client);
-
-            BasicDBObject filter = new BasicDBObject("notify", false);
-            int amount = 0;
-            for (Document unused : codeManCollection.find(filter)) {
-                amount++;
-            }
-
-            return amount;
-        }
-    }
-
-    public static boolean notifiable(long discordId) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
-            MongoCollection<Document> codeManCollection = getCollection(client);
-
-            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
-            for (Document result : codeManCollection.find(filter)) {
-                if (result.containsKey("notify"))
-                    return result.getBoolean("notify");
-            }
-
-            return true;
-        }
-    }
-
-    public static boolean toggleNotifications(long discordId) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
-            MongoCollection<Document> codeManCollection = getCollection(client);
-
-            boolean oldValue = true;
-
-            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
-            for (Document result : codeManCollection.find(filter)) {
-                if (result.containsKey("notify"))
-                    oldValue = result.getBoolean("notify");
-            }
-            codeManCollection.updateOne(filter, Updates.set("notify", !oldValue));
-            return !oldValue;
-        }
-    }
-
     public static ToggleMainResult toggleMain(long discordId, SSBMCharacter main) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
