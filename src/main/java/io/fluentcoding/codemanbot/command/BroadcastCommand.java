@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.requests.RestAction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,17 +23,17 @@ public class BroadcastCommand extends AdminCodeManCommand {
     public static List<BroadcastMode> broadcastModes = new ArrayList<>();
 
     static {
-        broadcastModes.add(new BroadcastMode("To all", (jda) ->
-                DatabaseBridge.getAllDiscordIds().stream().map(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
+        broadcastModes.add(BroadcastMode.createBroadcastModeAsync("To all", (jda) ->
+                DatabaseBridge.getAllDiscordIds().stream().map(id -> jda.retrieveUserById(id)).collect(Collectors.toList())
         ));
-        broadcastModes.add(new BroadcastMode("To all owners", (jda) ->
+        broadcastModes.add(BroadcastMode.createBroadcastMode("To all owners", (jda) ->
                 jda.getGuilds().stream().map(guild -> guild.getOwner().getUser()).collect(Collectors.toList())
         ));
-        broadcastModes.add(new BroadcastMode("To all players", (jda) -> {
+        broadcastModes.add(BroadcastMode.createBroadcastModeAsync("To all players", (jda) -> {
             List<Long> ownerIds = jda.getGuilds().stream().map(guild -> guild.getOwner().getIdLong()).collect(Collectors.toList());
-            return DatabaseBridge.getAllDiscordIds().stream().filter(id -> !ownerIds.contains(id)).map(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList());
+            return DatabaseBridge.getAllDiscordIds().stream().filter(id -> !ownerIds.contains(id)).map(id -> jda.retrieveUserById(id)).collect(Collectors.toList());
         }));
-        broadcastModes.add(new BroadcastMode("To devs", (jda) ->
+        broadcastModes.add(BroadcastMode.createBroadcastMode("To devs", (jda) ->
                 Arrays.stream(GlobalVar.owners).mapToObj(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
         ));
     }
@@ -74,12 +75,25 @@ public class BroadcastCommand extends AdminCodeManCommand {
 
         private String emote;
         private String description;
-        private Function<JDA, List<User>> fetcher;
+        private Function<JDA, List<User>> fetcher = null;
+        private Function<JDA, List<RestAction<User>>> asyncFetcher = null;
 
-        public BroadcastMode(String description, Function<JDA, List<User>> fetcher) {
-            this.emote = nextAvailableDigit();
-            this.description = description;
-            this.fetcher = fetcher;
+        public static BroadcastMode createBroadcastMode(String description, Function<JDA, List<User>> fetcher) {
+            BroadcastMode mode = new BroadcastMode();
+            mode.emote = mode.nextAvailableDigit();
+            mode.description = description;
+            mode.fetcher = fetcher;
+
+            return mode;
+        }
+
+        public static BroadcastMode createBroadcastModeAsync(String description, Function<JDA, List<RestAction<User>>> asyncFetcher) {
+            BroadcastMode mode = new BroadcastMode();
+            mode.emote = mode.nextAvailableDigit();
+            mode.description = description;
+            mode.asyncFetcher = asyncFetcher;
+
+            return mode;
         }
 
         private String nextAvailableDigit() {

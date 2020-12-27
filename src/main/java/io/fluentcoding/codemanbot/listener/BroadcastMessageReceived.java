@@ -1,6 +1,7 @@
 package io.fluentcoding.codemanbot.listener;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
+import io.fluentcoding.codemanbot.command.BroadcastCommand;
 import io.fluentcoding.codemanbot.container.BroadcastContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.Application;
@@ -58,7 +59,8 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     if (attachment.isImage())
                         link = attachment.getUrl();
                 }
-                List<User> users = BroadcastContainer.INSTANCE.getMode().getFetcher().apply(e.getJDA());
+                BroadcastCommand.BroadcastMode mode = BroadcastContainer.INSTANCE.getMode();
+                List users = mode.getAsyncFetcher() != null ? mode.getAsyncFetcher().apply(e.getJDA()) : mode.getFetcher().apply(e.getJDA());
 
                 BroadcastContainer.INSTANCE.setMessage(message);
                 BroadcastContainer.INSTANCE.setImageLink(link);

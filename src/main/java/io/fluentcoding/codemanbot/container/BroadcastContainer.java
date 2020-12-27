@@ -4,6 +4,7 @@ import io.fluentcoding.codemanbot.command.BroadcastCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.requests.RestAction;
 
 import java.util.List;
 
@@ -19,6 +20,9 @@ public enum BroadcastContainer {
     private String imageLink = null;
     @Setter
     private List<User> cachedTarget = null;
+    @Setter
+    private List<RestAction<User>> cachedFetchingStrategy = null;
+    @Setter
     private BroadcastCommand.BroadcastMode mode = null;
 
     public void broadcastHandler(long channelId, long messageId) {
@@ -33,6 +37,7 @@ public enum BroadcastContainer {
         this.message = null;
         this.imageLink = null;
         this.cachedTarget = null;
+        this.cachedFetchingStrategy = null;
     }
     public boolean broadcastAlreadyActive() {return currentMessageId != -1;}
 }
