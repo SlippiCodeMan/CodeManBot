@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.command;
 
+import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.AdminCodeManCommand;
@@ -22,6 +23,7 @@ public class StatsCommand extends AdminCodeManCommand {
         builder.addField("Free memory", "**" + memoryStats.getFreeMemory() + "**MiB", false);
         builder.addField("Used memory", "**" + memoryStats.getUsedMemory() + "**MiB", false);
         builder.addField("Discord API latency", "**" + e.getJDA().getGatewayPing() + "**ms", false);
+        builder.addField("People with disabled notifications", String.valueOf(DatabaseBridge.deactivatedNotifies()), false);
         builder.setColor(GlobalVar.SUCCESS);
 
         e.getChannel().sendMessage(builder.build()).queue();
