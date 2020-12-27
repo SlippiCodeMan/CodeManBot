@@ -51,6 +51,21 @@ public class DatabaseBridge {
         }
     }
 
+    public static int usersWithMains() {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            int amount = 0;
+            for (Document result : codeManCollection.find(new BasicDBObject())) {
+                if (result.containsKey("mains")) {
+                    amount++;
+                }
+            }
+
+            return amount;
+        }
+    }
+
     @Nullable
     public static List<SSBMCharacter> getMains(long discordId) {
         try (MongoClient client = MongoClients.create(mongoUri)) {

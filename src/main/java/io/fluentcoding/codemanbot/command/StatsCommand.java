@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.command;
 
+import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.AdminCodeManCommand;
@@ -23,6 +24,7 @@ public class StatsCommand extends AdminCodeManCommand {
         builder.addField("Used memory", bold(memoryStats.getUsedMemory()) + "MiB", false);
         builder.addField("Discord API latency", bold(e.getJDA().getGatewayPing()) + "ms", false);
         builder.addField("Servers", bold(e.getJDA().getGuilds().size()), false);
+        builder.addField("Users with mains", bold(DatabaseBridge.usersWithMains()), false);
         builder.setColor(GlobalVar.SUCCESS);
 
         e.getChannel().sendMessage(builder.build()).queue();
@@ -31,11 +33,9 @@ public class StatsCommand extends AdminCodeManCommand {
     private String bold(String input) {
         return "**" + input + "**";
     }
-
     private String bold(double input) {
         return "**" + input + "**";
     }
-
     private String bold(long input) {
         return "**" + input + "**";
     }
