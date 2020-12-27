@@ -18,7 +18,7 @@ plugins {
 }
 
 group 'io.fluentcoding'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 dependencies {
     compile 'com.github.vladimir-bukhtoyarov:bucket4j-core:6.0.0'
