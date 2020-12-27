@@ -23,17 +23,17 @@ public class BroadcastCommand extends AdminCodeManCommand {
 
     static {
         broadcastModes.add(new BroadcastMode("To all", (jda) ->
-                DatabaseBridge.getAllDiscordIds().stream().map(id -> jda.getUserById(id)).collect(Collectors.toList())
+                DatabaseBridge.getAllDiscordIds().stream().map(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
         ));
         broadcastModes.add(new BroadcastMode("To all owners", (jda) ->
                 jda.getGuilds().stream().map(guild -> guild.getOwner().getUser()).collect(Collectors.toList())
         ));
         broadcastModes.add(new BroadcastMode("To all players", (jda) -> {
             List<Long> ownerIds = jda.getGuilds().stream().map(guild -> guild.getOwner().getIdLong()).collect(Collectors.toList());
-            return DatabaseBridge.getAllDiscordIds().stream().filter(id -> !ownerIds.contains(id)).map(id -> jda.getUserById(id)).collect(Collectors.toList());
+            return DatabaseBridge.getAllDiscordIds().stream().filter(id -> !ownerIds.contains(id)).map(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList());
         }));
         broadcastModes.add(new BroadcastMode("To devs", (jda) ->
-                Arrays.stream(GlobalVar.owners).mapToObj(id -> jda.getUserById(id)).collect(Collectors.toList())
+                Arrays.stream(GlobalVar.owners).mapToObj(id -> jda.retrieveUserById(id).complete()).collect(Collectors.toList())
         ));
     }
 

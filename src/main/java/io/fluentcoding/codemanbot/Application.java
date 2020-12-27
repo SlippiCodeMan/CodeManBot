@@ -56,7 +56,6 @@ public class Application {
                 new BroadcastReactionListener(),
                 new BroadcastMessageReceived()
         );
-        builder.setMemberCachePolicy(MemberCachePolicy.ALL);
 
         builder.build();
     }
