@@ -24,6 +24,7 @@ public class StatsCommand extends AdminCodeManCommand {
         builder.addField("Used memory", bold(memoryStats.getUsedMemory()) + "MiB", false);
         builder.addField("Discord API latency", bold(e.getJDA().getGatewayPing()) + "ms", false);
         builder.addField("Servers", bold(e.getJDA().getGuilds().size()), false);
+        builder.addField("Connected users", bold(DatabaseBridge.countDatabase()), false);
         builder.addField("Users with mains", bold(DatabaseBridge.usersWithMains()), false);
         builder.setColor(GlobalVar.SUCCESS);
 
