@@ -40,6 +40,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger(0);
 
                 users.stream().filter(user -> user != null).forEachOrdered(user -> {
+                    System.out.println(user.getAsTag());
                     if (DatabaseBridge.notifiable(user.getIdLong())) {
                         notifiedPeopleAmount.getAndIncrement();
                         PrivateChannel channel = user.openPrivateChannel().complete();
