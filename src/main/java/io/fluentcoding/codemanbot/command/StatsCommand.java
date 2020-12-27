@@ -1,6 +1,7 @@
 package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
+import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.AdminCodeManCommand;
@@ -18,15 +19,15 @@ public class StatsCommand extends AdminCodeManCommand {
         SystemUtil.MemoryStats memoryStats = SystemUtil.memoryStats();
 
         EmbedBuilder builder = new EmbedBuilder();
-        builder.addField("Total memory", bold(memoryStats.getTotalMemory()) + "MiB", false);
-        builder.addField("Maximum memory", bold(memoryStats.getMaxMemory()) + "MiB", false);
-        builder.addField("Free memory", bold(memoryStats.getFreeMemory()) + "MiB", false);
-        builder.addField("Used memory", bold(memoryStats.getUsedMemory()) + "MiB", false);
-        builder.addField("Discord API Response time", bold(e.getJDA().getGatewayPing()) + "ms", false);
-        builder.addField("Slippi API Response time", bold(e.getJDA().getGatewayPing()) + "ms", false);
-        builder.addField("Servers", bold(e.getJDA().getGuilds().size()), false);
-        builder.addField("Connected users", bold(DatabaseBridge.countDatabase()), false);
-        builder.addField("Users with mains", bold(DatabaseBridge.usersWithMains()), false);
+        builder.addField("Total memory", bold(memoryStats.getTotalMemory()) + "MiB", true);
+        builder.addField("Maximum memory", bold(memoryStats.getMaxMemory()) + "MiB", true);
+        builder.addField("Free memory", bold(memoryStats.getFreeMemory()) + "MiB", true);
+        builder.addField("Used memory", bold(memoryStats.getUsedMemory()) + "MiB", true);
+        builder.addField("Discord API Response time", bold(e.getJDA().getGatewayPing()) + "ms", true);
+        builder.addField("Slippi API Response time", bold(SlippiBridge.ping()) + "ms", true);
+        builder.addField("Servers", bold(e.getJDA().getGuilds().size()), true);
+        builder.addField("Connected users", bold(DatabaseBridge.countDatabase()), true);
+        builder.addField("Users with mains", bold(DatabaseBridge.usersWithMains()), true);
         builder.setColor(GlobalVar.SUCCESS);
 
         e.getChannel().sendMessage(builder.build()).queue();
