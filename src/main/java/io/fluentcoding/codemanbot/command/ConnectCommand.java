@@ -1,6 +1,7 @@
 package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
+import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -16,26 +17,36 @@ public class ConnectCommand extends CodeManCommandWithArgs {
 
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
-        String code = args.get("code");
+        String code = args.get("code").toUpperCase();
         boolean isValid = PatternChecker.isConnectCode(code);
 
         EmbedBuilder builder = new EmbedBuilder();
         if (isValid) {
-            code = code.toUpperCase();
-            DatabaseBridge.InsertCodeResult result = DatabaseBridge.insertCode(e.getAuthor().getIdLong(), code);
-
-            if (result.isAccepted()) {
-                builder.setColor(GlobalVar.SUCCESS);
-                builder.setDescription("Operation done!");
-                if (result.getOldCode() != null) {
-                    builder.addField("Old Code", result.getOldCode(), true);
+            builder.setTitle(GlobalVar.LOADING_EMOJI);
+            builder.setColor(GlobalVar.LOADING);
+            e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                EmbedBuilder newBuilder = new EmbedBuilder();
+                if (!SlippiBridge.userWithCodeExists(code)) {
+                    newBuilder.setColor(GlobalVar.ERROR);
+                    newBuilder.setDescription("This connect code doesn't exist!");
+                    return;
                 }
-                builder.addField("New Code", code, true);
-                ActivityUpdater.update(e.getJDA());
-            } else {
-                builder.setColor(GlobalVar.ERROR);
-                builder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
-            }
+
+                DatabaseBridge.InsertCodeResult result = DatabaseBridge.insertCode(e.getAuthor().getIdLong(), code);
+
+                if (result.isAccepted()) {
+                    newBuilder.setColor(GlobalVar.SUCCESS);
+                    newBuilder.setDescription("Operation done!");
+                    if (result.getOldCode() != null) {
+                        newBuilder.addField("Old Code", result.getOldCode(), true);
+                    }
+                    newBuilder.addField("New Code", code, true);
+                    ActivityUpdater.update(e.getJDA());
+                } else {
+                    newBuilder.setColor(GlobalVar.ERROR);
+                    newBuilder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
+                }
+            });
         } else {
             builder.setColor(GlobalVar.ERROR);
             builder.setDescription("Operation failed! Your tag format should be like this:\n**ABCD#123**");
