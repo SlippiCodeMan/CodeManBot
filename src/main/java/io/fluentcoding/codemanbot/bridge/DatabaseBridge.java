@@ -32,6 +32,20 @@ public class DatabaseBridge {
         }
     }
 
+    public static int deactivatedNotifies() {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            BasicDBObject filter = new BasicDBObject("notify", false);
+            int amount = 0;
+            for (Document unused : codeManCollection.find(filter)) {
+                amount++;
+            }
+
+            return amount;
+        }
+    }
+
     public static boolean notifiable(long discordId) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);

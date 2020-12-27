@@ -40,9 +40,9 @@ public class WhoisCommand extends CodeManCommandWithArgs {
 
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     if (!SlippiBridge.userWithCodeExists(code)) {
-                        builder.setDescription("This connect code has no discord user associated to it!");
+                        builder.setDescription("Nobody uses this connect code!");
                     } else {
-                        builder.setDescription("Nobody uses this username!");
+                        builder.setDescription("This connect code has no discord user associated to it!");
                     }
 
                     msg.editMessage(builder.build()).queue();
