@@ -47,7 +47,8 @@ public class BroadcastCommand extends AdminCodeManCommand {
 
             EmbedBuilder builder = new EmbedBuilder();
             builder.setColor(GlobalVar.SUCCESS);
-            builder.setDescription("Someone already started a broadcast! Stop it before making a new one!");
+            builder.setDescription("Someone already started a broadcast! We stopped your last one.");
+            BroadcastContainer.INSTANCE.stopBroadcast();
             e.getAuthor().openPrivateChannel().queue(channel -> {
                 channel.sendMessage(builder.build()).queue(msg -> msg.delete().queueAfter(1, TimeUnit.MINUTES));
             });

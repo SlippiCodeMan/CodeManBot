@@ -80,7 +80,6 @@ public class BroadcastReactionListener extends ListenerAdapter {
                         builder.setColor(GlobalVar.SUCCESS);
                         builder.setDescription("Message got sent to **" + amount + "** people!\n");
                         builder.appendDescription("**" + (amount - notifiedPeopleAmount.get()) + "** of them blocked their notifications!");
-                        BroadcastContainer.INSTANCE.stopBroadcast();
 
                         e.getChannel().sendMessage(builder.build()).queue(newMsg -> msg.delete().queue());
                     });
