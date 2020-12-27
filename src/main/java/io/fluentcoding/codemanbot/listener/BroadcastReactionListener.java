@@ -98,6 +98,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
 
         if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
             BroadcastContainer.INSTANCE.stopBroadcast();
+            e.getChannel().deleteMessageById(e.getMessageIdLong()).queue();
         } else {
             int digit = StringUtil.getDigitOfEmoji(emoji);
             BroadcastCommand.BroadcastMode mode = BroadcastCommand.broadcastModes.get(digit - 1);
