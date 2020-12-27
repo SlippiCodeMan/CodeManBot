@@ -19,9 +19,18 @@ public class MainCommand extends CodeManCommandWithArgs {
 
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
-        String characterInput = args.get("char");
+        if (DatabaseBridge.getCode(e.getAuthor().getIdLong()) == null) {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setColor(GlobalVar.ERROR);
+            builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
+            e.getChannel().sendMessage(builder.build()).queue();
 
+            return;
+        }
+
+        String characterInput = args.get("char");
         EmbedBuilder builder = new EmbedBuilder();
+
         if (characterInput == null) {
             List<SSBMCharacter> result = DatabaseBridge.getMains(e.getAuthor().getIdLong());
 
