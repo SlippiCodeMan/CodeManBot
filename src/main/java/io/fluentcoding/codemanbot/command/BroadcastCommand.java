@@ -8,6 +8,7 @@ import io.fluentcoding.codemanbot.util.codemancommand.AdminCodeManCommand;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -26,8 +27,8 @@ public class BroadcastCommand extends AdminCodeManCommand {
         broadcastModes.add(BroadcastMode.createBroadcastModeAsync("To all", (jda) ->
                 DatabaseBridge.getAllDiscordIds().stream().map(id -> jda.retrieveUserById(id)).collect(Collectors.toList())
         ));
-        broadcastModes.add(BroadcastMode.createBroadcastMode("To all owners", (jda) ->
-                jda.getGuilds().stream().map(guild -> guild.getOwner().getUser()).collect(Collectors.toList())
+        broadcastModes.add(BroadcastMode.createBroadcastModeAsync("To all owners", (jda) ->
+                jda.getGuilds().stream().map(guild -> guild.retrieveOwner()).collect(Collectors.toList())
         ));
         broadcastModes.add(BroadcastMode.createBroadcastModeAsync("To all players", (jda) -> {
             List<Long> ownerIds = jda.getGuilds().stream().map(guild -> guild.getOwner().getIdLong()).collect(Collectors.toList());
@@ -76,7 +77,7 @@ public class BroadcastCommand extends AdminCodeManCommand {
         private String emote;
         private String description;
         private Function<JDA, List<User>> fetcher = null;
-        private Function<JDA, List<RestAction<User>>> asyncFetcher = null;
+        private Function<JDA, List<RestAction>> asyncFetcher = null;
 
         public static BroadcastMode createBroadcastMode(String description, Function<JDA, List<User>> fetcher) {
             BroadcastMode mode = new BroadcastMode();
@@ -87,7 +88,7 @@ public class BroadcastCommand extends AdminCodeManCommand {
             return mode;
         }
 
-        public static BroadcastMode createBroadcastModeAsync(String description, Function<JDA, List<RestAction<User>>> asyncFetcher) {
+        public static BroadcastMode createBroadcastModeAsync(String description, Function<JDA, List<RestAction>> asyncFetcher) {
             BroadcastMode mode = new BroadcastMode();
             mode.emote = mode.nextAvailableDigit();
             mode.description = description;

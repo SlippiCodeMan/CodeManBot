@@ -64,7 +64,10 @@ public class BroadcastMessageReceived extends ListenerAdapter {
 
                 BroadcastContainer.INSTANCE.setMessage(message);
                 BroadcastContainer.INSTANCE.setImageLink(link);
-                BroadcastContainer.INSTANCE.setCachedTarget(users);
+                if (mode.getAsyncFetcher() != null)
+                    BroadcastContainer.INSTANCE.setCachedFetchingStrategy(users);
+                else
+                    BroadcastContainer.INSTANCE.setCachedTarget(users);
 
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(GlobalVar.SUCCESS);

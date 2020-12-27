@@ -21,7 +21,7 @@ public enum BroadcastContainer {
     @Setter
     private List<User> cachedTarget = null;
     @Setter
-    private List<RestAction<User>> cachedFetchingStrategy = null;
+    private List<RestAction> cachedFetchingStrategy = null;
     @Setter
     private BroadcastCommand.BroadcastMode mode = null;
 

@@ -8,6 +8,7 @@ import io.fluentcoding.codemanbot.container.PagingContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -51,10 +52,15 @@ public class BroadcastReactionListener extends ListenerAdapter {
                         }
                     });
                 } else {
-                    for (RestAction<User> restAction : BroadcastContainer.INSTANCE.getCachedFetchingStrategy()) {
+                    for (RestAction restAction : BroadcastContainer.INSTANCE.getCachedFetchingStrategy()) {
                         restAction.submit().thenAccept(user -> {
-                            if (user != null) {
-                                CompletableFuture<Void> action = notifyUserIfNotifiable(user, notifiedPeopleAmount);
+                            if (user instanceof Member) {
+                                CompletableFuture<Void> action = notifyUserIfNotifiable(((Member) user).getUser(), notifiedPeopleAmount);
+                                if (action != null) {
+                                    asyncActions.add(action);
+                                }
+                            } else {
+                                CompletableFuture<Void> action = notifyUserIfNotifiable((User)user, notifiedPeopleAmount);
                                 if (action != null) {
                                     asyncActions.add(action);
                                 }
