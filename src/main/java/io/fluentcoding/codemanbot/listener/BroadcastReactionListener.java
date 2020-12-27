@@ -52,8 +52,8 @@ public class BroadcastReactionListener extends ListenerAdapter {
                         }
                     });
                 } else {
-                    for (RestAction restAction : BroadcastContainer.INSTANCE.getCachedFetchingStrategy()) {
-                        restAction.submit().thenAccept(user -> {
+                    for (CompletableFuture future : BroadcastContainer.INSTANCE.getCachedFetchingStrategy()) {
+                        future.thenAccept(user -> {
                             if (user instanceof Member) {
                                 CompletableFuture<Void> action = notifyUserIfNotifiable(((Member) user).getUser(), notifiedPeopleAmount);
                                 if (action != null) {

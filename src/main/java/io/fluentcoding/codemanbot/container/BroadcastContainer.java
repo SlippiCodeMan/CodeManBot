@@ -4,9 +4,9 @@ import io.fluentcoding.codemanbot.command.BroadcastCommand;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.requests.RestAction;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Getter
 public enum BroadcastContainer {
@@ -21,7 +21,7 @@ public enum BroadcastContainer {
     @Setter
     private List<User> cachedTarget = null;
     @Setter
-    private List<RestAction> cachedFetchingStrategy = null;
+    private List<CompletableFuture> cachedFetchingStrategy = null;
     @Setter
     private BroadcastCommand.BroadcastMode mode = null;
 
