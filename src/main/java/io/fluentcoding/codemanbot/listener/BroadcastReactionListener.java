@@ -30,7 +30,9 @@ public class BroadcastReactionListener extends ListenerAdapter {
             return;
 
         if (BroadcastContainer.INSTANCE.getCachedTarget() != null || BroadcastContainer.INSTANCE.getCachedFetchingStrategy() != null) {
-            e.getChannel().retrieveMessageById(e.getMessageIdLong()).queue(msg -> msg.clearReactions().queue());
+            try {
+                e.getChannel().retrieveMessageById(e.getMessageIdLong()).queue(msg -> msg.clearReactions().queue());
+            } catch(Exception ex) {}
             String emoji = e.getReactionEmote().getEmoji();
             if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
                 BroadcastContainer.INSTANCE.stopBroadcast();
