@@ -39,7 +39,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 BroadcastContainer.INSTANCE.stopBroadcast();
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger(0);
 
-                int amount = BroadcastContainer.INSTANCE.getCachedTarget() == null ?
+                int amount = BroadcastContainer.INSTANCE.getCachedTarget() != null ?
                         BroadcastContainer.INSTANCE.getCachedTarget().size() :
                         BroadcastContainer.INSTANCE.getCachedFetchingStrategy().size();
 
