@@ -22,7 +22,8 @@ public class StatsCommand extends AdminCodeManCommand {
         builder.addField("Maximum memory", bold(memoryStats.getMaxMemory()) + "MiB", false);
         builder.addField("Free memory", bold(memoryStats.getFreeMemory()) + "MiB", false);
         builder.addField("Used memory", bold(memoryStats.getUsedMemory()) + "MiB", false);
-        builder.addField("Discord API latency", bold(e.getJDA().getGatewayPing()) + "ms", false);
+        builder.addField("Discord API Response time", bold(e.getJDA().getGatewayPing()) + "ms", false);
+        builder.addField("Slippi API Response time", bold(e.getJDA().getGatewayPing()) + "ms", false);
         builder.addField("Servers", bold(e.getJDA().getGuilds().size()), false);
         builder.addField("Connected users", bold(DatabaseBridge.countDatabase()), false);
         builder.addField("Users with mains", bold(DatabaseBridge.usersWithMains()), false);

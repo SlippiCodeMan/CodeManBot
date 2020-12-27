@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -117,6 +118,19 @@ public class SlippiBridge {
             }
         } catch(Exception e) {
             return null;
+        }
+    }
+
+    public static long ping() {
+        try(DefaultHttpClient client = new DefaultHttpClient()) {
+            long start = System.currentTimeMillis();
+
+            HttpGet post = new HttpGet(SLIPPI_GRAPHQL_URL);
+            HttpResponse response = client.execute(post);
+
+            return System.currentTimeMillis() - start;
+        } catch(Exception e) {
+            return -1;
         }
     }
 
