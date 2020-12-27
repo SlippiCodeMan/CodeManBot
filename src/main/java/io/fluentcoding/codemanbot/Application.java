@@ -3,7 +3,9 @@ package io.fluentcoding.codemanbot;
 import javax.security.auth.login.LoginException;
 
 import io.fluentcoding.codemanbot.command.*;
-import io.fluentcoding.codemanbot.listener.ReactionListener;
+import io.fluentcoding.codemanbot.listener.BroadcastMessageReceived;
+import io.fluentcoding.codemanbot.listener.BroadcastReactionListener;
+import io.fluentcoding.codemanbot.listener.PagingReactionListener;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
 import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
 import io.fluentcoding.codemanbot.util.CommandHandler;
@@ -11,6 +13,7 @@ import io.fluentcoding.codemanbot.util.ExecutionMode;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.codemancommand.DeprecatedCodeManCommand;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Application {
@@ -25,23 +28,33 @@ public class Application {
 
         // EVENTS
         final CommandHandler handler = new CommandHandler(
+                // USER COMMANDS
                 new ConnectCommand(new CodeManArgumentSet().setNecessaryArguments("code"),
                         "Connects your slippi account by using your connect code ", "connect"),
                 new InfoCommand(new CodeManArgumentSet().setOptionalArguments("user").setLastArgumentVarArg(),
-                        "Shows the info based of a slippi username/connect code", "info", "i"),
+                        "Shows the info based off a slippi username/code or discord tag", "info", "i"),
                 new WhoisCommand(new CodeManArgumentSet().setNecessaryArguments("user").setLastArgumentVarArg(),
-                        "Shows the discord username based of a slippi username/connect code", "whois", "wi"),
+                        "Shows the discord username based of a slippi username/code", "whois", "wi"),
+                new MainCommand(new CodeManArgumentSet().setOptionalArguments("char").setLastArgumentVarArg(),
+                        "Toggle a character main", "main", "mains", "m"),
                 new AskCommand("Asks for you if someone wants you to play", "ask", "a"),
                 new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect"),
+
+                // DEPRECATED COMMANDS
                 new DeprecatedCodeManCommand("info","code", "c"),
                 new DeprecatedCodeManCommand("info","name", "n"),
-                new StatsCommand("stats")
+
+                // ADMIN COMMANDS
+                new StatsCommand("stats"),
+                new BroadcastCommand("broadcast")
         );
 
         handler.addCommand(new HelpCommand(handler, "Displays the help message", "help", "h"));
         builder.addEventListeners(
                 handler,
-                new ReactionListener()
+                new PagingReactionListener(),
+                new BroadcastReactionListener(),
+                new BroadcastMessageReceived()
         );
 
         builder.build();

@@ -4,7 +4,7 @@ import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.CommandHandler;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class HelpCommand extends CodeManCommand {
     private CommandHandler handler;
@@ -15,7 +15,7 @@ public class HelpCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(MessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setDescription("**CodeMan** is a bot to link your slippi account to ssbm.\n\n" +
                 "__**Info:**__ **(Aliases)**, **<Necessary Argument>**, **[Optional Argument]**");

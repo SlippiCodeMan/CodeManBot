@@ -5,11 +5,12 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
-import io.fluentcoding.codemanbot.util.paging.PagingContainer;
+import io.fluentcoding.codemanbot.container.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
     }
 
     @Override
-    public void handle(MessageReceivedEvent e, Map<String, String> args) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         String user = args.get("user");
 
         EmbedBuilder builder = new EmbedBuilder();
@@ -34,8 +35,13 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
+                String mains = getMains(e.getAuthor().getIdLong());
+
                 builder.addField("Your code", retrievedCode, true);
-                builder.addField("Your name", "*Loading...*", true);
+                builder.addField("Your name", GlobalVar.LOADING_EMOJI, true);
+                if (!mains.isEmpty()) {
+                    builder.addField("Your mains", mains, true);
+                }
 
                 builder.setColor(GlobalVar.LOADING);
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
@@ -43,7 +49,11 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     newBuilder.addField("Your code", retrievedCode, true);
 
                     String name = SlippiBridge.getName(retrievedCode);
-                    newBuilder.addField("Your name", name, true);
+                    newBuilder.addField("Your name", name == null ? "*No name found*" : name, true);
+
+                    if (!mains.isEmpty()) {
+                        newBuilder.addField("Your mains", mains, true);
+                    }
 
                     newBuilder.setColor(GlobalVar.SUCCESS);
                     msg.editMessage(newBuilder.build()).queue();
@@ -59,8 +69,13 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 builder.setDescription("This person didn't connect to CodeMan yet!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
+                String mains = getMains(mentionedMember.getIdLong());
+
                 builder.addField("Their code", retrievedCode, true);
-                builder.addField("Their name", "*Loading...*", true);
+                builder.addField("Their name", GlobalVar.LOADING_EMOJI, true);
+                if (!mains.isEmpty()) {
+                    builder.addField("Their mains", mains, true);
+                }
 
                 builder.setColor(GlobalVar.LOADING);
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
@@ -70,13 +85,27 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     String name = SlippiBridge.getName(retrievedCode);
                     newBuilder.addField("Their name", name, true);
 
+                    if (!mains.isEmpty()) {
+                        newBuilder.addField("Their mains", mains, true);
+                    }
+
                     newBuilder.setColor(GlobalVar.SUCCESS);
                     msg.editMessage(newBuilder.build()).queue();
                 });
                 return;
             }
         } else if (PatternChecker.isConnectCode(user)) {
-            builder.addField("Their name", "*Loading...*", false);
+            long discordID = DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase());
+            builder.addField("Their name", GlobalVar.LOADING_EMOJI, true);
+            String mains;
+            if (discordID == -1) {
+                mains = "";
+            } else {
+                mains = getMains(discordID);
+                if (!mains.isEmpty()) {
+                    builder.addField("Their mains", mains, true);
+                }
+            }
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 EmbedBuilder newBuilder = new EmbedBuilder();
@@ -86,6 +115,9 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     newBuilder.setColor(GlobalVar.ERROR);
                 } else {
                     newBuilder.addField("Their name", name, true);
+                    if (!mains.isEmpty()) {
+                        newBuilder.addField("Their mains", mains, true);
+                    }
                     newBuilder.setColor(GlobalVar.SUCCESS);
                 }
 
@@ -93,29 +125,75 @@ public class InfoCommand extends CodeManCommandWithArgs {
             });
             return;
         } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.addField("Their code", "*Loading...*", false);
+            builder.setTitle(GlobalVar.LOADING_EMOJI);
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
 
                 EmbedBuilder newBuilder = new EmbedBuilder();
                 if (codes == null || codes.size() == 0) {
-                    newBuilder.setDescription("This person didn't connect to CodeMan yet!");
+                    newBuilder.setDescription("This person doesn't exist!");
                     newBuilder.setColor(GlobalVar.ERROR);
                 } else {
                     if (codes.size() == 1) {
                         SlippiBridge.UserEntry entry = codes.get(0);
-                        newBuilder.addField("Their code", entry.getDisplayName() == null ? entry.getCode() : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()), false);
+                        long discordID = DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode());
+                        newBuilder.addField("Their code",
+                                entry.getDisplayName() == null ? entry.getCode()
+                                        : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()),
+                                false);
+                        String mains;
+                        if (discordID == -1) {
+                            mains = "";
+                        } else {
+                            mains = getMains(discordID);
+                            if (!mains.isEmpty()) {
+                                newBuilder.addField("Their mains", mains, true);
+                            }
+                        }
                         newBuilder.setColor(GlobalVar.SUCCESS);
                     } else {
+                        Map<String, String> codesWithMains = new HashMap<>();
+                        for (SlippiBridge.UserEntry entry : codes) {
+                            long discordId = DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode());
+                            String mains = getMains(discordId);
+                            if (!mains.isEmpty())
+                                codesWithMains.put(entry.getCode(), mains);
+                        }
+                        
                         List<String> result = codes.stream()
-                                .filter(entry -> entry.getDisplayName() == null)
-                                .map(entry -> entry.getCode())
+                                .filter(entry -> entry.getDisplayName() == null && codesWithMains.containsKey(entry.getCode()))
+                                .map(entry -> StringUtil.stringWithMains(
+                                        entry.getCode(),
+                                        codesWithMains.get(entry.getCode())
+                                    )
+                                )
                                 .collect(Collectors.toList());
                         result.addAll(
                                 codes.stream()
-                                        .filter(entry -> entry.getDisplayName() != null)
-                                        .map(entry -> StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()))
+                                        .filter(entry -> entry.getDisplayName() == null && !codesWithMains.containsKey(entry.getCode()))
+                                        .map(entry -> entry.getCode())
+                                        .collect(Collectors.toList())
+                        );
+                        result.addAll(
+                                codes.stream()
+                                        .filter(entry -> entry.getDisplayName() != null && codesWithMains.containsKey(entry.getCode()))
+                                        .map(entry -> StringUtil.stringWithSlippiUsernameAndMains(
+                                                entry.getCode(),
+                                                entry.getDisplayName(),
+                                                codesWithMains.get(entry.getCode())
+                                            )
+                                        )
+                                        .collect(Collectors.toList())
+                        );
+                        result.addAll(
+                                codes.stream()
+                                        .filter(entry -> entry.getDisplayName() != null && !codesWithMains.containsKey(entry.getCode()))
+                                        .map(entry -> StringUtil.stringWithSlippiUsername(
+                                                entry.getCode(),
+                                                entry.getDisplayName()
+                                            )
+                                        )
                                         .collect(Collectors.toList())
                         );
 
@@ -135,9 +213,17 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
                 msg.editMessage(newBuilder.build()).queue();
             });
+
+            return;
         } else {
             builder.setDescription("This parameter could neither get recognized as an username nor as a connect code!");
             builder.setColor(GlobalVar.ERROR);
         }
+
+        e.getChannel().sendMessage(builder.build()).queue();
+    }
+
+    private String getMains(long discordId) {
+        return StringUtil.getMainsFormatted(DatabaseBridge.getMains(discordId));
     }
 }

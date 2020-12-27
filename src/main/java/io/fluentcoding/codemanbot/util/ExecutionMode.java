@@ -1,6 +1,5 @@
 package io.fluentcoding.codemanbot.util;
 
-import io.fluentcoding.codemanbot.util.GlobalVar;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

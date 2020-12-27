@@ -1,12 +1,15 @@
 package io.fluentcoding.codemanbot.command;
 
+import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
+import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class AskCommand extends CodeManCommand {
 
@@ -15,16 +18,27 @@ public class AskCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(MessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e) {
         EmbedBuilder builder = new EmbedBuilder();
 
-        builder.setTitle("Netplay Search");
-        builder.setDescription(e.getAuthor().getName() + " is looking for an opponent!");
-        builder.setThumbnail(e.getAuthor().getAvatarUrl());
-        builder.setColor(GlobalVar.SUCCESS);
+        String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
+        if (code == null) {
+            builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
+            builder.setColor(GlobalVar.ERROR);
+        } else {
+            builder.setTitle("Netplay Search");
+            builder.setDescription(e.getAuthor().getName() + " is looking for an opponent!");
+            builder.setThumbnail(e.getAuthor().getAvatarUrl());
+            builder.setColor(GlobalVar.SUCCESS);
 
-        builder.addField("Their code", DatabaseBridge.getCode(e.getAuthor().getIdLong()), false);
-        builder.setFooter(GlobalVar.FROG_EMOJI + " slippi 2.x.x");
+            builder.addField("Their code", code, true);
+            List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
+            if (characters != null && characters.size() != 0) {
+                builder.addField("Their mains", StringUtil.getMainsFormatted(characters), true);
+            }
+
+            builder.setFooter(GlobalVar.FROG_EMOJI + " slippi 2.x.x");
+        }
 
         e.getChannel().sendMessage(builder.build()).queue();
     }

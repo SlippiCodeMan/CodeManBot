@@ -4,12 +4,12 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
-import io.fluentcoding.codemanbot.util.paging.PagingContainer;
+import io.fluentcoding.codemanbot.container.PagingContainer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
     }
 
     @Override
-    public void handle(MessageReceivedEvent e, Map<String, String> args) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         String user = args.get("user");
 
         EmbedBuilder builder = new EmbedBuilder();
@@ -35,14 +35,14 @@ public class WhoisCommand extends CodeManCommandWithArgs {
 
             // ERROR
             if (discordId == -1L) {
-                builder.setDescription("*Loading...*");
+                builder.setDescription(GlobalVar.LOADING_EMOJI);
                 builder.setColor(GlobalVar.ERROR);
 
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     if (!SlippiBridge.userWithCodeExists(code)) {
-                        builder.setDescription("This connect code has no discord user associated to it!");
+                        builder.setDescription("Nobody uses this connect code!");
                     } else {
-                        builder.setDescription("Nobody uses this username!");
+                        builder.setDescription("This connect code has no discord user associated to it!");
                     }
 
                     msg.editMessage(builder.build()).queue();
@@ -55,7 +55,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 builder.setColor(GlobalVar.SUCCESS);
             }
         } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.addField("Their discord tag", "*Loading...*", false);
+            builder.addField("Their discord tag", GlobalVar.LOADING_EMOJI, false);
             builder.setColor(GlobalVar.LOADING);
 
             e.getChannel().sendMessage(builder.build()).queue(msg -> {

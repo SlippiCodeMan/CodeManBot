@@ -11,12 +11,120 @@ import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import lombok.Data;
 import org.bson.Document;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DatabaseBridge {
     private final static String mongoUri = GlobalVar.dotenv.get("CODEMAN_DB_URI");
+
+    public static List<Long> getAllDiscordIds() {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+            List<Long> discordIds = new ArrayList<>();
+
+            for (Document result : codeManCollection.find()) {
+                discordIds.add(result.getLong("discord_id"));
+            }
+
+            return discordIds;
+        }
+    }
+
+    public static int deactivatedNotifies() {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            BasicDBObject filter = new BasicDBObject("notify", false);
+            int amount = 0;
+            for (Document unused : codeManCollection.find(filter)) {
+                amount++;
+            }
+
+            return amount;
+        }
+    }
+
+    public static boolean notifiable(long discordId) {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
+            for (Document result : codeManCollection.find(filter)) {
+                if (result.containsKey("notify"))
+                    return result.getBoolean("notify");
+            }
+
+            return true;
+        }
+    }
+
+    public static boolean toggleNotifications(long discordId) {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            boolean oldValue = true;
+
+            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
+            for (Document result : codeManCollection.find(filter)) {
+                if (result.containsKey("notify"))
+                    oldValue = result.getBoolean("notify");
+            }
+            codeManCollection.updateOne(filter, Updates.set("notify", !oldValue));
+            return !oldValue;
+        }
+    }
+
+    public static ToggleMainResult toggleMain(long discordId, SSBMCharacter main) {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            ToggleMainResult result;
+
+            List<SSBMCharacter> oldMains = getMains(discordId);
+            List<SSBMCharacter> newMains;
+
+            if (oldMains == null) {
+                newMains = new ArrayList<>();
+                newMains.add(main);
+                result = ToggleMainResult.acceptedAndFirstCreation(newMains);
+            } else {
+                newMains = new ArrayList<>(oldMains);
+                if (newMains.contains(main)) {
+                    newMains.remove(main);
+                    result = ToggleMainResult.acceptedAndRemoved(oldMains, newMains);
+                } else {
+                    if (newMains.size() >= 3)
+                        return ToggleMainResult.DeclinedAndlistFull(oldMains);
+                    newMains.add(main);
+                    result = ToggleMainResult.acceptedAndAdded(oldMains, newMains);
+                }
+            }
+
+            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
+            codeManCollection.updateOne(filter, Updates.set("mains", newMains.stream().map(ssbmCharacter -> ssbmCharacter.ordinal()).collect(Collectors.toList())));
+            return result;
+        }
+    }
+
+    @Nullable
+    public static List<SSBMCharacter> getMains(long discordId) {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            for (Document result : codeManCollection.find(new BasicDBObject("discord_id", discordId))) {
+                if (result.containsKey("mains")) {
+                    return result.getList("mains", Integer.class).stream()
+                            .map(main -> SSBMCharacter.values()[main]).collect(Collectors.toList());
+                } else {
+                    return null;
+                }
+            }
+
+            return null;
+        }
+    }
 
     public static InsertCodeResult insertCode(long discordId, String code) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
@@ -40,36 +148,7 @@ public class DatabaseBridge {
         }
     }
 
-    public static ToogleMainResult toggleMain(long discordId, SSBMCharacter main) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
-            MongoCollection<Document> codeManCollection = getCollection(client);
-
-            if (codeManCollection.countDocuments(new BasicDBObject("main", main)) > 0) {
-                return ToogleMainResult.declined();
-            }
-
-            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
-            FindIterable<Document> result = codeManCollection.find(filter);
-            List<SSBMCharacter> oldMains = getMains(discordId);
-            if (oldMains != null) {
-                if (oldMains.size() <= 3) {
-                    if (oldMains.contains(main)) {
-                        codeManCollection.updateOne(filter, Updates.set("mains", oldMains.remove(main)));
-                    } else {
-                        codeManCollection.updateOne(filter, Updates.set("mains", oldMains.add(main)));
-                    }
-                    return ToogleMainResult.accepted(oldMains);
-                } else {
-                    return ToogleMainResult.listFull(oldMains);
-                }
-            } else {
-                List<SSBMCharacter> newMain = new ArrayList<>();
-                codeManCollection.insertOne(new Document("discord_id", discordId).append("slippi_code", newMain.add(main)));
-                return ToogleMainResult.acceptedAndFirstCreation();
-            }
-        }
-    }
-
+    @Nullable
     public static String getCode(long discordId) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
@@ -77,23 +156,6 @@ public class DatabaseBridge {
             for (Document result : codeManCollection.find(new BasicDBObject("discord_id", discordId))) {
                 if (result.containsKey("slippi_code")) {
                     return (String) result.get("slippi_code");
-                } else {
-                    return null;
-                }
-            }
-
-            return null;
-        }
-    }
-
-    public static List<SSBMCharacter> getMains(long discordId) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
-            MongoCollection<Document> codeManCollection = getCollection(client);
-
-            for (Document result : codeManCollection.find(new BasicDBObject("discord_id", discordId))) {
-                if (result.containsKey("mains")) {
-                    return result.getList("mains", Integer.class).stream()
-                            .map(main -> SSBMCharacter.values()[main]).collect(Collectors.toList());
                 } else {
                     return null;
                 }
@@ -155,22 +217,23 @@ public class DatabaseBridge {
     }
 
     @Data
-    public static class ToogleMainResult {
+    public static class ToggleMainResult {
         private final List<SSBMCharacter> oldMains;
+        private final List<SSBMCharacter> newMains;
         private final boolean isAccepted;
-        private final boolean firstCreation;
+        private final boolean isAdding;
 
-        public static ToogleMainResult declined() {
-            return new ToogleMainResult(null, false, false);
+        public static ToggleMainResult DeclinedAndlistFull(List<SSBMCharacter> oldMains) {
+            return new ToggleMainResult(oldMains, null, false, false);
         }
-        public static ToogleMainResult listFull(List<SSBMCharacter> oldMains) {
-            return new ToogleMainResult(oldMains, false, false);
+        public static ToggleMainResult acceptedAndAdded(List<SSBMCharacter> oldMains, List<SSBMCharacter> newMains) {
+            return new ToggleMainResult(oldMains, newMains, true, true);
         }
-        public static ToogleMainResult accepted(List<SSBMCharacter> oldMains) {
-            return new ToogleMainResult(oldMains, true, false);
+        public static ToggleMainResult acceptedAndRemoved(List<SSBMCharacter> oldMains, List<SSBMCharacter> newMains) {
+            return new ToggleMainResult(oldMains, newMains, true, false);
         }
-        public static ToogleMainResult acceptedAndFirstCreation() {
-            return new ToogleMainResult(null, true, true);
+        public static ToggleMainResult acceptedAndFirstCreation(List<SSBMCharacter> newMains) {
+            return new ToggleMainResult(null, newMains, true, true);
         }
     }
 }
