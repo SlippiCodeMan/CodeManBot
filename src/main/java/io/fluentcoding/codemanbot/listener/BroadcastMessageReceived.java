@@ -42,8 +42,8 @@ public class BroadcastMessageReceived extends ListenerAdapter {
             if (e.getChannel().getIdLong() == BroadcastContainer.INSTANCE.getChannelId()) {
                 String message = e.getMessage().getContentRaw();
 
-                BroadcastContainer.INSTANCE.stopBroadcast();
                 if (message.equals(Application.EXEC_MODE.getCommandPrefix() + "cancel")) {
+                    BroadcastContainer.INSTANCE.stopBroadcast();
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setColor(GlobalVar.SUCCESS);
                     builder.setDescription("Broadcast got cancelled!");

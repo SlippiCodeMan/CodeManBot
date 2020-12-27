@@ -132,7 +132,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
 
                 EmbedBuilder newBuilder = new EmbedBuilder();
                 if (codes == null || codes.size() == 0) {
-                    newBuilder.setDescription("This person didn't connect to CodeMan yet!");
+                    newBuilder.setDescription("This person doesn't exist!");
                     newBuilder.setColor(GlobalVar.ERROR);
                 } else {
                     if (codes.size() == 1) {
