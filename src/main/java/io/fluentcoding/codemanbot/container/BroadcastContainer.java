@@ -31,6 +31,7 @@ public enum BroadcastContainer {
     public void stopBroadcast() {
         this.currentMessageId = -1;
         this.message = null;
+        this.imageLink = null;
         this.cachedTarget = null;
     }
     public boolean broadcastAlreadyActive() {return currentMessageId != -1;}

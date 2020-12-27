@@ -9,6 +9,7 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -37,16 +38,17 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 users.stream().forEachOrdered(user -> {
                     if (DatabaseBridge.notifiable(user.getIdLong())) {
                         notifiedPeopleAmount.getAndIncrement();
-                        user.openPrivateChannel().queue(channel -> {
-                            EmbedBuilder builder = new EmbedBuilder();
-                            builder.setDescription(BroadcastContainer.INSTANCE.getMessage());
-                            builder.setColor(GlobalVar.SUCCESS);
-                            builder.setImage(BroadcastContainer.INSTANCE.getImageLink());
-                            builder.setFooter(
-                                    "write " + Application.EXEC_MODE.getCommandPrefix() + "notify here to turn on/off notifications"
-                            );
-                            channel.sendMessage(builder.build()).queue();
-                        });
+                        PrivateChannel channel = user.openPrivateChannel().complete();
+
+                        EmbedBuilder builder = new EmbedBuilder();
+                        builder.setDescription(BroadcastContainer.INSTANCE.getMessage());
+                        builder.setColor(GlobalVar.SUCCESS);
+                        builder.setImage(BroadcastContainer.INSTANCE.getImageLink());
+                        builder.setFooter(
+                                "write " + Application.EXEC_MODE.getCommandPrefix() + "notify here to turn on/off notifications"
+                        );
+
+                        channel.sendMessage(builder.build()).queue();
                     }
                 });
 
