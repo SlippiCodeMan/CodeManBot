@@ -30,7 +30,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
             if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
                 BroadcastContainer.INSTANCE.stopBroadcast();
                 e.getChannel().deleteMessageById(e.getMessageIdLong()).queue();
-            } else if (e.getReaction().getCount() >= GlobalVar.owners.length + 1) {
+            } else {
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger(0);
 
                 users.stream().forEachOrdered(user -> {

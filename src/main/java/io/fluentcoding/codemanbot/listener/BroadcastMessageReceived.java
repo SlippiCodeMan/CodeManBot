@@ -69,7 +69,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setColor(GlobalVar.SUCCESS);
                 builder.setDescription("Message will get sent to **" + users.size() + "** person!\n");
-                builder.appendDescription("Are you sure to do it? Every owner has to accept it!");
+                builder.appendDescription("Are you sure that you want to send it?");
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     msg.addReaction(GlobalVar.CHECKMARK_EMOJI).queue();
                     msg.addReaction(GlobalVar.CANCEL_EMOJI).queue();
