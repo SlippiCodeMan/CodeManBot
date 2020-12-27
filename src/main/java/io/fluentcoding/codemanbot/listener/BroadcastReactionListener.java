@@ -36,7 +36,6 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 BroadcastContainer.INSTANCE.stopBroadcast();
                 e.getChannel().deleteMessageById(e.getMessageIdLong()).queue();
             } else {
-                BroadcastContainer.INSTANCE.stopBroadcast();
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger(0);
 
                 int amount = BroadcastContainer.INSTANCE.getCachedTarget() != null ?
@@ -79,6 +78,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
                         builder.setColor(GlobalVar.SUCCESS);
                         builder.setDescription("Message got sent to **" + amount + "** people!\n");
                         builder.appendDescription("**" + (amount - notifiedPeopleAmount.get()) + "** of them blocked their notifications!");
+                        BroadcastContainer.INSTANCE.stopBroadcast();
 
                         e.getChannel().sendMessage(builder.build()).queue(newMsg -> msg.delete().queue());
                     });
