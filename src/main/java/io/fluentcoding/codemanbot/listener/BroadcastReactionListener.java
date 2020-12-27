@@ -33,17 +33,21 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 BroadcastContainer.INSTANCE.stopBroadcast();
                 e.getChannel().deleteMessageById(e.getMessageIdLong()).queue();
             } else {
+                String message = BroadcastContainer.INSTANCE.getMessage();
+                String imageLink = BroadcastContainer.INSTANCE.getImageLink();
+
+                BroadcastContainer.INSTANCE.stopBroadcast();
                 AtomicInteger notifiedPeopleAmount = new AtomicInteger(0);
 
-                users.stream().forEachOrdered(user -> {
+                users.stream().filter(user -> user != null).forEachOrdered(user -> {
                     if (DatabaseBridge.notifiable(user.getIdLong())) {
                         notifiedPeopleAmount.getAndIncrement();
                         PrivateChannel channel = user.openPrivateChannel().complete();
 
                         EmbedBuilder builder = new EmbedBuilder();
-                        builder.setDescription(BroadcastContainer.INSTANCE.getMessage());
+                        builder.setDescription(message);
                         builder.setColor(GlobalVar.SUCCESS);
-                        builder.setImage(BroadcastContainer.INSTANCE.getImageLink());
+                        builder.setImage(imageLink);
                         builder.setFooter(
                                 "write " + Application.EXEC_MODE.getCommandPrefix() + "notify here to turn on/off notifications"
                         );
@@ -57,7 +61,6 @@ public class BroadcastReactionListener extends ListenerAdapter {
                 builder.setDescription("Message got sent to **" + users.size() + "** people!\n");
                 builder.appendDescription("**" + (users.size() - notifiedPeopleAmount.get()) + "** of them blocked their notifications!");
 
-                BroadcastContainer.INSTANCE.stopBroadcast();
                 e.getChannel().sendMessage(builder.build()).queue();
             }
 
