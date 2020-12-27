@@ -13,8 +13,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class BroadcastMessageReceived extends ListenerAdapter {
 
@@ -54,7 +52,7 @@ public class BroadcastMessageReceived extends ListenerAdapter {
                     return;
                 }
 
-                String link = "";
+                String link = null;
                 if (e.getMessage().getAttachments().size() != 0) {
                     Message.Attachment attachment = e.getMessage().getAttachments().get(0);
                     if (attachment.isImage())

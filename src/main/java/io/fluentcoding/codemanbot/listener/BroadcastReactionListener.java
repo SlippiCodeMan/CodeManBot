@@ -26,6 +26,7 @@ public class BroadcastReactionListener extends ListenerAdapter {
 
         List<User> users = BroadcastContainer.INSTANCE.getCachedTarget();
         if (users != null) {
+            e.getChannel().retrieveMessageById(e.getMessageIdLong()).queue(msg -> msg.clearReactions().queue());
             String emoji = e.getReactionEmote().getEmoji();
             if (emoji.equals(GlobalVar.CANCEL_EMOJI)) {
                 BroadcastContainer.INSTANCE.stopBroadcast();
