@@ -30,27 +30,31 @@ public class ConnectCommand extends CodeManCommandWithArgs {
                     newBuilder.setColor(GlobalVar.ERROR);
                     newBuilder.setDescription("This connect code doesn't exist!");
                     return;
-                }
-
-                DatabaseBridge.InsertCodeResult result = DatabaseBridge.insertCode(e.getAuthor().getIdLong(), code);
-
-                if (result.isAccepted()) {
-                    newBuilder.setColor(GlobalVar.SUCCESS);
-                    newBuilder.setDescription("Operation done!");
-                    if (result.getOldCode() != null) {
-                        newBuilder.addField("Old Code", result.getOldCode(), true);
-                    }
-                    newBuilder.addField("New Code", code, true);
-                    ActivityUpdater.update(e.getJDA());
                 } else {
-                    newBuilder.setColor(GlobalVar.ERROR);
-                    newBuilder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
+                    DatabaseBridge.InsertCodeResult result = DatabaseBridge.insertCode(e.getAuthor().getIdLong(), code);
+
+                    if (result.isAccepted()) {
+                        newBuilder.setColor(GlobalVar.SUCCESS);
+                        newBuilder.setDescription("Operation done!");
+                        if (result.getOldCode() != null) {
+                            newBuilder.addField("Old Code", result.getOldCode(), true);
+                        }
+                        newBuilder.addField("New Code", code, true);
+                        ActivityUpdater.update(e.getJDA());
+                    } else {
+                        newBuilder.setColor(GlobalVar.ERROR);
+                        newBuilder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
+                    }
                 }
+
+                msg.editMessage(newBuilder.build()).queue();
             });
+
+            return;
         } else {
             builder.setColor(GlobalVar.ERROR);
             builder.setDescription("Operation failed! Your tag format should be like this:\n**ABCD#123**");
+            e.getChannel().sendMessage(builder.build()).queue();
         }
-        e.getChannel().sendMessage(builder.build()).queue();
     }
 }
