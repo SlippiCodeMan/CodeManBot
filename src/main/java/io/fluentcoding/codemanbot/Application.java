@@ -13,6 +13,7 @@ import io.fluentcoding.codemanbot.util.ExecutionMode;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.codemancommand.DeprecatedCodeManCommand;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Application {
@@ -55,6 +56,7 @@ public class Application {
                 new BroadcastReactionListener(),
                 new BroadcastMessageReceived()
         );
+        builder.setMemberCachePolicy(MemberCachePolicy.ALL);
 
         builder.build();
     }
