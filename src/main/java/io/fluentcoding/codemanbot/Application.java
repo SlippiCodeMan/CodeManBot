@@ -20,8 +20,6 @@ public class Application {
         GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("prod") ? ExecutionMode.PRODUCTION : ExecutionMode.DEV;
 
     public static void main(final String[] args) throws LoginException {
-        System.out.println(DatabaseBridge.getURI());
-
         final JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
 
         builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.EMOTE);
