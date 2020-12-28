@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.bridge;
 
+import com.mongodb.client.model.Filters;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
@@ -48,6 +49,14 @@ public class DatabaseBridge {
             BasicDBObject filter = new BasicDBObject("discord_id", discordId);
             codeManCollection.updateOne(filter, Updates.set("mains", newMains.stream().map(ssbmCharacter -> ssbmCharacter.ordinal()).collect(Collectors.toList())));
             return result;
+        }
+    }
+
+    public static long usersWithMains() {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            return codeManCollection.countDocuments(Filters.exists("mains"));
         }
     }
 

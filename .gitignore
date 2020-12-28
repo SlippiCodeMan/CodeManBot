@@ -113,3 +113,11 @@ Temporary Items
 
 # Ignore vscode stuff
 .vscode
+.classpath
+.project
+.settings
+
+# https://stackoverflow.com/questions/11968531/what-to-gitignore-from-the-idea-folder
+workspace.xml
+tasks.xml
+*.iws
