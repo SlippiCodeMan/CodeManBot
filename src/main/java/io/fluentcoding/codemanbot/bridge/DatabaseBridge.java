@@ -148,7 +148,7 @@ public class DatabaseBridge {
     }
 
     private static MongoCollection<Document> getCollection(MongoClient client) {
-        return client.getDatabase("player_codes").getCollection("codeman");
+        return client.getDatabase("codeman").getCollection("player_entries");
     }
 
     @Data
