@@ -40,7 +40,7 @@ public class DatabaseBridge {
                     result = ToggleMainResult.acceptedAndRemoved(oldMains, newMains);
                 } else {
                     if (newMains.size() >= 3)
-                        return ToggleMainResult.DeclinedAndlistFull(oldMains);
+                        return ToggleMainResult.declinedAndListFull(oldMains);
                     newMains.add(main);
                     result = ToggleMainResult.acceptedAndAdded(oldMains, newMains);
                 }
@@ -175,7 +175,7 @@ public class DatabaseBridge {
         private final boolean isAccepted;
         private final boolean isAdding;
 
-        public static ToggleMainResult DeclinedAndlistFull(List<SSBMCharacter> oldMains) {
+        public static ToggleMainResult declinedAndListFull(List<SSBMCharacter> oldMains) {
             return new ToggleMainResult(oldMains, null, false, false);
         }
         public static ToggleMainResult acceptedAndAdded(List<SSBMCharacter> oldMains, List<SSBMCharacter> newMains) {

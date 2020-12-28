@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -76,12 +75,11 @@ public enum PagingContainer {
         }
 
         public void react(Message msg, Runnable onDone) {
-            CompletableFuture[] futures = new CompletableFuture[] {
-                    msg.addReaction(GlobalVar.ARROW_LEFT_EMOJI).submit(),
-                    msg.addReaction(GlobalVar.ARROW_RIGHT_EMOJI).submit()
-            };
-
-            CompletableFuture.allOf(futures).thenAccept(unused -> onDone.run());
+            msg.addReaction(GlobalVar.ARROW_LEFT_EMOJI).queue(reaction -> {
+                msg.addReaction(GlobalVar.ARROW_RIGHT_EMOJI).queue(reaction2 -> {
+                    onDone.run();
+                });
+            });
         }
 
         private int maxPages() {
