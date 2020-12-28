@@ -123,7 +123,7 @@ public class SlippiBridge {
             long start = System.currentTimeMillis();
 
             HttpGet post = new HttpGet(SLIPPI_GRAPHQL_URL);
-            HttpResponse response = client.execute(post);
+            client.execute(post);
 
             return System.currentTimeMillis() - start;
         } catch(Exception e) {
