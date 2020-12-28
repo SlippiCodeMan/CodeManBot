@@ -8,8 +8,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 @Getter
 public class DeprecatedCodeManCommand extends CodeManCommand {
-    String newCommand;
-
     public DeprecatedCodeManCommand(String newCommand, String name, String... aliases) {
         super(null, name, aliases);
 
@@ -27,4 +25,6 @@ public class DeprecatedCodeManCommand extends CodeManCommand {
     public String getHelpTitle() {
         return null;
     }
+
+    private String newCommand;
 }
