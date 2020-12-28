@@ -22,6 +22,14 @@ public class ConnectCommand extends CodeManCommandWithArgs {
 
         EmbedBuilder builder = new EmbedBuilder();
         if (isValid) {
+            long discordId = DatabaseBridge.getDiscordIdFromConnectCode(code);
+            if (e.getAuthor().getIdLong() == discordId) {
+                builder.setDescription("You are already connected to this code!");
+                builder.setColor(GlobalVar.ERROR);
+                e.getChannel().sendMessage(builder.build()).queue();
+                return;
+            }
+
             builder.setTitle(GlobalVar.LOADING_EMOJI);
             builder.setColor(GlobalVar.LOADING);
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
