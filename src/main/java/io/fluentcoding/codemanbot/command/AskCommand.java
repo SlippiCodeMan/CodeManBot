@@ -2,6 +2,7 @@ package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
+import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.GlobalVar;
@@ -26,18 +27,17 @@ public class AskCommand extends CodeManCommand {
             builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
             builder.setColor(GlobalVar.ERROR);
         } else {
-            builder.setTitle("Netplay Search");
-            builder.setDescription(e.getAuthor().getName() + " is looking for an opponent!");
-            builder.setThumbnail(e.getAuthor().getAvatarUrl());
-            builder.setColor(GlobalVar.SUCCESS);
+            builder.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
+            builder.setTitle("Friendlies `[1/2]`");
+            builder.setDescription("a few games");
+            builder.setColor(GlobalVar.WAITING);
 
-            builder.addField("Their code", code, true);
             List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
             if (characters != null && characters.size() != 0) {
-                builder.addField("Their mains", StringUtil.getMainsFormatted(characters), true);
+                builder.addField("Mains", StringUtil.getMainsFormatted(characters), true);
             }
 
-            builder.setFooter(GlobalVar.FROG_EMOJI + " slippi 2.x.x");
+            builder.setFooter("Lobby ID: 1824");
         }
 
         e.getChannel().sendMessage(builder.build()).queue();
