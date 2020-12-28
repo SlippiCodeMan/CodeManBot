@@ -20,6 +20,10 @@ import java.util.stream.Collectors;
 public class DatabaseBridge {
     private final static String mongoUri = GlobalVar.dotenv.get("CODEMAN_DB_URI");
 
+    public static String getURI() {
+        return mongoUri;
+    }
+
     public static ToggleMainResult toggleMain(long discordId, SSBMCharacter main) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
