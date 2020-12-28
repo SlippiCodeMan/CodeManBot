@@ -38,9 +38,6 @@ public class StatsCommand extends AdminCodeManCommand {
         });
     }
 
-    private String bold(String input) {
-        return "**" + input + "**";
-    }
     private String bold(double input) {
         return "**" + input + "**";
     }
