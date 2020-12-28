@@ -3,18 +3,15 @@ package io.fluentcoding.codemanbot.bridge;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +19,7 @@ public class SlippiBridge {
     private final static String SLIPPI_GRAPHQL_URL = "https://slippi-hasura.herokuapp.com/v1/graphql";
 
     public static String getName(String code) {
-        try(DefaultHttpClient client = new DefaultHttpClient();) {
+        try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"fragment userDisplay on User {" +
                     "  displayName" +
@@ -50,7 +47,7 @@ public class SlippiBridge {
     }
 
     public static boolean userWithCodeExists(String code) {
-        try(DefaultHttpClient client = new DefaultHttpClient()) {
+        try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"fragment userDisplay on User {" +
                         "status" +
@@ -76,7 +73,7 @@ public class SlippiBridge {
     }
 
     public static List<UserEntry> getCodesWithActualName(String name) {
-        try(DefaultHttpClient client = new DefaultHttpClient();) {
+        try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
                     "  displayName" +
@@ -122,11 +119,11 @@ public class SlippiBridge {
     }
 
     public static long ping() {
-        try(DefaultHttpClient client = new DefaultHttpClient()) {
+        try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             long start = System.currentTimeMillis();
 
             HttpGet post = new HttpGet(SLIPPI_GRAPHQL_URL);
-            HttpResponse response = client.execute(post);
+            client.execute(post);
 
             return System.currentTimeMillis() - start;
         } catch(Exception e) {
