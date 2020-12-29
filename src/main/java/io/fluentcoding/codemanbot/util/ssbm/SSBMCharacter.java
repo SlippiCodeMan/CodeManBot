@@ -24,7 +24,7 @@ public enum SSBMCharacter {
     KIRBY("Kirby", 791703555572498432L, "kirbo", "puyo"),
     SAMUS("Samus", 791703555349676033L),
     ZELDA("Zelda", 791703555362258944L, "sheikbutbad"),
-    SHEIK("Sheik", 791703555416260638L),
+    SHEIK("Sheik", 791703555416260638L, "shiek"),
     LINK("Link", 791703555450863666L, "biglink"),
     YOUNG_LINK("Young Link", 791703555463053332L, "yl", "young", "ylink"),
     PICHU("Pichu", 791703555358195714L, "pikabutbad"),
