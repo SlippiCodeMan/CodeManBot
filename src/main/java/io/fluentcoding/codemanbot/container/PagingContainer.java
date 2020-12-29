@@ -15,8 +15,6 @@ import java.util.function.Function;
 public enum PagingContainer {
     INSTANCE;
 
-    private Map<Long, PageableContent> container = new HashMap<>();
-
     public void pageableMessageHandler(Function<MessageEmbed, MessageAction> action, PageableContent content) {
         action.apply(content.render()).queue(msg -> {
             content.react(msg, () -> {
@@ -44,10 +42,6 @@ public enum PagingContainer {
                 ListenerHook.removeReactionListener(msg.getIdLong());
             });
         });
-    }
-
-    public PageableContent getPageableContent(Long messageId) {
-        return container.get(messageId);
     }
 
     public static class PageableContent {
