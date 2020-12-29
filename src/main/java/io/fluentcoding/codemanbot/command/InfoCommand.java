@@ -32,27 +32,26 @@ public class InfoCommand extends CodeManCommandWithArgs {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
             if (retrievedCode == null) {
-                builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
-                builder.setColor(GlobalVar.ERROR);
+                builder = EmbedUtil.notConnected(builder);
             } else {
                 String mains = getMains(e.getAuthor().getIdLong());
 
-                builder.addField("Your code", retrievedCode, true);
-                builder.addField("Your name", GlobalVar.LOADING_EMOJI, true);
+                builder.addField("Code", retrievedCode, true);
+                builder.addField("Name", GlobalVar.LOADING_EMOJI, true);
                 if (!mains.isEmpty()) {
-                    builder.addField("Your mains", mains, true);
+                    builder.addField("Mains", mains, true);
                 }
 
                 builder.setColor(GlobalVar.LOADING);
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     EmbedBuilder newBuilder = new EmbedBuilder();
-                    newBuilder.addField("Your code", retrievedCode, true);
+                    newBuilder.addField("Code", retrievedCode, true);
 
                     String name = SlippiBridge.getName(retrievedCode);
-                    newBuilder.addField("Your name", name == null ? "*No name found*" : name, true);
+                    newBuilder.addField("Name", name == null ? StringUtil.italic("No name found") : name, true);
 
                     if (!mains.isEmpty()) {
-                        newBuilder.addField("Your mains", mains, true);
+                        newBuilder.addField("Mains", mains, true);
                     }
 
                     newBuilder.setColor(GlobalVar.SUCCESS);
@@ -197,7 +196,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                                         .collect(Collectors.toList())
                         );
 
-                        String title = "**" + codes.size() + " players are using this username:**\n\n";
+                        String title = StringUtil.bold(codes.size() + " players are using this username:\n\n");
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage,

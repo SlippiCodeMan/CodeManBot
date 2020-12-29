@@ -9,6 +9,7 @@ public class GlobalVar {
             ARROW_RIGHT_EMOJI ="\u25B6\uFE0F",
             LOADING_EMOJI = "<a:loading:792463286951870496>",
             CHECKMARK_EMOJI = "\u2705",
+            GREEN_HEART_EMOJI = "\u1F49A",
             CANCEL_EMOJI = "\u274C";
 
     public static Color SUCCESS = new Color(68, 169, 99),

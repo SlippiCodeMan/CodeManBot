@@ -21,8 +21,7 @@ public class MainCommand extends CodeManCommandWithArgs {
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         if (DatabaseBridge.getCode(e.getAuthor().getIdLong()) == null) {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setColor(GlobalVar.ERROR);
-            builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
+            EmbedUtil.notConnected(builder);
             e.getChannel().sendMessage(builder.build()).queue();
 
             return;
@@ -36,7 +35,7 @@ public class MainCommand extends CodeManCommandWithArgs {
 
             builder.setColor(GlobalVar.SUCCESS);
             String mains = StringUtil.getMainsFormatted(result);
-            builder.addField("Your mains", mains.isEmpty() ? "*None*" : mains, false);
+            builder.addField("Your mains", mains.isEmpty() ? StringUtil.italic("None") : mains, false);
         }
         else {
             characterInput = characterInput.replaceAll("[\\s-'.&]", "").toLowerCase();
@@ -61,8 +60,8 @@ public class MainCommand extends CodeManCommandWithArgs {
                         String oldMains = StringUtil.getMainsFormatted(result.getOldMains());
                         String newMains = StringUtil.getMainsFormatted(result.getNewMains());
 
-                        builder.addField("Old mains", oldMains.isEmpty() ? "*None*" : oldMains, false);
-                        builder.addField("New mains", newMains.isEmpty() ? "*None*" : newMains, false);
+                        builder.addField("Old mains", oldMains.isEmpty() ? StringUtil.italic("None") : oldMains, false);
+                        builder.addField("New mains", newMains.isEmpty() ? StringUtil.italic("None") : newMains, false);
                     if (result.isAdding()) {
                         builder.setFooter(Application.EXEC_MODE.getCommandPrefix() + "main " + args.get("char") +  " to remove this main");
                     }

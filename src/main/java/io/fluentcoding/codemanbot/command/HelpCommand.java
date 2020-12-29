@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.CommandHandler;
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.StringUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -17,8 +18,13 @@ public class HelpCommand extends CodeManCommand {
     @Override
     public void handle(GuildMessageReceivedEvent e) {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setDescription("**CodeMan** is a bot to link your slippi account to ssbm.\n\n" +
-                "__**Info:**__ **(Aliases)**, **<Necessary Argument>**, **[Optional Argument]**");
+        builder.setDescription(StringUtil.bold("CodeMan")
+                + " is a bot to link your slippi account to ssbm.\n\n"
+                + "__" + StringUtil.bold("Info:") + "__"
+                + StringUtil.bold(" (Aliases)")
+                + ", " + StringUtil.bold("<Necessary Argument>")
+                + ", " + StringUtil.bold("[Optional Argument])")
+        );
         builder.setColor(GlobalVar.SUCCESS);
 
         for (CodeManCommand command : handler.getCommands()) {
@@ -28,7 +34,7 @@ public class HelpCommand extends CodeManCommand {
                 builder.addField(helpTitle, command.getDescription(), false);
         }
 
-        builder.setFooter("Ananas#5903 (founder, ideas, prototype), FluentCoding#3314 (code cleaning, improvements, hosting)");
+        builder.setFooter("made with " + GlobalVar.GREEN_HEART_EMOJI + " by Ananas#5903 and FluentCoding#3314");
 
         e.getChannel().sendMessage(builder.build()).queue();
     }
