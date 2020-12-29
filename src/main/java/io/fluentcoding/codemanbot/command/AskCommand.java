@@ -27,6 +27,8 @@ public class AskCommand extends CodeManCommand {
             builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
             builder.setColor(GlobalVar.ERROR);
         } else {
+            e.getMessage().delete().queue();
+
             builder.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
             builder.setTitle("Friendlies Singles `[1/2]`");
             builder.setDescription("a few games");
