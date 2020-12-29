@@ -28,7 +28,7 @@ public class AskCommand extends CodeManCommand {
             builder.setColor(GlobalVar.ERROR);
         } else {
             builder.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
-            builder.setTitle("Friendlies `[1/2]`");
+            builder.setTitle("Friendlies Singles `[1/2]`");
             builder.setDescription("a few games");
             builder.setColor(GlobalVar.WAITING);
 

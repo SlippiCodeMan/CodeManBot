@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public abstract class DevCodeManCommand extends RestrictedCodeManCommand {
+
     public DevCodeManCommand(String name, String... aliases) {
         super((user, guild) -> Arrays.stream(GlobalVar.owners).anyMatch(owner -> user.getIdLong() == owner), "devs only", name, aliases);
     }

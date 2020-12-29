@@ -15,10 +15,10 @@ import java.util.function.Predicate;
 
 @Getter
 public abstract class RestrictedCodeManCommand extends CodeManCommand {
-    private BiPredicate<IMentionable, Guild> restriction;
+    private BiPredicate<Member, Guild> restriction;
     private String restrictionName;
 
-    public RestrictedCodeManCommand(BiPredicate<IMentionable, Guild> restriction, String restrictionName, String name, String... aliases) {
+    public RestrictedCodeManCommand(BiPredicate<Member, Guild> restriction, String restrictionName, String name, String... aliases) {
         super(null, name, aliases);
         this.restriction = restriction;
         this.restrictionName = restrictionName;
@@ -28,7 +28,7 @@ public abstract class RestrictedCodeManCommand extends CodeManCommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent e) {
-        if (restriction.test(e.getAuthor(), e.getGuild())) {
+        if (restriction.test(e.getMember(), e.getGuild())) {
             for (Member member : e.getChannel().getMembers()) {
                 if (!member.getUser().isBot() && !restriction.test(member, e.getGuild())) {
                     e.getMessage().delete().queue();

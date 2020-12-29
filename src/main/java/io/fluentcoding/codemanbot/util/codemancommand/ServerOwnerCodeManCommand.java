@@ -1,11 +1,10 @@
 package io.fluentcoding.codemanbot.util.codemancommand;
 
-import io.fluentcoding.codemanbot.util.GlobalVar;
-
-import java.util.Arrays;
+import net.dv8tion.jda.api.Permission;
 
 public abstract class ServerOwnerCodeManCommand extends RestrictedCodeManCommand {
+
     public ServerOwnerCodeManCommand(String name, String... aliases) {
-        super((user, guild) -> guild.retrieveOwner().complete().getIdLong() == user.getIdLong(), "server owner only", name, aliases);
+        super((member, guild) -> member.getPermissions().contains(Permission.ADMINISTRATOR), "server admin only", name, aliases);
     }
 }
