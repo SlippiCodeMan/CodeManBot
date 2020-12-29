@@ -40,6 +40,6 @@ public class LobbyCommand extends CodeManCommand {
 
             builder.setFooter("Lobby ID: 1824");
         }
-        e.getChannel().sendMessage(builder.build()).queue(message -> message.addReaction(GlobalVar.ARROW_RIGHT_EMOJI));
+        e.getChannel().sendMessage(builder.build()).queue(message -> message.addReaction(GlobalVar.ARROW_RIGHT_EMOJI).queue());
     }
 }
