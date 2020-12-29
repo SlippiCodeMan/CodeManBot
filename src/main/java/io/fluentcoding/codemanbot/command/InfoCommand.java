@@ -35,7 +35,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             } else {
                 String mains = getMains(e.getAuthor().getIdLong());
 
-                builder.setAuthor(GlobalVar.LOADING_EMOJI, e.getAuthor().getAvatarUrl());
+                builder.setAuthor(GlobalVar.LOADING_EMOJI, null, e.getAuthor().getAvatarUrl());
                 if (mains.isEmpty()) {
                     builder.setDescription(retrievedCode);
                 } else {
@@ -47,12 +47,12 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     EmbedBuilder newBuilder = new EmbedBuilder();
 
                     String name = SlippiBridge.getName(retrievedCode);
-                    newBuilder.setAuthor(name == null ? e.getAuthor().getName() : name, e.getAuthor().getAvatarUrl());
+                    newBuilder.setAuthor(name == null ? e.getAuthor().getName() : name, null, e.getAuthor().getAvatarUrl());
 
                     if (mains.isEmpty()) {
                         newBuilder.setDescription(retrievedCode);
                     } else {
-                        newBuilder.setDescription(retrievedCode + mains);
+                        newBuilder.setDescription(retrievedCode + " " + mains);
                     }
 
                     newBuilder.setColor(GlobalVar.SUCCESS);
