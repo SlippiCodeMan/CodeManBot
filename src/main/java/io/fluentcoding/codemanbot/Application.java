@@ -1,9 +1,7 @@
 package io.fluentcoding.codemanbot;
 
 import javax.security.auth.login.LoginException;
-import javax.xml.crypto.Data;
 
-import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.command.*;
 import io.fluentcoding.codemanbot.listener.PagingReactionListener;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
