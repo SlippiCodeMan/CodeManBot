@@ -1,6 +1,7 @@
 package io.fluentcoding.codemanbot.container;
 
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.hook.ListenerHook;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -14,19 +15,33 @@ import java.util.function.Function;
 public enum PagingContainer {
     INSTANCE;
 
-    private Map<Long, PageableContent> container = new HashMap<>();
-
     public void pageableMessageHandler(Function<MessageEmbed, MessageAction> action, PageableContent content) {
         action.apply(content.render()).queue(msg -> {
-            content.react(msg, () -> container.put(msg.getIdLong(), content));
+            content.react(msg, () -> {
+                ListenerHook.addReactionListener(msg.getIdLong(), event -> {
+                    event.getReaction().removeReaction(event.getUser()).queue();
+                    if (event.getUser().getIdLong() != content.getAuthorId())
+                        return;
+
+                    String emoji = event.getReactionEmote().getEmoji();
+                    if (emoji.equals(GlobalVar.ARROW_LEFT_EMOJI)) {
+                        if (!content.canGoToPreviousPage())
+                            return;
+                        content.previousPage();
+                        event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
+                    } else if (emoji.equals(GlobalVar.ARROW_RIGHT_EMOJI)) {
+                        if (!content.canGoToNextPage())
+                            return;
+                        content.nextPage();
+                        event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
+                    }
+                });
+            });
+
             msg.clearReactions().queueAfter(1, TimeUnit.HOURS, (unused) -> {
-                container.remove(msg.getIdLong(), content);
+                ListenerHook.removeReactionListener(msg.getIdLong());
             });
         });
-    }
-
-    public PageableContent getPageableContent(Long messageId) {
-        return container.get(messageId);
     }
 
     public static class PageableContent {

@@ -3,13 +3,13 @@ package io.fluentcoding.codemanbot;
 import javax.security.auth.login.LoginException;
 
 import io.fluentcoding.codemanbot.command.*;
-import io.fluentcoding.codemanbot.listener.PagingReactionListener;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
 import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
 import io.fluentcoding.codemanbot.util.CommandHandler;
 import io.fluentcoding.codemanbot.util.ExecutionMode;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.codemancommand.DeprecatedCodeManCommand;
+import io.fluentcoding.codemanbot.util.hook.ListenerHook;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
@@ -48,7 +48,7 @@ public class Application {
         handler.addCommand(new HelpCommand(handler, "Displays the help message", "help", "h"));
         builder.addEventListeners(
                 handler,
-                new PagingReactionListener()
+                new ListenerHook()
         );
 
         builder.build();
