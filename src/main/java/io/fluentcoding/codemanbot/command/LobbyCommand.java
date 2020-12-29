@@ -9,7 +9,6 @@ import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class LobbyCommand extends CodeManCommand {
@@ -33,7 +32,6 @@ public class LobbyCommand extends CodeManCommand {
             builder.setTitle("Friendlies Singles `[1/2]`");
             builder.setDescription("a few games");
             builder.setColor(GlobalVar.WAITING);
-            builder.setTimestamp(LocalDateTime.now());
 
             List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
             if (characters != null && characters.size() != 0) {
