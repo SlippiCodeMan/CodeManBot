@@ -11,9 +11,9 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.List;
 
-public class AskCommand extends CodeManCommand {
+public class LobbyCommand extends CodeManCommand {
 
-    public AskCommand(String description, String prefix, String... aliases) {
+    public LobbyCommand(String description, String prefix, String... aliases) {
         super(description, prefix, aliases);
     }
 
