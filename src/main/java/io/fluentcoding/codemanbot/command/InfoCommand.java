@@ -35,22 +35,24 @@ public class InfoCommand extends CodeManCommandWithArgs {
             } else {
                 String mains = getMains(e.getAuthor().getIdLong());
 
-                builder.addField("Code", retrievedCode, true);
-                builder.addField("Name", GlobalVar.LOADING_EMOJI, true);
-                if (!mains.isEmpty()) {
-                    builder.addField("Mains", mains, true);
+                builder.setAuthor(GlobalVar.LOADING_EMOJI, e.getAuthor().getAvatarUrl());
+                if (mains.isEmpty()) {
+                    builder.setDescription(retrievedCode);
+                } else {
+                    builder.setDescription(retrievedCode + mains);
                 }
 
                 builder.setColor(GlobalVar.LOADING);
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     EmbedBuilder newBuilder = new EmbedBuilder();
-                    newBuilder.addField("Code", retrievedCode, true);
 
                     String name = SlippiBridge.getName(retrievedCode);
-                    newBuilder.addField("Name", name == null ? StringUtil.italic("No name found") : name, true);
+                    newBuilder.setAuthor(name == null ? e.getAuthor().getName() : name, e.getAuthor().getAvatarUrl());
 
-                    if (!mains.isEmpty()) {
-                        newBuilder.addField("Mains", mains, true);
+                    if (mains.isEmpty()) {
+                        newBuilder.setDescription(retrievedCode);
+                    } else {
+                        newBuilder.setDescription(retrievedCode + mains);
                     }
 
                     newBuilder.setColor(GlobalVar.SUCCESS);
