@@ -7,6 +7,7 @@ import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.List;
@@ -40,7 +41,6 @@ public class LobbyCommand extends CodeManCommand {
 
             builder.setFooter("Lobby ID: 1824");
         }
-
-        e.getChannel().sendMessage(builder.build()).queue();
+        e.getChannel().sendMessage(builder.build()).queue(message -> message.addReaction(GlobalVar.ARROW_RIGHT_EMOJI));
     }
 }
