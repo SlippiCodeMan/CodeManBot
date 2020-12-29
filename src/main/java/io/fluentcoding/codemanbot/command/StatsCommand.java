@@ -4,12 +4,12 @@ import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
-import io.fluentcoding.codemanbot.util.codemancommand.AdminCodeManCommand;
+import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class StatsCommand extends AdminCodeManCommand {
+public class StatsCommand extends DevCodeManCommand {
 
     public StatsCommand(String name, String... aliases) {
         super(name, aliases);
