@@ -35,11 +35,11 @@ public class InfoCommand extends CodeManCommandWithArgs {
             } else {
                 String mains = getMains(e.getAuthor().getIdLong());
 
-                builder.setAuthor("Loading...", null, "https://codeman.rocks/assets/loading.gif");
-                if (mains.isEmpty()) {
-                    builder.setDescription(retrievedCode);
-                } else {
-                    builder.setDescription(retrievedCode + mains);
+                builder.addField("Your code", retrievedCode, true);
+                builder.addField("Your name", GlobalVar.LOADING_EMOJI, true);
+
+                if (!mains.isEmpty()) {
+                    builder.addField("Your mains", mains, true);
                 }
 
                 builder.setColor(GlobalVar.LOADING);
@@ -47,12 +47,11 @@ public class InfoCommand extends CodeManCommandWithArgs {
                     EmbedBuilder newBuilder = new EmbedBuilder();
 
                     String name = SlippiBridge.getName(retrievedCode);
-                    newBuilder.setAuthor(name == null ? e.getAuthor().getName() : name, null, e.getAuthor().getAvatarUrl());
+                    newBuilder.addField("Your code", retrievedCode, true);
+                    newBuilder.addField("Your name", name == null ? StringUtil.italic("Not found") : name, true);
 
-                    if (mains.isEmpty()) {
-                        newBuilder.setDescription(retrievedCode);
-                    } else {
-                        newBuilder.setDescription(retrievedCode + " " + mains);
+                    if (!mains.isEmpty()) {
+                        newBuilder.addField("Your mains", mains, true);
                     }
 
                     newBuilder.setColor(GlobalVar.SUCCESS);
