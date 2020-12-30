@@ -34,6 +34,7 @@ public class LobbyCommand extends CodeManCommand {
             EmbedBuilder stepOne = new EmbedBuilder();
             stepOne.setTitle("Lobby Creator");
             stepOne.setDescription("Enter the description of your lobby:");
+            e.getChannel().sendMessage(stepOne.build()).queue();
 
             String content = e.getMessage().getContentRaw();
             if (!content.isEmpty()) {
@@ -43,7 +44,6 @@ public class LobbyCommand extends CodeManCommand {
 
             lobby.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
             lobby.setTitle("Searching `[1/2]`");
-            lobby.setDescription(StringUtil.bold("quick sesh"));
             lobby.setColor(GlobalVar.WAITING);
 
             List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
