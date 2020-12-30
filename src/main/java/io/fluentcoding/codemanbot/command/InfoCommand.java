@@ -35,7 +35,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             } else {
                 String mains = getMains(e.getAuthor().getIdLong());
 
-                builder.setAuthor("", null, "https://codeman.rocks/assets/loading.gif");
+                builder.setAuthor("Loading...", null, "https://codeman.rocks/assets/loading.gif");
                 if (mains.isEmpty()) {
                     builder.setDescription(retrievedCode);
                 } else {
