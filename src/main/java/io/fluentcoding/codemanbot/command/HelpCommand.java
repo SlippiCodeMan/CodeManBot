@@ -34,7 +34,7 @@ public class HelpCommand extends CodeManCommand {
                 builder.addField(helpTitle, command.getDescription(), false);
         }
 
-        builder.setFooter("made with " + GlobalVar.GREEN_HEART_EMOJI + " by Ananas#5903 and FluentCoding#3314");
+        builder.setFooter("made with " + GlobalVar.GREEN_HEART_EMOJI + " by Ananas#5903 (founder, ideas, prototype), FluentCoding#3314 (code cleaning, improvements, hosting)");
 
         e.getChannel().sendMessage(builder.build()).queue();
     }
