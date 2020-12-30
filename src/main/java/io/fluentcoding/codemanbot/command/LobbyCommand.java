@@ -20,29 +20,35 @@ public class LobbyCommand extends CodeManCommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent e) {
+        // Set settings
         // WIP
         EmbedBuilder builder = new EmbedBuilder();
+        String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
-        String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
-        if (code == null) {
+        if (retrievedCode == null) {
             builder = EmbedUtil.notConnected(builder);
         } else {
-            e.getMessage().delete().queue();
+            String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
+            if (code == null) {
+                builder = EmbedUtil.notConnected(builder);
+            } else {
+                e.getMessage().delete().queue();
 
-            builder.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
-            builder.setTitle("Searching `[1/2]`");
-            builder.setDescription(StringUtil.bold("quick sesh"));
-            builder.setColor(GlobalVar.WAITING);
+                builder.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
+                builder.setTitle("Searching `[1/2]`");
+                builder.setDescription(StringUtil.bold("quick sesh"));
+                builder.setColor(GlobalVar.WAITING);
 
-            List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
-            if (characters != null && characters.size() != 0) {
-                builder.addField("Mains", StringUtil.getMainsFormatted(characters), true);
+                List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
+                if (characters != null && characters.size() != 0) {
+                    builder.addField("Mains", StringUtil.getMainsFormatted(characters), true);
+                }
+
+                Random random = new Random();
+
+                builder.setFooter("ID: " + String.format("%03d", random.nextInt(9999 - 0 + 1) + 0));
             }
-
-            Random random = new Random();
-
-            builder.setFooter("ID: " + String.format("%03d", random.nextInt(9999 - 0 + 1) + 0));
+            e.getChannel().sendMessage(builder.build()).queue(msg -> msg.addReaction(GlobalVar.CHECKMARK_EMOJI).queue());
         }
-        e.getChannel().sendMessage(builder.build()).queue(message -> message.addReaction(GlobalVar.CHECKMARK_EMOJI).queue());
     }
 }
