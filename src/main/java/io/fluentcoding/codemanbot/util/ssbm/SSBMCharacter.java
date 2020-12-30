@@ -28,7 +28,7 @@ public enum SSBMCharacter {
     LINK("Link", 791703555450863666L, "linkle"),
     YOUNG_LINK("Young Link", 791703555463053332L, "yl", "young", "ylink"),
     PICHU("Pichu", 791703555358195714L, "pikabutbad"),
-    PIKACHU("Pikachu", 791703555445882920L, "pika", "chu", "pikapika", "yellow rat"),
+    PIKACHU("Pikachu", 791703555445882920L, "pika", "chu", "pikapika", "yellowrat"),
     JIGGLYPUFF("Jigglypuff", 791703555446800394L, "pummeluff", "puff", "overpowered", "jpuff", "jigglyp", "clutchbox"),
     MEWTWO("Mewtwo", 791703555462922251L, "m2", "jason"),
     MRGAMEWATCH("Mr. Game & Watch", 791703555492544582L, "gnw", "gw", "mgnw", "mrgnw", "mrgw", "gameandwatch", "mrgameandwatch", "mrgamewatch", "gamewatch", "mrgamenwatch", "gamenwatch"),
