@@ -20,6 +20,4 @@ jobs:
             cd CodeManDev
             git checkout dev
             git pull
-            chmod +x deploy.sh
             ./deploy.sh
-      
