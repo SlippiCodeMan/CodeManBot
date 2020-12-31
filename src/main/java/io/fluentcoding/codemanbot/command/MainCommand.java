@@ -21,7 +21,7 @@ public class MainCommand extends CodeManCommandWithArgs {
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         if (DatabaseBridge.getCode(e.getAuthor().getIdLong()) == null) {
             EmbedBuilder builder = new EmbedBuilder();
-            EmbedUtil.notConnected(builder);
+            builder = EmbedUtil.ALREADYCONNECTED.getEmbed();
             e.getChannel().sendMessage(builder.build()).queue();
 
             return;

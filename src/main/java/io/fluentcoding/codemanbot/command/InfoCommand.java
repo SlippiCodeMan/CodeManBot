@@ -34,7 +34,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
             if (retrievedCode == null) {
-                EmbedUtil.alreadyConnected(builder);
+                builder = EmbedUtil.ALREADYCONNECTED.getEmbed();
             } else {
                 String mains = getMains(e.getAuthor().getIdLong());
 

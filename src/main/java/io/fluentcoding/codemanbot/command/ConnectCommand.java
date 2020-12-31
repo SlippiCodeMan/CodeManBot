@@ -24,7 +24,7 @@ public class ConnectCommand extends CodeManCommandWithArgs {
         if (isValid) {
             long discordId = DatabaseBridge.getDiscordIdFromConnectCode(code);
             if (e.getAuthor().getIdLong() == discordId) {
-                EmbedUtil.alreadyConnected(builder);
+                builder = EmbedUtil.ALREADYCONNECTED.getEmbed();
                 e.getChannel().sendMessage(builder.build()).queue();
                 return;
             }

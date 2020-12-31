@@ -1,6 +1,5 @@
 package io.fluentcoding.codemanbot.command;
 
-import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
@@ -13,7 +12,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class AskCommand extends CodeManCommandWithArgs {
 
@@ -27,7 +25,7 @@ public class AskCommand extends CodeManCommandWithArgs {
 
         String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
         if (code == null) {
-            EmbedUtil.notConnected(builder);
+            builder = EmbedUtil.NOTCONNECTED.getEmbed();
         } else {
             builder.setTitle("Netplay Search");
             builder.setDescription(e.getAuthor().getName() + " is looking for an opponent!");
