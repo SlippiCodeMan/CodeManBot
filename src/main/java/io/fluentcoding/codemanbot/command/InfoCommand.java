@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import javax.print.DocFlavor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +37,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
             if (retrievedCode == null) {
-                builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
-                builder.setColor(GlobalVar.ERROR);
+                EmbedUtil.alreadyConnected(builder);
             } else {
                 String mains = getMains(e.getAuthor().getIdLong());
 
@@ -228,7 +228,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                                         .collect(Collectors.toList())
                         );
 
-                        String title = "**" + codes.size() + " players are using this username:**\n\n";
+                        String title = StringUtil.bold( codes.size() + " players are using this username:") + "\n\n";
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage,

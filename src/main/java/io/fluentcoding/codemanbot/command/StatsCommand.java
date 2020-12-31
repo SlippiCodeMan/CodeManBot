@@ -10,6 +10,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class StatsCommand extends DevCodeManCommand {
 
     public StatsCommand(String name, String... aliases) {
@@ -32,9 +36,13 @@ public class StatsCommand extends DevCodeManCommand {
         builder.addField("Users with mains", StringUtil.bold(DatabaseBridge.usersWithMains()), true);
         builder.setColor(GlobalVar.SUCCESS);
 
+        Future<Long> pingFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.ping());
         e.getChannel().sendMessage(builder.build()).queue(msg -> {
-            builder.getFields().set(5, new MessageEmbed.Field("Slippi API Response time", StringUtil.bold(SlippiBridge.ping()) + "ms", true));
-
+            try {
+                builder.getFields().set(5, new MessageEmbed.Field("Slippi API Response time", StringUtil.bold(pingFuture.get()) + "ms", true));
+            } catch(Exception ex) {
+                builder.getFields().set(5, new MessageEmbed.Field("Slippi API Response time", "*Failed*", true));
+            }
             msg.editMessage(builder.build()).queue();
         });
     }
