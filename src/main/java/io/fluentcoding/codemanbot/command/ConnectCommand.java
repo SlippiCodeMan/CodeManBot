@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ConnectCommand extends CodeManCommandWithArgs {
 
@@ -31,9 +33,17 @@ public class ConnectCommand extends CodeManCommandWithArgs {
 
             builder.setTitle(GlobalVar.LOADING_EMOJI);
             builder.setColor(GlobalVar.LOADING);
+            Future<Boolean> userWithCodeExistsFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.userWithCodeExists(code));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                boolean userWithCodeExists;
+                try {
+                    userWithCodeExists = userWithCodeExistsFuture.get();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    userWithCodeExists = false;
+                }
                 EmbedBuilder newBuilder = new EmbedBuilder();
-                if (!SlippiBridge.userWithCodeExists(code)) {
+                if (!userWithCodeExists) {
                     newBuilder.setColor(GlobalVar.ERROR);
                     newBuilder.setDescription("This connect code doesn't exist!");
                 } else {

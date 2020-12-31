@@ -35,7 +35,7 @@ public class Application {
                 new MainCommand(new CodeManArgumentSet().setOptionalArguments("char").setLastArgumentVarArg(),
                         "Toggle a character main", "main", "mains", "m"),
                 new AskCommand(new CodeManArgumentSet().setOptionalArguments("description").setLastArgumentVarArg(),
-                        "Creates a netplay request", "lobby", "l"),
+                        "Creates a netplay request", "ask", "a"),
                 new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect"),
 
                 // DEPRECATED COMMANDS
