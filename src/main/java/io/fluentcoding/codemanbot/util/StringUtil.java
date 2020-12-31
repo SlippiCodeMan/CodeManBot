@@ -53,4 +53,8 @@ public class StringUtil {
     public static String italic(String input) {
         return "*" + input + "*";
     }
+
+    public static String underline(String input) {
+        return "__" + input + "__";
+    }
 }
