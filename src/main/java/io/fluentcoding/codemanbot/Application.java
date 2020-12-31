@@ -34,8 +34,8 @@ public class Application {
                         "Shows the discord username based of a slippi username/code", "whois", "wi"),
                 new MainCommand(new CodeManArgumentSet().setOptionalArguments("char").setLastArgumentVarArg(),
                         "Toggle a character main", "main", "mains", "m"),
-                new LobbyCommand(new CodeManArgumentSet().setOptionalArguments("description").setLastArgumentVarArg(),
-                        "Creates a lobby request", "lobby", "l"),
+                new AskCommand(new CodeManArgumentSet().setOptionalArguments("description").setLastArgumentVarArg(),
+                        "Creates a netplay request", "lobby", "l"),
                 new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect"),
 
                 // DEPRECATED COMMANDS
