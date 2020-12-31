@@ -9,11 +9,13 @@ public class GlobalVar {
             ARROW_RIGHT_EMOJI ="\u25B6\uFE0F",
             LOADING_EMOJI = "<a:loading:792463286951870496>",
             CHECKMARK_EMOJI = "\u2705",
+            GREEN_HEART_EMOJI = "\uD83D\uDC9A",
             CANCEL_EMOJI = "\u274C";
 
     public static Color SUCCESS = new Color(68, 169, 99),
             ERROR = new Color(168, 67, 104),
-            LOADING = new Color(47, 49, 54);
+            LOADING = new Color(47, 49, 54),
+            WAITING = new Color(243, 193, 120);
 
     public static int MAX_ITEMS_PER_PAGE = 10;
 

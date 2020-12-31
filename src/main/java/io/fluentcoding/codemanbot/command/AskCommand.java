@@ -1,9 +1,9 @@
 package io.fluentcoding.codemanbot.command;
 
-import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
+import io.fluentcoding.codemanbot.util.EmbedUtil;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -23,8 +23,7 @@ public class AskCommand extends CodeManCommand {
 
         String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
         if (code == null) {
-            builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
-            builder.setColor(GlobalVar.ERROR);
+            builder = EmbedUtil.NOTCONNECTED.getEmbed();
         } else {
             builder.setTitle("Netplay Search");
             builder.setDescription(e.getAuthor().getName() + " is looking for an opponent!");

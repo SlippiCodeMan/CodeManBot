@@ -36,7 +36,7 @@ public class CommandHandler extends ListenerAdapter {
                     Arrays.stream(command.getAliases()).anyMatch(alias -> isCommand(msg, alias))) {
                 if (!Arrays.stream(GlobalVar.owners).anyMatch(owner -> owner == event.getAuthor().getIdLong()) && !AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
                     EmbedBuilder builder = new EmbedBuilder();
-                    builder.setDescription("**Anti-Spam protection**\n\nPlease wait a bit before writing the next command!");
+                    builder.setDescription(StringUtil.bold("Anti-Spam protection") + "\n\nPlease wait a bit before writing the next command!");
                     builder.setColor(GlobalVar.ERROR);
 
                     try {

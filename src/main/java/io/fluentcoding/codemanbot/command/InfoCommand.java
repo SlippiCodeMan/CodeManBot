@@ -1,6 +1,5 @@
 package io.fluentcoding.codemanbot.command;
 
-import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
@@ -13,6 +12,9 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class InfoCommand extends CodeManCommandWithArgs {
@@ -32,8 +34,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
             if (retrievedCode == null) {
-                builder.setDescription("You haven't connected to CodeMan yet! Take a look at **" + Application.EXEC_MODE.getCommandPrefix() + "connect**!");
-                builder.setColor(GlobalVar.ERROR);
+                builder = EmbedUtil.ALREADYCONNECTED.getEmbed();
             } else {
                 String mains = getMains(e.getAuthor().getIdLong());
 
@@ -44,11 +45,18 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 }
 
                 builder.setColor(GlobalVar.LOADING);
+                Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(retrievedCode));
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     EmbedBuilder newBuilder = new EmbedBuilder();
                     newBuilder.addField("Your code", retrievedCode, true);
 
-                    String name = SlippiBridge.getName(retrievedCode);
+                    String name;
+                    try {
+                        name = nameFuture.get(5, TimeUnit.SECONDS);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        name = null;
+                    }
                     newBuilder.addField("Your name", name == null ? "*No name found*" : name, true);
 
                     if (!mains.isEmpty()) {
@@ -78,11 +86,17 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 }
 
                 builder.setColor(GlobalVar.LOADING);
+                Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(retrievedCode));
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
                     EmbedBuilder newBuilder = new EmbedBuilder();
                     newBuilder.addField("Their code", retrievedCode, true);
 
-                    String name = SlippiBridge.getName(retrievedCode);
+                    String name;
+                    try {
+                        name = nameFuture.get(5, TimeUnit.SECONDS);
+                    } catch (Exception ex) {
+                        name = null;
+                    }
                     newBuilder.addField("Their name", name, true);
 
                     if (!mains.isEmpty()) {
@@ -107,9 +121,16 @@ public class InfoCommand extends CodeManCommandWithArgs {
                 }
             }
             builder.setColor(GlobalVar.LOADING);
+            Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(user.toUpperCase()));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 EmbedBuilder newBuilder = new EmbedBuilder();
-                String name = SlippiBridge.getName(user.toUpperCase());
+                String name;
+                try {
+                    name = nameFuture.get(5, TimeUnit.SECONDS);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    name = null;
+                }
                 if (name == null) {
                     newBuilder.setDescription("This person doesn't exist!");
                     newBuilder.setColor(GlobalVar.ERROR);
@@ -127,8 +148,15 @@ public class InfoCommand extends CodeManCommandWithArgs {
         } else if (PatternChecker.isSlippiUsername(user)) {
             builder.setTitle(GlobalVar.LOADING_EMOJI);
             builder.setColor(GlobalVar.LOADING);
+            Future<List<SlippiBridge.UserEntry>> codesFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getCodesWithActualName(user));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
+                List<SlippiBridge.UserEntry> codes;
+                try {
+                    codes = codesFuture.get();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    codes = null;
+                }
 
                 EmbedBuilder newBuilder = new EmbedBuilder();
                 if (codes == null || codes.size() == 0) {
@@ -197,7 +225,7 @@ public class InfoCommand extends CodeManCommandWithArgs {
                                         .collect(Collectors.toList())
                         );
 
-                        String title = "**" + codes.size() + " players are using this username:**\n\n";
+                        String title = StringUtil.bold( codes.size() + " players are using this username:") + "\n\n";
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage,

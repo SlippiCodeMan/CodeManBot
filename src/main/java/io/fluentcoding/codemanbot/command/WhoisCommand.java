@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class WhoisCommand extends CodeManCommandWithArgs {
@@ -38,13 +40,20 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 builder.setDescription(GlobalVar.LOADING_EMOJI);
                 builder.setColor(GlobalVar.ERROR);
 
+                Future<Boolean> userWithCodeExistsFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.userWithCodeExists(code));
                 e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                    if (!SlippiBridge.userWithCodeExists(code)) {
+                    boolean userWithCodeExists;
+                    try {
+                        userWithCodeExists = userWithCodeExistsFuture.get();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        userWithCodeExists = false;
+                    }
+                    if (!userWithCodeExists) {
                         builder.setDescription("Nobody uses this connect code!");
                     } else {
                         builder.setDescription("This connect code has no discord user associated to it!");
                     }
-
                     msg.editMessage(builder.build()).queue();
                 });
 
@@ -58,8 +67,15 @@ public class WhoisCommand extends CodeManCommandWithArgs {
             builder.addField("Their discord tag", GlobalVar.LOADING_EMOJI, false);
             builder.setColor(GlobalVar.LOADING);
 
+            Future<List<SlippiBridge.UserEntry>> codesFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getCodesWithActualName(user));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                List<SlippiBridge.UserEntry> codes = SlippiBridge.getCodesWithActualName(user);
+                List<SlippiBridge.UserEntry> codes;
+                try {
+                    codes = codesFuture.get();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    codes = null;
+                }
                 EmbedBuilder newBuilder = new EmbedBuilder();
 
                 // ERROR
@@ -120,7 +136,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                                 })
                                 .collect(Collectors.toList()));
 
-                        String title = "**" + result.size() + " players are using this username:**\n\n";
+                        String title = StringUtil.bold(result.size() + " players are using this username:\n\n");
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(e.getChannel()::sendMessage,
