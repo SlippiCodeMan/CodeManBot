@@ -11,7 +11,7 @@ public enum EmbedUtil {
             "!", false),
     ALREADYCONNECTED("You are already connected to this code !", false);
 
-    @Getter private EmbedBuilder embed;
+    @Getter private EmbedBuilder embed = new EmbedBuilder();
 
     EmbedUtil(String body, boolean success) {
         this.embed.setColor(success ? GlobalVar.SUCCESS : GlobalVar.ERROR);
