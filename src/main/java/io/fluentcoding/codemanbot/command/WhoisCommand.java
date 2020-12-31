@@ -120,7 +120,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                                 })
                                 .collect(Collectors.toList()));
 
-                        String title = "**" + result.size() + " players are using this username:**\n\n";
+                        String title = StringUtil.bold(result.size() + " players are using this username:\n\n");
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(e.getChannel()::sendMessage,

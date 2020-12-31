@@ -37,4 +37,20 @@ public class StringUtil {
         String result = String.format("\\u%04x", (int) unicode.charAt(0));
         return Character.getNumericValue(result.charAt(5));
     }
+
+    public static String bold(String input) {
+        return "**" + input + "**";
+    }
+    
+    public static String bold(double input) {
+        return "**" + input + "**";
+    }
+
+    public static String bold(long input) {
+        return "**" + input + "**";
+    }
+
+    public static String italic(String input) {
+        return "*" + input + "*";
+    }
 }
