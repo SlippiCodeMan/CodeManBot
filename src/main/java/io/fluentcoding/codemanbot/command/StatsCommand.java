@@ -6,12 +6,17 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
 import io.fluentcoding.codemanbot.util.StringUtil;
+import io.fluentcoding.codemanbot.util.hook.ListenerHook;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class StatsCommand extends DevCodeManCommand {
 
@@ -20,29 +25,82 @@ public class StatsCommand extends DevCodeManCommand {
     }
 
     @Override
-    public void handleOnSuccess(GuildMessageReceivedEvent e) {
+    public void handleOnSuccess(GuildMessageReceivedEvent e, Map<String, String> args) {
         SystemUtil.MemoryStats memoryStats = SystemUtil.memoryStats();
 
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.addField("Total memory", StringUtil.bold(memoryStats.getTotalMemory()) + "MiB", true);
-        builder.addField("Maximum memory", StringUtil.bold(memoryStats.getMaxMemory()) + "MiB", true);
-        builder.addField("Free memory", StringUtil.bold(memoryStats.getFreeMemory()) + "MiB", true);
-        builder.addField("Used memory", StringUtil.bold(memoryStats.getUsedMemory()) + "MiB", true);
-        builder.addField("Discord API Response time", StringUtil.bold(e.getJDA().getGatewayPing()) + "ms", true);
-        builder.addField("Slippi API Response time", GlobalVar.LOADING_EMOJI, true);
-        builder.addField("Servers", StringUtil.bold(e.getJDA().getGuilds().size()), true);
-        builder.addField("Connected users", StringUtil.bold(DatabaseBridge.countDatabase()), true);
-        builder.addField("Users with mains", StringUtil.bold(DatabaseBridge.usersWithMains()), true);
-        builder.setColor(GlobalVar.SUCCESS);
+        create(Map.of(
+                "Total memory", mb(memoryStats.getTotalMemory()),
+                "Maximum memory", mb(memoryStats.getMaxMemory()),
+                "Free memory", mb(memoryStats.getFreeMemory()),
+                "Used memory", mb(memoryStats.getUsedMemory()),
+                "Discord API Response time", e.getJDA().getGatewayPing() + "ms",
+                "Slippi API Response time", (Supplier) () -> SlippiBridge.ping() + "ms",
+                "Servers", e.getJDA().getGuilds().size(),
+                "Connected users", DatabaseBridge.countDatabase(),
+                "Users with mains", DatabaseBridge.usersWithMains(),
+                "Active ListenerHooks", ListenerHook.getActiveListenerHooks()
+        ), e);
+    }
 
-        Future<Long> pingFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.ping());
-        e.getChannel().sendMessage(builder.build()).queue(msg -> {
-            try {
-                builder.getFields().set(5, new MessageEmbed.Field("Slippi API Response time", StringUtil.bold(pingFuture.get()) + "ms", true));
-            } catch(Exception ex) {
-                builder.getFields().set(5, new MessageEmbed.Field("Slippi API Response time", "*Failed*", true));
-            }
-            msg.editMessage(builder.build()).queue();
-        });
+    private String mb(float input) {
+        return input + "MiB";
+    }
+
+    private void create(Map<String, ?> values, GuildMessageReceivedEvent e) {
+        EmbedBuilder builder = new EmbedBuilder();
+
+        int i = 0;
+        Map<Integer, Supplier> toUpdate = new HashMap<>();
+        for (Map.Entry<String, ?> entry : values.entrySet()) {
+            builder.addField(
+                    entry.getKey(),
+                    entry.getValue() instanceof Supplier ? GlobalVar.LOADING_EMOJI : String.valueOf(entry.getValue()),
+                    true
+            );
+
+            if (entry.getValue() instanceof Supplier)
+                toUpdate.put(i, (Supplier) entry.getValue());
+
+            i++;
+        }
+
+        if (toUpdate.size() > 0) {
+            Map<Integer, Future<String>> updateFutures = toUpdate.entrySet().stream().collect(Collectors.toMap(
+                    entry -> entry.getKey(),
+                    entry -> Executors.newCachedThreadPool().submit(() -> String.valueOf(entry.getValue().get()))
+            ));
+
+            builder.setColor(GlobalVar.LOADING);
+            e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                for (Map.Entry<Integer, Future<String>> updateFutureEntry : updateFutures.entrySet()) {
+                    try {
+                        builder.getFields().set(
+                                updateFutureEntry.getKey(),
+                                new MessageEmbed.Field(
+                                        builder.getFields().get(updateFutureEntry.getKey()).getName(),
+                                        updateFutureEntry.getValue().get(),
+                                        true
+                                )
+                        );
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        builder.getFields().set(
+                                updateFutureEntry.getKey(),
+                                new MessageEmbed.Field(
+                                        builder.getFields().get(updateFutureEntry.getKey()).getName(),
+                                        StringUtil.italic("Failed"),
+                                        true
+                                )
+                        );
+                    }
+                }
+
+                builder.setColor(GlobalVar.SUCCESS);
+                msg.editMessage(builder.build()).queue();
+            });
+        } else {
+            builder.setColor(GlobalVar.SUCCESS);
+            e.getChannel().sendMessage(builder.build()).queue();
+        }
     }
 }

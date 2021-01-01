@@ -3,7 +3,7 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
-import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
+import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.container.PagingContainer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-public class WhoisCommand extends CodeManCommandWithArgs {
+public class WhoisCommand extends CodeManCommand {
 
     public WhoisCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
         super(argSet, description, name, aliases);
@@ -60,11 +60,11 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                 return;
             } else {
                 User discordUser = e.getJDA().retrieveUserById(discordId).complete();
-                builder.addField("Their discord tag", discordUser.getAsTag(), false);
+                builder.addField(StringUtil.getPersonPrefixedString(false, "discord tag"), discordUser.getAsTag(), false);
                 builder.setColor(GlobalVar.SUCCESS);
             }
         } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.addField("Their discord tag", GlobalVar.LOADING_EMOJI, false);
+            builder.addField(StringUtil.getPersonPrefixedString(false, "discord tag"), GlobalVar.LOADING_EMOJI, false);
             builder.setColor(GlobalVar.LOADING);
 
             Future<List<SlippiBridge.UserEntry>> codesFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getCodesWithActualName(user));
@@ -97,7 +97,7 @@ public class WhoisCommand extends CodeManCommandWithArgs {
                         UserDiscordEntry entry = userEntries.get(0);
                         e.getJDA().retrieveUserById(entry.getDiscordId()).queue(discordUser -> {
                             newBuilder.addField(
-                                    "Their discord tag",
+                                    StringUtil.getPersonPrefixedString(false, "discord tag"),
                                     entry.getDisplayName() == null ? discordUser.getAsTag() : StringUtil.stringWithSlippiUsername(discordUser.getAsTag(), entry.getDisplayName()),
                                     false
                             );

@@ -1,5 +1,7 @@
 package io.fluentcoding.codemanbot;
 
+import java.util.Arrays;
+
 import javax.security.auth.login.LoginException;
 
 import io.fluentcoding.codemanbot.command.*;
@@ -15,7 +17,9 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Application {
     public final static ExecutionMode EXEC_MODE =
-        GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("prod") ? ExecutionMode.PRODUCTION : ExecutionMode.DEV;
+        Arrays.stream(ExecutionMode.values())
+                .filter(mode -> GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals(mode.getDotEnvNotation()))
+                .findFirst().orElse(null);
 
     public static void main(final String[] args) throws LoginException {
         final JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());

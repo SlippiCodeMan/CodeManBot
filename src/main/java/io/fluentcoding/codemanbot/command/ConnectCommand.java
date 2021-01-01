@@ -3,7 +3,7 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
-import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
+import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class ConnectCommand extends CodeManCommandWithArgs {
+public class ConnectCommand extends CodeManCommand {
 
     public ConnectCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
         super(argSet, description, name, aliases);

@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.List;
+import java.util.Map;
 
 public class AskCommand extends CodeManCommand {
 
@@ -18,7 +19,7 @@ public class AskCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         EmbedBuilder builder = new EmbedBuilder();
 
         String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
@@ -30,10 +31,10 @@ public class AskCommand extends CodeManCommand {
             builder.setThumbnail(e.getAuthor().getAvatarUrl());
             builder.setColor(GlobalVar.SUCCESS);
 
-            builder.addField("Their code", code, true);
+            builder.addField(StringUtil.getPersonPrefixedString(false, "code"), code, true);
             List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
             if (characters != null && characters.size() != 0) {
-                builder.addField("Their mains", StringUtil.getMainsFormatted(characters), true);
+                builder.addField(StringUtil.getPersonPrefixedString(false, "mains"), StringUtil.getMainsFormatted(characters), true);
             }
 
             builder.setFooter(GlobalVar.FROG_EMOJI + " slippi 2.x.x");

@@ -7,6 +7,8 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.Map;
+
 public class DisconnectCommand extends CodeManCommand {
 
     public DisconnectCommand(String description, String name, String... aliases) {
@@ -14,7 +16,7 @@ public class DisconnectCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         DatabaseBridge.removeData(e.getAuthor().getIdLong());
         ActivityUpdater.update(e.getJDA());
 

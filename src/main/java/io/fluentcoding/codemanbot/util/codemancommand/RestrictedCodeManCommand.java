@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 
@@ -21,10 +22,10 @@ public abstract class RestrictedCodeManCommand extends CodeManCommand {
         this.restrictionName = restrictionName;
     }
 
-    public abstract void handleOnSuccess(GuildMessageReceivedEvent e);
+    public abstract void handleOnSuccess(GuildMessageReceivedEvent e, Map<String, String> args);
 
     @Override
-    public void handle(GuildMessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         if (restriction.test(e.getMember(), e.getGuild())) {
             for (Member member : e.getChannel().getMembers()) {
                 if (!member.getUser().isBot() && !restriction.test(member, e.getGuild())) {
@@ -40,7 +41,7 @@ public abstract class RestrictedCodeManCommand extends CodeManCommand {
                     return;
                 }
             }
-            handleOnSuccess(e);
+            handleOnSuccess(e, args);
         }
     }
 
