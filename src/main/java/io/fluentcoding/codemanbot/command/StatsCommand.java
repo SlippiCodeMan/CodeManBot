@@ -21,7 +21,7 @@ public class StatsCommand extends DevCodeManCommand {
     }
 
     @Override
-    public void handleOnSuccess(GuildMessageReceivedEvent e, Map args) {
+    public void handleOnSuccess(GuildMessageReceivedEvent e, Map<String, String> args) {
         SystemUtil.MemoryStats memoryStats = SystemUtil.memoryStats();
 
         EmbedBuilder builder = new EmbedBuilder();

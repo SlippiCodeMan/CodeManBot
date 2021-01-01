@@ -16,7 +16,7 @@ public class DisconnectCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map args) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         DatabaseBridge.removeData(e.getAuthor().getIdLong());
         ActivityUpdater.update(e.getJDA());
 
