@@ -6,6 +6,8 @@ import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.util.Map;
+
 @Getter
 public class DeprecatedCodeManCommand extends CodeManCommand {
     private String newCommand;
@@ -16,7 +18,7 @@ public class DeprecatedCodeManCommand extends CodeManCommand {
         this.newCommand = newCommand;
     }
 
-    public void handle(GuildMessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e, Map args) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(GlobalVar.ERROR);
         builder.setDescription("This command is deprecated! Consider using **" + Application.EXEC_MODE.getCommandPrefix() + newCommand + "** instead!");
