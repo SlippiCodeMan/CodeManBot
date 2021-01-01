@@ -22,10 +22,10 @@ public abstract class RestrictedCodeManCommand extends CodeManCommand {
         this.restrictionName = restrictionName;
     }
 
-    public abstract void handleOnSuccess(GuildMessageReceivedEvent e, Map args);
+    public abstract void handleOnSuccess(GuildMessageReceivedEvent e, Map<String, String> args);
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map args) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         if (restriction.test(e.getMember(), e.getGuild())) {
             for (Member member : e.getChannel().getMembers()) {
                 if (!member.getUser().isBot() && !restriction.test(member, e.getGuild())) {

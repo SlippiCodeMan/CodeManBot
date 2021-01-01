@@ -19,7 +19,7 @@ public class AskCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map args) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         EmbedBuilder builder = new EmbedBuilder();
 
         String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());

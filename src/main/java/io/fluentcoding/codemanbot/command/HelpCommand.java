@@ -18,7 +18,7 @@ public class HelpCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map args) {
+    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setDescription(StringUtil.bold("CodeMan")
                 + " is a bot to link your slippi account to ssbm.\n\n"
