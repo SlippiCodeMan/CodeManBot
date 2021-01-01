@@ -25,7 +25,7 @@ public class HelpCommand extends CodeManCommand {
                 + StringUtil.underline(StringUtil.bold("Info:"))
                 + StringUtil.bold(" (Aliases)")
                 + ", " + StringUtil.bold("<Necessary Argument>")
-                + ", " + StringUtil.bold("[Optional Argument])")
+                + ", " + StringUtil.bold("[Optional Argument]")
         );
         builder.setColor(GlobalVar.SUCCESS);
 
