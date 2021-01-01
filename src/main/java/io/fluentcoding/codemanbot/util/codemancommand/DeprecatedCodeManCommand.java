@@ -2,6 +2,7 @@ package io.fluentcoding.codemanbot.util.codemancommand;
 
 import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.StringUtil;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -21,7 +22,7 @@ public class DeprecatedCodeManCommand extends CodeManCommand {
     public void handle(GuildMessageReceivedEvent e, Map args) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(GlobalVar.ERROR);
-        builder.setDescription("This command is deprecated! Consider using **" + Application.EXEC_MODE.getCommandPrefix() + newCommand + "** instead!");
+        builder.setDescription("This command is deprecated! Consider using " + StringUtil.bold(Application.EXEC_MODE.getCommandPrefix()) + newCommand + " instead!");
 
         e.getChannel().sendMessage(builder.build()).queue();
     }
