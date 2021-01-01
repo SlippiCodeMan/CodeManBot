@@ -14,9 +14,11 @@ public class ListenerHook extends ListenerAdapter {
     public static void addReactionListener(long msgId, Consumer<MessageReactionAddEvent> onReaction) {
         reactionListeners.put(msgId, onReaction);
     }
-
     public static void removeReactionListener(long msgId) {
         reactionListeners.remove(msgId);
+    }
+    public static int getActiveListenerHooks() {
+        return reactionListeners.size();
     }
 
     @Override
