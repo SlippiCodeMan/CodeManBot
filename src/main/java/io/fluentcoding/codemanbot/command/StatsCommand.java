@@ -78,7 +78,7 @@ public class StatsCommand extends DevCodeManCommand {
                                 updateFutureEntry.getKey(),
                                 new MessageEmbed.Field(
                                         builder.getFields().get(updateFutureEntry.getKey()).getName(),
-                                        StringUtil.bold(updateFutureEntry.getValue().get()),
+                                        updateFutureEntry.getValue().get(),
                                         true
                                 )
                         );
