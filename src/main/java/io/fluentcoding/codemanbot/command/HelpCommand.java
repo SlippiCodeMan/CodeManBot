@@ -21,7 +21,7 @@ public class HelpCommand extends CodeManCommand {
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setDescription(StringUtil.bold("CodeMan")
-                + " is a bot to link discord with slippi.\n\n"
+                + " is a bot to link your slippi account with discord.\n\n"
                 + StringUtil.underline(StringUtil.bold("Info:"))
                 + StringUtil.bold(" (Aliases)")
                 + " " + StringUtil.bold("<Necessary Argument>")
