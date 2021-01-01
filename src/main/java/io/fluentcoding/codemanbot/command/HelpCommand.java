@@ -25,7 +25,7 @@ public class HelpCommand extends CodeManCommand {
                 + StringUtil.underline(StringUtil.bold("Info:"))
                 + StringUtil.bold(" (Aliases)")
                 + ", " + StringUtil.bold("<Necessary Argument>")
-                + ", " + StringUtil.bold("[Optional Argument])")
+                + ", " + StringUtil.bold("[Optional Argument]")
         );
         builder.setColor(GlobalVar.SUCCESS);
 
@@ -33,7 +33,7 @@ public class HelpCommand extends CodeManCommand {
             String helpTitle = command.getHelpTitle();
 
             if (helpTitle != null)
-                builder.addField(helpTitle, command.getDescription(), false);
+                builder.addField("`" + helpTitle + "`", command.getDescription(), false);
         }
 
         builder.setFooter("made with " + GlobalVar.GREEN_HEART_EMOJI + " by Ananas#5903 and FluentCoding#3314");
