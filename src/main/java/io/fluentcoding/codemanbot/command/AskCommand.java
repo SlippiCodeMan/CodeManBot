@@ -37,7 +37,7 @@ public class AskCommand extends CodeManCommand {
                 builder.addField(StringUtil.getPersonPrefixedString(false, "mains"), StringUtil.getMainsFormatted(characters), true);
             }
 
-            builder.setFooter(GlobalVar.FROG_EMOJI + " slippi 2.x.x");
+            builder.setFooter(GlobalVar.FROG_EMOJI + " slippi");
         }
 
         e.getChannel().sendMessage(builder.build()).queue();
