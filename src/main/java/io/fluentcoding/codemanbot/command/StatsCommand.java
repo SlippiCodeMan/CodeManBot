@@ -2,7 +2,6 @@ package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
-import io.fluentcoding.codemanbot.container.PagingContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
@@ -35,7 +34,7 @@ public class StatsCommand extends DevCodeManCommand {
                 "Free memory", mb(memoryStats.getFreeMemory()),
                 "Used memory", mb(memoryStats.getUsedMemory()),
                 "Discord API Response time", e.getJDA().getGatewayPing() + "ms",
-                "Slippi API Response time", (Supplier) () -> SlippiBridge.ping(),
+                "Slippi API Response time", (Supplier) () -> SlippiBridge.ping() + "ms",
                 "Servers", e.getJDA().getGuilds().size(),
                 "Connected users", DatabaseBridge.countDatabase(),
                 "Users with mains", DatabaseBridge.usersWithMains(),
