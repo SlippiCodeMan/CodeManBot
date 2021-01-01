@@ -3,7 +3,7 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.*;
-import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
+import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.container.PagingContainer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-public class WhoisCommand extends CodeManCommandWithArgs {
+public class WhoisCommand extends CodeManCommand {
 
     public WhoisCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
         super(argSet, description, name, aliases);

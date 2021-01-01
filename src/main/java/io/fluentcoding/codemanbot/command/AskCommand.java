@@ -3,8 +3,6 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
-import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
-import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
 import io.fluentcoding.codemanbot.util.EmbedUtil;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
@@ -21,7 +19,7 @@ public class AskCommand extends CodeManCommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e) {
+    public void handle(GuildMessageReceivedEvent e, Map args) {
         EmbedBuilder builder = new EmbedBuilder();
 
         String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());

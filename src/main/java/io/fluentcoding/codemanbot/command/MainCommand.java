@@ -3,7 +3,7 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.util.*;
-import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommandWithArgs;
+import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import java.util.List;
 import java.util.Map;
 
-public class MainCommand extends CodeManCommandWithArgs {
+public class MainCommand extends CodeManCommand {
 
     public MainCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
         super(argSet, description, name, aliases);
@@ -20,9 +20,7 @@ public class MainCommand extends CodeManCommandWithArgs {
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         if (DatabaseBridge.getCode(e.getAuthor().getIdLong()) == null) {
-            EmbedBuilder builder = new EmbedBuilder();
-            builder = EmbedUtil.ALREADYCONNECTED.getEmbed();
-            e.getChannel().sendMessage(builder.build()).queue();
+            e.getChannel().sendMessage(EmbedUtil.ALREADYCONNECTED.getEmbed().build()).queue();
 
             return;
         }

@@ -26,29 +26,53 @@ public class CommandHandler extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if (event.getAuthor().isBot())
+    public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
+        if (e.getAuthor().isBot())
             return;
 
-        String msg = event.getMessage().getContentStripped();
+        String msg = e.getMessage().getContentStripped();
         for (CodeManCommand command : commands) {
             if (isCommand(msg, command.getName()) ||
                     Arrays.stream(command.getAliases()).anyMatch(alias -> isCommand(msg, alias))) {
-                if (!Arrays.stream(GlobalVar.owners).anyMatch(owner -> owner == event.getAuthor().getIdLong()) && !AntiSpamContainer.INSTANCE.userAllowedToAction(event.getAuthor().getIdLong())) {
+                if (!Arrays.stream(GlobalVar.owners).anyMatch(owner -> owner == e.getAuthor().getIdLong()) && !AntiSpamContainer.INSTANCE.userAllowedToAction(e.getAuthor().getIdLong())) {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setDescription(StringUtil.bold("Anti-Spam protection") + "\n\nPlease wait a bit before writing the next command!");
                     builder.setColor(GlobalVar.ERROR);
 
                     try {
-                        event.getMessage().delete().queue();
-                    } catch(ErrorResponseException e) {}
+                        e.getMessage().delete().queue();
+                    } catch(ErrorResponseException ex) {}
 
-                    event.getAuthor().openPrivateChannel().queue(channel -> channel.sendMessage(builder.build()).queue(temp -> {
+                    e.getAuthor().openPrivateChannel().queue(channel -> channel.sendMessage(builder.build()).queue(temp -> {
                         temp.delete().queueAfter(1, TimeUnit.MINUTES);
                     }));
                     return;
                 }
-                command.handle(event);
+
+                if (command.getArgumentSet() != null) {
+                    Optional<Map<String, String>> args = command.getArgumentSet().toMap(msg);
+
+                    if (args.isPresent()) {
+                        command.handle(e, args.get());
+                    } else {
+                        // SHOW SYNTAX ERROR
+                        EmbedBuilder builder = new EmbedBuilder();
+                        builder.setDescription("Syntax Error!");
+                        builder.addField("Input", msg, false);
+                        String correctUsageFieldTitle = "Correct Usage - () = Aliases ";
+                        if (command.getArgumentSet().getNecessaryArguments().length != 0)
+                            correctUsageFieldTitle += "| <> = Necessary Argument ";
+                        if (command.getArgumentSet().getOptionalArguments().length != 0)
+                            correctUsageFieldTitle += "| [] = Optional Argument";
+
+                        builder.addField(correctUsageFieldTitle, command.getHelpTitle(), false);
+                        builder.setColor(GlobalVar.ERROR);
+
+                        e.getChannel().sendMessage(builder.build()).queue();
+                    }
+                } else {
+                    command.handle(e, null);
+                }
                 return;
             }
         }
