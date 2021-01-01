@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Build and deploy development build
@@ -20,8 +20,4 @@ jobs:
             cd CodeManDev
             git checkout dev
             git pull
-            ./gradlew shadowjar
-            ./gradlew docker
-            ./gradlew dockerStop
-            ./gradlew dockerRun
-      
+            ./deploy.sh

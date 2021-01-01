@@ -22,7 +22,7 @@ public class HelpCommand extends CodeManCommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setDescription(StringUtil.bold("CodeMan")
                 + " is a bot to link your slippi account to ssbm.\n\n"
-                + "__" + StringUtil.bold("Info:") + "__"
+                + StringUtil.underline(StringUtil.bold("Info:"))
                 + StringUtil.bold(" (Aliases)")
                 + ", " + StringUtil.bold("<Necessary Argument>")
                 + ", " + StringUtil.bold("[Optional Argument])")
@@ -36,7 +36,7 @@ public class HelpCommand extends CodeManCommand {
                 builder.addField(helpTitle, command.getDescription(), false);
         }
 
-        builder.setFooter("made with " + GlobalVar.GREEN_HEART_EMOJI + " by Ananas#5903, FluentCoding#3314");
+        builder.setFooter("made with " + GlobalVar.GREEN_HEART_EMOJI + " by Ananas#5903 and FluentCoding#3314");
 
         e.getChannel().sendMessage(builder.build()).queue();
     }
