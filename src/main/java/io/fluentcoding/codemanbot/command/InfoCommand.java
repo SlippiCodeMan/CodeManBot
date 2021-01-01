@@ -7,6 +7,7 @@ import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.container.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.HashMap;
@@ -36,37 +37,7 @@ public class InfoCommand extends CodeManCommand {
             if (retrievedCode == null) {
                 builder = EmbedUtil.ALREADYCONNECTED.getEmbed();
             } else {
-                String mains = getMains(e.getAuthor().getIdLong());
-
-                builder.addField("Your code", retrievedCode, true);
-                builder.addField("Your name", GlobalVar.LOADING_EMOJI, true);
-                if (!mains.isEmpty()) {
-                    builder.addField("Your mains", mains, true);
-                }
-
-                builder.setColor(GlobalVar.LOADING);
-                Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(retrievedCode));
-                e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                    EmbedBuilder newBuilder = new EmbedBuilder();
-                    newBuilder.addField("Your code", retrievedCode, true);
-
-                    String name;
-                    try {
-                        name = nameFuture.get(5, TimeUnit.SECONDS);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        name = null;
-                    }
-                    newBuilder.addField("Your name", name == null ? "*No name found*" : name, true);
-
-                    if (!mains.isEmpty()) {
-                        newBuilder.addField("Your mains", mains, true);
-                    }
-
-                    newBuilder.setColor(GlobalVar.SUCCESS);
-                    msg.editMessage(newBuilder.build()).queue();
-                });
-
+                output(e.getAuthor().getIdLong(), retrievedCode, e, true);
                 return;
             }
         } else if (e.getMessage().getMentionedMembers().size() > 0) {
@@ -77,47 +48,19 @@ public class InfoCommand extends CodeManCommand {
                 builder.setDescription("This person didn't connect to CodeMan yet!");
                 builder.setColor(GlobalVar.ERROR);
             } else {
-                String mains = getMains(mentionedMember.getIdLong());
-
-                builder.addField("Their code", retrievedCode, true);
-                builder.addField("Their name", GlobalVar.LOADING_EMOJI, true);
-                if (!mains.isEmpty()) {
-                    builder.addField("Their mains", mains, true);
-                }
-
-                builder.setColor(GlobalVar.LOADING);
-                Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(retrievedCode));
-                e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                    EmbedBuilder newBuilder = new EmbedBuilder();
-                    newBuilder.addField("Their code", retrievedCode, true);
-
-                    String name;
-                    try {
-                        name = nameFuture.get(5, TimeUnit.SECONDS);
-                    } catch (Exception ex) {
-                        name = null;
-                    }
-                    newBuilder.addField("Their name", name, true);
-
-                    if (!mains.isEmpty()) {
-                        newBuilder.addField("Their mains", mains, true);
-                    }
-
-                    newBuilder.setColor(GlobalVar.SUCCESS);
-                    msg.editMessage(newBuilder.build()).queue();
-                });
+                output(mentionedMember.getIdLong(), retrievedCode, e, false);
                 return;
             }
         } else if (PatternChecker.isConnectCode(user)) {
             long discordID = DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase());
-            builder.addField("Their name", GlobalVar.LOADING_EMOJI, true);
+            builder.addField(StringUtil.getPersonPrefixedString(false, "name"), GlobalVar.LOADING_EMOJI, true);
             String mains;
             if (discordID == -1) {
                 mains = "";
             } else {
                 mains = getMains(discordID);
                 if (!mains.isEmpty()) {
-                    builder.addField("Their mains", mains, true);
+                    builder.addField(StringUtil.getPersonPrefixedString(false, "mains"), mains, true);
                 }
             }
             builder.setColor(GlobalVar.LOADING);
@@ -135,9 +78,9 @@ public class InfoCommand extends CodeManCommand {
                     newBuilder.setDescription("This person doesn't exist!");
                     newBuilder.setColor(GlobalVar.ERROR);
                 } else {
-                    newBuilder.addField("Their name", name, true);
+                    newBuilder.addField(StringUtil.getPersonPrefixedString(false, "name"), name, true);
                     if (!mains.isEmpty()) {
-                        newBuilder.addField("Their mains", mains, true);
+                        newBuilder.addField(StringUtil.getPersonPrefixedString(false, "mains"), mains, true);
                     }
                     newBuilder.setColor(GlobalVar.SUCCESS);
                 }
@@ -166,17 +109,14 @@ public class InfoCommand extends CodeManCommand {
                     if (codes.size() == 1) {
                         SlippiBridge.UserEntry entry = codes.get(0);
                         long discordID = DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode());
-                        newBuilder.addField("Their code",
+                        newBuilder.addField(StringUtil.getPersonPrefixedString(false, "code"),
                                 entry.getDisplayName() == null ? entry.getCode()
                                         : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()),
-                                false);
-                        String mains;
-                        if (discordID == -1) {
-                            mains = "";
-                        } else {
-                            mains = getMains(discordID);
+                                true);
+                        if (discordID != -1) {
+                            String mains = getMains(discordID);
                             if (!mains.isEmpty()) {
-                                newBuilder.addField("Their mains", mains, true);
+                                newBuilder.addField(StringUtil.getPersonPrefixedString(false, "mains"), mains, true);
                             }
                         }
                         newBuilder.setColor(GlobalVar.SUCCESS);
@@ -253,5 +193,39 @@ public class InfoCommand extends CodeManCommand {
 
     private String getMains(long discordId) {
         return StringUtil.getMainsFormatted(DatabaseBridge.getMains(discordId));
+    }
+
+    private void output(long discordId, String retrievedCode, GuildMessageReceivedEvent e, boolean you) {
+        String mains = getMains(discordId);
+
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.addField(StringUtil.getPersonPrefixedString(you, "code"), retrievedCode, true);
+        builder.addField(StringUtil.getPersonPrefixedString(you, "name"), GlobalVar.LOADING_EMOJI, true);
+        if (!mains.isEmpty()) {
+            builder.addField(StringUtil.getPersonPrefixedString(you, "mains"), mains, true);
+        }
+
+        builder.setColor(GlobalVar.LOADING);
+        Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(retrievedCode));
+        e.getChannel().sendMessage(builder.build()).queue(msg -> {
+            EmbedBuilder newBuilder = new EmbedBuilder();
+            newBuilder.addField(StringUtil.getPersonPrefixedString(you, "code"), retrievedCode, true);
+
+            String name;
+            try {
+                name = nameFuture.get(5, TimeUnit.SECONDS);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                name = null;
+            }
+            newBuilder.addField(StringUtil.getPersonPrefixedString(you, "name"), name == null ? "*No name found*" : name, true);
+
+            if (!mains.isEmpty()) {
+                newBuilder.addField(StringUtil.getPersonPrefixedString(you, "mains"), mains, true);
+            }
+
+            newBuilder.setColor(GlobalVar.SUCCESS);
+            msg.editMessage(newBuilder.build()).queue();
+        });
     }
 }

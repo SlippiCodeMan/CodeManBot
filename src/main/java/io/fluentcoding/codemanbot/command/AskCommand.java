@@ -31,10 +31,10 @@ public class AskCommand extends CodeManCommand {
             builder.setThumbnail(e.getAuthor().getAvatarUrl());
             builder.setColor(GlobalVar.SUCCESS);
 
-            builder.addField("Their code", code, true);
+            builder.addField(StringUtil.getPersonPrefixedString(false, "code"), code, true);
             List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
             if (characters != null && characters.size() != 0) {
-                builder.addField("Their mains", StringUtil.getMainsFormatted(characters), true);
+                builder.addField(StringUtil.getPersonPrefixedString(false, "mains"), StringUtil.getMainsFormatted(characters), true);
             }
 
             builder.setFooter(GlobalVar.FROG_EMOJI + " slippi 2.x.x");

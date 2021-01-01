@@ -33,7 +33,7 @@ public class MainCommand extends CodeManCommand {
 
             builder.setColor(GlobalVar.SUCCESS);
             String mains = StringUtil.getMainsFormatted(result);
-            builder.addField("Your mains", mains.isEmpty() ? StringUtil.italic("None") : mains, false);
+            builder.addField(StringUtil.getPersonPrefixedString(true, "mains"), mains.isEmpty() ? StringUtil.italic("None") : mains, false);
         }
         else {
             characterInput = characterInput.replaceAll("[\\s-'.&]", "").toLowerCase();

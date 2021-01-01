@@ -60,11 +60,11 @@ public class WhoisCommand extends CodeManCommand {
                 return;
             } else {
                 User discordUser = e.getJDA().retrieveUserById(discordId).complete();
-                builder.addField("Their discord tag", discordUser.getAsTag(), false);
+                builder.addField(StringUtil.getPersonPrefixedString(false, "discord tag"), discordUser.getAsTag(), false);
                 builder.setColor(GlobalVar.SUCCESS);
             }
         } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.addField("Their discord tag", GlobalVar.LOADING_EMOJI, false);
+            builder.addField(StringUtil.getPersonPrefixedString(false, "discord tag"), GlobalVar.LOADING_EMOJI, false);
             builder.setColor(GlobalVar.LOADING);
 
             Future<List<SlippiBridge.UserEntry>> codesFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getCodesWithActualName(user));
@@ -97,7 +97,7 @@ public class WhoisCommand extends CodeManCommand {
                         UserDiscordEntry entry = userEntries.get(0);
                         e.getJDA().retrieveUserById(entry.getDiscordId()).queue(discordUser -> {
                             newBuilder.addField(
-                                    "Their discord tag",
+                                    StringUtil.getPersonPrefixedString(false, "discord tag"),
                                     entry.getDisplayName() == null ? discordUser.getAsTag() : StringUtil.stringWithSlippiUsername(discordUser.getAsTag(), entry.getDisplayName()),
                                     false
                             );
