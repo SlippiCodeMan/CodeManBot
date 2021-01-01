@@ -51,7 +51,7 @@ public class StringUtil {
     public static String underline(String input) {
         return "__" + input + "__";
     }
-    public static String code(String input) {
+    public static String oneLineCodeBlock(String input) {
         return "`" + input + "`";
     }
 }
