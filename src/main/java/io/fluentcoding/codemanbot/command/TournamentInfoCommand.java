@@ -47,9 +47,9 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (tournament.getState().equals("complete")) {
                     builder.addField("Final Results", participants.stream()
                             .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
-                            .map(participant -> "<"
-                                + Arrays.stream(RankEmotes.values())
+                            .map(participant -> Arrays.stream(RankEmotes.values())
                                     .filter(emote -> participant.getFinalRank() == emote.getNumber())
+                                    .findFirst().orElse(null)
                                 + " "
                                 + participant.getFinalRank()
                                 + participant.getDisplayName())
