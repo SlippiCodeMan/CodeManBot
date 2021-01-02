@@ -3,6 +3,7 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
+import io.fluentcoding.codemanbot.bridge.ChallongeBridge.ParticipantEntry;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge.TournamentEntry;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
@@ -31,16 +32,25 @@ public class TournamentInfoCommand extends CodeManCommand {
         // BIG WIP
 
         String url = args.get("url");
+        // Gonna change this when challonge/smash.gg detection will be done
+        url = url.replace("https://challonge.com/", "");
 
         EmbedBuilder builder = new EmbedBuilder();
 
         TournamentEntry tournament = ChallongeBridge.getTournament(url);
         if (tournament != null) {
+            List<ParticipantEntry> participants = ChallongeBridge.getParticipants(url);
+
             builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
             builder.setTitle(tournament.getName());
+
             String description = tournament.getDescription();
             if (!description.isEmpty())
                 builder.setDescription(StringUtil.getTextFromHtml(description));
+
+            builder.addField("Status", tournament.getState(), false);
+            builder.setFooter(tournament.getStartsAt());
+
             builder.setColor(GlobalVar.CHALLONGE);
         } else {
             builder.setDescription("Operation failed: tournament not found !");
