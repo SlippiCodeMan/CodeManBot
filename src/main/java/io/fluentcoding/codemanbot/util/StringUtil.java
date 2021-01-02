@@ -35,7 +35,9 @@ public class StringUtil {
         String result = String.format("\\u%04x", (int) unicode.charAt(0));
         return Character.getNumericValue(result.charAt(5));
     }
-
+    public static String getTextFromHtml(String input) {
+        return input.replace("/<[^>]*>/g", "");
+    }
     public static String bold(String input) {
         return "**" + input + "**";
     }

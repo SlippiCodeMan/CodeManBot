@@ -39,7 +39,7 @@ public class TournamentInfoCommand extends CodeManCommand {
         builder.setTitle(tournament.getName());
         String description = tournament.getDescription();
         if (!description.isEmpty())
-            builder.setDescription(description);
+            builder.setDescription(StringUtil.getTextFromHtml(description));
         builder.setColor(GlobalVar.CHALLONGE);
         e.getChannel().sendMessage(builder.build()).queue();
     }
