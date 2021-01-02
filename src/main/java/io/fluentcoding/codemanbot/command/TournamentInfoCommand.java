@@ -50,9 +50,21 @@ public class TournamentInfoCommand extends CodeManCommand {
                 builder.setDescription(StringUtil.getTextFromHtml(description));
 
             builder.addField("Status", tournament.getState(), false);
-            if (!participants.equals(null))
-                builder.addField("Attendees", participants.stream().map(participant -> participant.getDisplayName())
-                        .collect(Collectors.joining("\n")), false);
+            if (participants != null) {
+                if (tournament.getState().equals("complete")) {
+                    builder.addField("Attendees", participants.stream()
+                            .map(participant -> participant.getFinalRank()
+                                + " | "
+                                + participant.getDisplayName())
+                            .collect(Collectors.joining("\n")), false);
+                } else {
+                    builder.addField("Attendees", participants.stream()
+                            .map(participant -> participant.getSeed()
+                                + " | "
+                                + participant.getDisplayName())
+                            .collect(Collectors.joining("\n")), false);
+                }
+            }
             //builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
 
             builder.setColor(GlobalVar.CHALLONGE);
