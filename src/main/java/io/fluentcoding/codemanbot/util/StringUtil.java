@@ -74,11 +74,11 @@ public class StringUtil {
     }
     public static Map<String, String> separateCodeFromUsername(String input) {
         String username = input.replaceAll("[([]+([A-Za-z])+#+[0-9]{1,3}+[])]$", "");
-        String code = input.replaceAll(username, "").toUpperCase();
-        //username = username.stripTrailing();
+        //String code = input.replaceAll(username, "").toUpperCase();
+        username = username.stripTrailing();
         Map<String, String> hm = new HashMap<String, String>();
         hm.put("username", username);
-        hm.put("code", code);
+        //hm.put("code", code);
         return hm;
     }
 }
