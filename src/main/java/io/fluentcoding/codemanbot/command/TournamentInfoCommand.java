@@ -47,7 +47,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
             String description = tournament.getDescription();
             if (!description.isEmpty())
-                builder.setDescription(StringUtil.getTextFromHtml(description));
+                builder.setDescription(description);
 
             builder.addField("Status", tournament.getState(), false);
             builder.addField("Attendees",
