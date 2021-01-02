@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class TournamentInfoCommand extends CodeManCommand {
@@ -49,6 +50,10 @@ public class TournamentInfoCommand extends CodeManCommand {
                 builder.setDescription(StringUtil.getTextFromHtml(description));
 
             builder.addField("Status", tournament.getState(), false);
+            builder.addField("Attendees", participants.stream()
+                    .map(participant -> participant.getDisplayName())
+                    .collect(Collectors.joining("\n")), false);
+
             builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
 
             builder.setColor(GlobalVar.CHALLONGE);
