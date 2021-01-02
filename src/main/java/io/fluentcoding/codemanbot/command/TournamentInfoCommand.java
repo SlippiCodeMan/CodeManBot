@@ -49,7 +49,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                             .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
                             .map(participant -> Arrays.stream(RankEmotes.values())
                                     .filter(emote -> participant.getFinalRank() == emote.getNumber())
-                                    .findFirst().orElse(null)
+                                    .findFirst().orElse(null).getEmote()
                                 + " "
                                 + participant.getFinalRank()
                                 + participant.getDisplayName())
