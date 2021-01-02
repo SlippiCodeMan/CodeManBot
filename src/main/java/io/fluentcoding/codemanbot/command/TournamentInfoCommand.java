@@ -61,7 +61,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                             .collect(Collectors.joining("\n")), false);
                 }
             }
-            //builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
+            builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
 
             builder.setColor(GlobalVar.CHALLONGE);
         } else {
