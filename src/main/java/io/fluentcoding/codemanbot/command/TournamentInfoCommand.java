@@ -48,7 +48,6 @@ public class TournamentInfoCommand extends CodeManCommand {
                 participants = null;
             }
 
-            e.getChannel().sendMessage(builder.build()).queue();
             EmbedBuilder newBuilder = new EmbedBuilder();
 
             if (tournament != null) {
