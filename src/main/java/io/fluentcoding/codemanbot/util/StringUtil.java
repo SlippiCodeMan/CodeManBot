@@ -36,7 +36,7 @@ public class StringUtil {
         return Character.getNumericValue(result.charAt(5));
     }
     public static String getTextFromHtml(String input) {
-        return input.replace("<(.|\n)*?>", "");
+        return input.replaceAll("<(.|\n)*?>", "");
     }
     public static String bold(String input) {
         return "**" + input + "**";
