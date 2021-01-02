@@ -2,6 +2,10 @@ package io.fluentcoding.codemanbot.util;
 
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +41,11 @@ public class StringUtil {
     }
     public static String getTextFromHtml(String input) {
         return input.replaceAll("<(.|\n)*?>", "");
+    }
+    public static String formatIsoDateAndTime(String input) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse(input, timeFormatter);
+        return Date.from(Instant.from(offsetDateTime)).toString();
     }
     public static String bold(String input) {
         return "**" + input + "**";

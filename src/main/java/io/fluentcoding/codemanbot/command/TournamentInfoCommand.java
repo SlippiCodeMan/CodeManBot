@@ -49,7 +49,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 builder.setDescription(StringUtil.getTextFromHtml(description));
 
             builder.addField("Status", tournament.getState(), false);
-            builder.setFooter(tournament.getStartsAt());
+            builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
 
             builder.setColor(GlobalVar.CHALLONGE);
         } else {
