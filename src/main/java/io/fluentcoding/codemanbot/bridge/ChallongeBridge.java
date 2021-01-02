@@ -38,7 +38,6 @@ public class ChallongeBridge {
                     participants.add(new ParticipantEntry(
                         participant.getString("display_name"),
                         participant.getString("username"), 
-                        participant.getString("attached_participatable_portrait_url"),
                         participant.getBoolean("checked_in"),
                         participant.getInt("seed"),
                         participant.getInt("result")
@@ -98,7 +97,6 @@ public class ChallongeBridge {
     public static class ParticipantEntry {
         private String displayName;
         private String username;
-        private String portraitUrl;
         private boolean checkedIn;
         private int seed;
         private int result;
