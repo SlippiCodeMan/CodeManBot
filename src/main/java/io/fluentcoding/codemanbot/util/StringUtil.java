@@ -47,7 +47,7 @@ public class StringUtil {
     public static String formatIsoDateAndTime(String input) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(input, timeFormatter);
-        DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy hh:mm z");  
+        DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy, hh:mm z");  
         return dateFormat.format(Date.from(Instant.from(offsetDateTime)));
     }
     public static String bold(String input) {
