@@ -47,13 +47,13 @@ public class TournamentInfoCommand extends CodeManCommand {
 
             String description = tournament.getDescription();
             if (!description.isEmpty())
-                builder.setDescription(description);
+                builder.setDescription(StringUtil.getTextFromHtml(description));
 
             builder.addField("Status", tournament.getState(), false);
-            builder.addField("Attendees",
-                participants == null ? StringUtil.italic("No attendee yet") : participants.stream()
-                    .map(participant -> participant.getDisplayName())
-                    .collect(Collectors.joining("\n")), false);
+            //builder.addField("Attendees",
+            //    participants == null ? StringUtil.italic("No attendee yet") : participants.stream()
+            //        .map(participant -> participant.getDisplayName())
+            //        .collect(Collectors.joining("\n")), false);
             builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
 
             builder.setColor(GlobalVar.CHALLONGE);
