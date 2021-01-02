@@ -35,6 +35,7 @@ public class TournamentInfoCommand extends CodeManCommand {
         builder.setAuthor("Challonge");
         builder.setTitle(tournament.getName());
         builder.setColor(GlobalVar.CHALLONGE);
+        e.getChannel().sendMessage(builder.build()).queue();
     }
 
 }
