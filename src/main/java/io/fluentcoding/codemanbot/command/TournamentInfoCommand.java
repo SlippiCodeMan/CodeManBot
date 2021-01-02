@@ -70,7 +70,8 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     + participant.getDisplayName())
                                 .collect(Collectors.joining("\n")), false);
                     } else {
-                        newBuilder.addField("Attendees", "```md\n" + participants.stream()
+                        newBuilder.addField("Seeding", "```md\n" + participants.stream()
+                                .filter(participant -> participant.getSeed() <= 10)
                                 .map(participant -> participant.getSeed()
                                     + ". "
                                     + participant.getDisplayName())
