@@ -34,7 +34,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
         String url = args.get("url");
         // Gonna change this when challonge/smash.gg detection will be done
-        url = url.replace("https://challonge.com/", "");
+        //url = url.replace("https://challonge.com/", "");
 
         EmbedBuilder builder = new EmbedBuilder();
 
