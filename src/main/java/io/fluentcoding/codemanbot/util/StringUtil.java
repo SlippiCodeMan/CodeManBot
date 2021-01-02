@@ -2,6 +2,8 @@ package io.fluentcoding.codemanbot.util;
 
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +47,8 @@ public class StringUtil {
     public static String formatIsoDateAndTime(String input) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(input, timeFormatter);
-        return Date.from(Instant.from(offsetDateTime)).toString();
+        DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy at hh:mm z");  
+        return dateFormat.format(Date.from(Instant.from(offsetDateTime)));
     }
     public static String bold(String input) {
         return "**" + input + "**";
