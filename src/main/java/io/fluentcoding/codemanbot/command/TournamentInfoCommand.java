@@ -50,7 +50,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 builder.setDescription(StringUtil.getTextFromHtml(description));
 
             builder.addField("Status", tournament.getState(), false);
-            builder.addField("Attendees", participants.stream()
+            builder.addField("Attendees", participants == null ? "" : participants.stream()
                     .map(participant -> participant.getDisplayName())
                     .collect(Collectors.joining("\n")), false);
             builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
