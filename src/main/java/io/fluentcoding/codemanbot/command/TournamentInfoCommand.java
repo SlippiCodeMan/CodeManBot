@@ -51,7 +51,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     .filter(emote -> participant.getFinalRank() == emote.getNumber())
                                     .findFirst().orElse(null).getEmote()
                                 + " "
-                                + participant.getDisplayName())
+                                + StringUtil.makeSponsorBold(participant.getDisplayName()))
                             .collect(Collectors.joining("\n")), false);
                 } else {
                     builder.addField("Attendees", participants.stream()
