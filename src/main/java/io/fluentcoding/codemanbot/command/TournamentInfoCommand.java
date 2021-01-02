@@ -42,7 +42,7 @@ public class TournamentInfoCommand extends CodeManCommand {
             if (!description.isEmpty())
                 builder.setDescription(StringUtil.getTextFromHtml(description));
 
-            builder.addField("Status", tournament.getState(), false);
+            builder.addField("Status", StringUtil.oneLineCodeBlock(tournament.getState()), false);
             if (participants != null) {
                 if (tournament.getState().equals("complete")) {
                     builder.addField("Final Results", participants.stream()
