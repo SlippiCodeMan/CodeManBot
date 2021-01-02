@@ -62,7 +62,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 newBuilder.addField("Status", StringUtil.oneLineCodeBlock(tournament.getState()), false);
                 if (participants != null) {
                     if (tournament.getState().equals("complete")) {
-                        builder.addField("Final Results", participants.stream()
+                        newBuilder.addField("Final Results", participants.stream()
                                 .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
                                 .map(participant -> Arrays.stream(RankEmotes.values())
                                         .filter(emote -> participant.getFinalRank() == emote.getNumber())
@@ -71,7 +71,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     + participant.getDisplayName())
                                 .collect(Collectors.joining("\n")), false);
                     } else {
-                        builder.addField("Attendees", participants.stream()
+                        newBuilder.addField("Attendees", participants.stream()
                                 .map(participant -> participant.getSeed()
                                     + " | "
                                     + participant.getDisplayName())
