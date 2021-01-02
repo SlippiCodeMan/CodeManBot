@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class TournamentInfoCommand extends CodeManCommand {
@@ -28,46 +30,61 @@ public class TournamentInfoCommand extends CodeManCommand {
         String url = args.get("url");
         // Gonna change this when challonge/smash.gg detection will be done
         //url = url.replace("https://challonge.com/", "");
-
         EmbedBuilder builder = new EmbedBuilder();
 
-        TournamentEntry tournament = ChallongeBridge.getTournament(url);
-        if (tournament != null) {
-            List<ParticipantEntry> participants = ChallongeBridge.getParticipants(url);
-
-            builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
-            builder.setTitle(tournament.getName(), "https://challonge.com/" + url);
-
-            String description = tournament.getDescription();
-            if (!description.isEmpty())
-                builder.setDescription(StringUtil.getTextFromHtml(description));
-
-            builder.addField("Status", StringUtil.oneLineCodeBlock(tournament.getState()), false);
-            if (participants != null) {
-                if (tournament.getState().equals("complete")) {
-                    builder.addField("Final Results", participants.stream()
-                            .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
-                            .map(participant -> Arrays.stream(RankEmotes.values())
-                                    .filter(emote -> participant.getFinalRank() == emote.getNumber())
-                                    .findFirst().orElse(null).getEmote()
-                                + " "
-                                + participant.getDisplayName())
-                            .collect(Collectors.joining("\n")), false);
-                } else {
-                    builder.addField("Attendees", participants.stream()
-                            .map(participant -> participant.getSeed()
-                                + " | "
-                                + participant.getDisplayName())
-                            .collect(Collectors.joining("\n")), false);
-                }
+        builder.setTitle(GlobalVar.LOADING_EMOJI);
+        builder.setColor(GlobalVar.LOADING);
+        Future<TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(url));
+        Future<List<ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(url));
+        e.getChannel().sendMessage(builder.build()).queue(msg -> {
+            TournamentEntry tournament;
+            List<ParticipantEntry> participants;
+            try {
+                tournament = tournamentFuture.get();
+                participants = participantFuture.get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                tournament = null;
+                participants = null;
             }
-            builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
 
-            builder.setColor(GlobalVar.CHALLONGE);
-        } else {
-            builder.setDescription("Operation failed: tournament not found !");
-            builder.setColor(GlobalVar.ERROR);
-        }
-        e.getChannel().sendMessage(builder.build()).queue();
+            e.getChannel().sendMessage(builder.build()).queue();
+            EmbedBuilder newBuilder = new EmbedBuilder();
+
+            if (tournament != null) {
+                newBuilder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
+                newBuilder.setTitle(tournament.getName(), "https://challonge.com/" + url);
+
+                String description = tournament.getDescription();
+                if (!description.isEmpty())
+                    newBuilder.setDescription(StringUtil.getTextFromHtml(description));
+
+                newBuilder.addField("Status", StringUtil.oneLineCodeBlock(tournament.getState()), false);
+                if (participants != null) {
+                    if (tournament.getState().equals("complete")) {
+                        builder.addField("Final Results", participants.stream()
+                                .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
+                                .map(participant -> Arrays.stream(RankEmotes.values())
+                                        .filter(emote -> participant.getFinalRank() == emote.getNumber())
+                                        .findFirst().orElse(null).getEmote()
+                                    + " "
+                                    + participant.getDisplayName())
+                                .collect(Collectors.joining("\n")), false);
+                    } else {
+                        builder.addField("Attendees", participants.stream()
+                                .map(participant -> participant.getSeed()
+                                    + " | "
+                                    + participant.getDisplayName())
+                                .collect(Collectors.joining("\n")), false);
+                    }
+                }
+                newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
+                newBuilder.setColor(GlobalVar.CHALLONGE);
+            } else {
+                newBuilder.setDescription("Operation failed: tournament not found !");
+                newBuilder.setColor(GlobalVar.ERROR);
+            }
+            msg.editMessage(newBuilder.build()).queue();
+        });
     }
 }
