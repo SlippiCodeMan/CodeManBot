@@ -43,7 +43,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 builder.setDescription(StringUtil.getTextFromHtml(description));
             builder.setColor(GlobalVar.CHALLONGE);
         } else {
-            builder.setDescription("Operation failed: tournament nor found !");
+            builder.setDescription("Operation failed: tournament not found !");
             builder.setColor(GlobalVar.ERROR);
         }
         e.getChannel().sendMessage(builder.build()).queue();
