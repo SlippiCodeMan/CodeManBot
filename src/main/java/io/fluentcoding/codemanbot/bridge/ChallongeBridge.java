@@ -40,7 +40,7 @@ public class ChallongeBridge {
                         participant.isNull("username") ? "" : participant.getString("username"), 
                         participant.getBoolean("checked_in"),
                         participant.getInt("seed"),
-                        participant.isNull("final_rank") ? 0 : participant.getInt("final_rank")
+                        participant.isNull("final_rank") ? null : participant.getInt("final_rank")
                     ));
                 }
                 return participants;
