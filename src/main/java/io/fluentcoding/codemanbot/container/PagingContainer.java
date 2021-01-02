@@ -39,13 +39,12 @@ public enum PagingContainer {
                         if (!content.canGoToPreviousPage())
                             return;
                         content.previousPage();
-                        event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
                     } else if (emoji.equals(GlobalVar.ARROW_RIGHT_EMOJI)) {
                         if (!content.canGoToNextPage())
                             return;
                         content.nextPage();
-                        event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
                     }
+                    event.getChannel().editMessageById(event.getMessageIdLong(), content.render()).queue();
                 });
             });
 
