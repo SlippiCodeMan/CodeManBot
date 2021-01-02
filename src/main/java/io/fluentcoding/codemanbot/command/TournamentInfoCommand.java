@@ -53,7 +53,7 @@ public class TournamentInfoCommand extends CodeManCommand {
             if (participants != null) {
                 if (tournament.getState().equals("complete")) {
                     builder.addField("Final Results", participants.stream()
-                            .filter(participant -> participant.getFinalRank() <= 5)
+                            .filter(participant -> participant.getFinalRank() >= 3 && participant.getFinalRank() == 0)
                             .map(participant ->
                                 + participant.getFinalRank()
                                 + " "
