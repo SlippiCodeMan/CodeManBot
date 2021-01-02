@@ -2,7 +2,7 @@ name: Build and Deploy Development Build
 
 on:
   push:
-    branches-ignore: [ main ]
+    branches: [ dev ]
 
 jobs:
   deploy:
