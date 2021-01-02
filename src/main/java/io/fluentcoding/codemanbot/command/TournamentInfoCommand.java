@@ -35,12 +35,17 @@ public class TournamentInfoCommand extends CodeManCommand {
         EmbedBuilder builder = new EmbedBuilder();
 
         TournamentEntry tournament = ChallongeBridge.getTournament(url);
-        builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
-        builder.setTitle(tournament.getName());
-        String description = tournament.getDescription();
-        if (!description.isEmpty())
-            builder.setDescription(StringUtil.getTextFromHtml(description));
-        builder.setColor(GlobalVar.CHALLONGE);
+        if (tournament != null) {
+            builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
+            builder.setTitle(tournament.getName());
+            String description = tournament.getDescription();
+            if (!description.isEmpty())
+                builder.setDescription(StringUtil.getTextFromHtml(description));
+            builder.setColor(GlobalVar.CHALLONGE);
+        } else {
+            builder.setDescription("Operation failed: tournament nor found !");
+            builder.setColor(GlobalVar.ERROR);
+        }
         e.getChannel().sendMessage(builder.build()).queue();
     }
 
