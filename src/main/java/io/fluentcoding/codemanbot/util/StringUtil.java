@@ -50,7 +50,7 @@ public class StringUtil {
         return Date.from(Instant.from(offsetDateTime)).toString();
     }
     public static String makeSponsorBold(String input) {
-        Pattern stringPattern = Pattern.compile("^[[A-Z1-9]]+\\s");
+        Pattern stringPattern = Pattern.compile("^[[A-Z1-9]]+");
         Matcher matcher = stringPattern.matcher(input);
         return input.replaceAll(matcher.group(0), "**" + matcher.group(0) + "**");
     }
