@@ -61,7 +61,7 @@ public class ChallongeBridge {
             HttpResponse response = client.execute(get);
 
             String json = EntityUtils.toString(response.getEntity());
-            JSONObject tournament = new JSONObject(json);
+            JSONObject tournament = new JSONObject(json).getJSONObject("tournament");
             if (tournament.length() == 0)
                 return null;
             else {
