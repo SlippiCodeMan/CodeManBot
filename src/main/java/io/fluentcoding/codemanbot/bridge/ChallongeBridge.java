@@ -37,10 +37,10 @@ public class ChallongeBridge {
                     JSONObject participant = entries.getJSONObject(i).getJSONObject("participant");
                     participants.add(new ParticipantEntry(
                         participant.getString("display_name"),
-                        participant.getString("username"), 
+                        participant.isNull("username") ? "" : participant.getString("username"), 
                         participant.getBoolean("checked_in"),
                         participant.getInt("seed"),
-                        participant.getInt("final_rank")
+                        participant.isNull("final_rank") ? null : participant.getInt("final_rank")
                     ));
                 }
                 return participants;
