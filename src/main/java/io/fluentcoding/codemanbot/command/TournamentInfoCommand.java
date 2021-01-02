@@ -70,13 +70,11 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     + participant.getDisplayName())
                                 .collect(Collectors.joining("\n")), false);
                     } else {
-                        newBuilder.addField("Attendees", participants.stream()
-                                .map(participant -> StringUtil.oneLineCodeBlock(
-                                        participant.getSeed()+ "."
-                                    )
-                                    + " "
+                        newBuilder.addField("Attendees", "```md\n" + participants.stream()
+                                .map(participant -> participant.getSeed()
+                                    + ". "
                                     + participant.getDisplayName())
-                                .collect(Collectors.joining("\n")), false);
+                                .collect(Collectors.joining("\n")) + "\n```", false);
                     }
                 }
                 newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
