@@ -27,13 +27,19 @@ public class TournamentInfoCommand extends CodeManCommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
+
+        // BIG WIP
+
         String url = args.get("url");
 
         EmbedBuilder builder = new EmbedBuilder();
 
         TournamentEntry tournament = ChallongeBridge.getTournament(url);
-        builder.setAuthor("Challonge");
+        builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
         builder.setTitle(tournament.getName());
+        String description = tournament.getDescription();
+        if (!description.isEmpty())
+            builder.setDescription(description);
         builder.setColor(GlobalVar.CHALLONGE);
         e.getChannel().sendMessage(builder.build()).queue();
     }

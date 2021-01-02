@@ -67,6 +67,7 @@ public class ChallongeBridge {
             else {
                 return new TournamentEntry(
                     tournament.getString("name"),
+                    tournament.getString("description"),
                     tournament.getString("game_name"),
                     tournament.getString("tournament_type"),
                     tournament.getString("start_at"),
@@ -107,6 +108,7 @@ public class ChallongeBridge {
     @Getter
     public static class TournamentEntry {
         private String name;
+        private String description;
         private String gameName;
         private String type;
         private String startsAt;
