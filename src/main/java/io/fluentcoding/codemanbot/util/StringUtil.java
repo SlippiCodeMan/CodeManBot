@@ -7,6 +7,8 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringUtil {
@@ -46,6 +48,11 @@ public class StringUtil {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(input, timeFormatter);
         return Date.from(Instant.from(offsetDateTime)).toString();
+    }
+    public static String makeSponsorBold(String input) {
+        Pattern stringPattern = Pattern.compile("^[[A-Z1-9]]+\s");
+        Matcher matcher = stringPattern.matcher(input);
+        return input.replaceAll(matcher.group(0), "**" + matcher.group(0) + "**");
     }
     public static String bold(String input) {
         return "**" + input + "**";
