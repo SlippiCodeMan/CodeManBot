@@ -73,7 +73,7 @@ public class StringUtil {
         return "`" + input + "`";
     }
     public static Map<String, String> separateCodeFromUsername(String input) {
-        String username = input.replace("[([]+([A-Za-z])+#[0-9]{1,3}[])]$", "");
+        String username = input.replace("[([]([A-Za-z])+#[0-9]{1,3}[])]$", "");
         String code = input.replace(username, "").toUpperCase();
         username = username.stripTrailing();
         Map <String, String> hm = new HashMap<String, String>();
