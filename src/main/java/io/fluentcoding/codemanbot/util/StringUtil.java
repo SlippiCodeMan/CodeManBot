@@ -14,9 +14,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class StringUtil {
-
-    private static final int Map = 0;
-
     public static String getPersonPrefixedString(boolean you, String suffix) {
         return (you ? "Your " : "Their ") + suffix;
     }
@@ -76,7 +73,7 @@ public class StringUtil {
         return "`" + input + "`";
     }
     public static Map<String, String> separateCodeFromUsername(String input) {
-        String username = input.replace(".*+([A-Za-z])+#[0-9]{1,3}$", "");
+        String username = input.replace("\\s\\(([A-Za-z])+#[0-9]{1,3}\\)$", "");
         String code = input.replace(username, "");
         Map <String, String> hm = new HashMap<String, String>();
         hm.put("username", username);
