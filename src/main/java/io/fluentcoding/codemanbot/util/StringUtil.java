@@ -52,7 +52,7 @@ public class StringUtil {
     public static String makeSponsorBold(String input) {
         Pattern stringPattern = Pattern.compile("^[[A-Z1-9]]+");
         Matcher matcher = stringPattern.matcher(input);
-        return input.replaceAll(matcher.group(0), "**" + matcher.group(0) + "**");
+        return input.replaceAll(matcher.toString(), "**" + matcher.toString() + "**");
     }
     public static String bold(String input) {
         return "**" + input + "**";
