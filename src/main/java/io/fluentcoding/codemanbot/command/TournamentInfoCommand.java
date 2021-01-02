@@ -42,14 +42,14 @@ public class TournamentInfoCommand extends CodeManCommand {
         if (tournament != null) {
             List<ParticipantEntry> participants = ChallongeBridge.getParticipants(url);
 
-            //builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
+            builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
             builder.setTitle(tournament.getName());
 
             String description = tournament.getDescription();
             if (!description.isEmpty())
                 builder.setDescription(StringUtil.getTextFromHtml(description));
 
-            //builder.addField("Status", tournament.getState(), false);
+            builder.addField("Status", tournament.getState(), false);
             builder.addField("Attendees",
                 participants == null ? StringUtil.italic("No attendee yet") : participants.stream()
                     .map(participant -> participant.getDisplayName())
