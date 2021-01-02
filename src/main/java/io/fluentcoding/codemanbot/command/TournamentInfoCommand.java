@@ -40,9 +40,9 @@ public class TournamentInfoCommand extends CodeManCommand {
 
         TournamentEntry tournament = ChallongeBridge.getTournament(url);
         if (tournament != null) {
-            List<ParticipantEntry> participants = ChallongeBridge.getParticipants(url);
+            //List<ParticipantEntry> participants = ChallongeBridge.getParticipants(url);
 
-            builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
+            //builder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
             builder.setTitle(tournament.getName());
 
             String description = tournament.getDescription();
@@ -54,7 +54,7 @@ public class TournamentInfoCommand extends CodeManCommand {
             //    participants == null ? StringUtil.italic("No attendee yet") : participants.stream()
             //        .map(participant -> participant.getDisplayName())
             //        .collect(Collectors.joining("\n")), false);
-            builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
+            //builder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
 
             builder.setColor(GlobalVar.CHALLONGE);
         } else {
