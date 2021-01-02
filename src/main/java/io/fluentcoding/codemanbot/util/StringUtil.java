@@ -68,4 +68,7 @@ public class StringUtil {
     public static String oneLineCodeBlock(String input) {
         return "`" + input + "`";
     }
+    public static String oneLineCodeBlock(int input) {
+        return "`" + input + "`";
+    }
 }
