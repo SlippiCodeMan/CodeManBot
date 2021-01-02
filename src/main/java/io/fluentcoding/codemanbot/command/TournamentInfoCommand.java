@@ -74,7 +74,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                 .filter(participant -> participant.getSeed() <= 10)
                                 .map(participant -> participant.getSeed()
                                     + ". "
-                                    + participant.getDisplayName())
+                                    + StringUtil.separateCodeFromUsername(participant.getDisplayName()).get("username"))
                                 .collect(Collectors.joining("\n")) + "\n```", false);
                     }
                 }
