@@ -10,14 +10,25 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 
 public enum PagingContainer {
     INSTANCE;
 
+    private Map<Long, Message> lastUserMessage = new HashMap<>();
+    private ReentrantLock safetyLock = new ReentrantLock();
+
     public void pageableMessageHandler(Function<MessageEmbed, MessageAction> action, PageableContent content) {
         action.apply(content.render()).queue(msg -> {
             content.react(msg, () -> {
+                safetyLock.lock();
+                Message lastMessage = lastUserMessage.get(content.getAuthorId());
+                if (lastMessage != null)
+                    lastMessage.clearReactions().queue(unused -> ListenerHook.removeReactionListener(lastMessage.getIdLong()));
+                lastUserMessage.put(content.getAuthorId(), msg);
+                safetyLock.unlock();
+
                 ListenerHook.addReactionListener(msg.getIdLong(), event -> {
                     event.getReaction().removeReaction(event.getUser()).queue();
                     if (event.getUser().getIdLong() != content.getAuthorId())
@@ -40,6 +51,10 @@ public enum PagingContainer {
 
             msg.clearReactions().queueAfter(1, TimeUnit.HOURS, (unused) -> {
                 ListenerHook.removeReactionListener(msg.getIdLong());
+                safetyLock.lock();
+                if (lastUserMessage.get(content.getAuthorId()).getIdLong() == msg.getIdLong())
+                    lastUserMessage.remove(content.getAuthorId());
+                safetyLock.unlock();
             });
         });
     }
