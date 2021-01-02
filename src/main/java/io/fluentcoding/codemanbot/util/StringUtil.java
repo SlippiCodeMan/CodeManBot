@@ -49,11 +49,6 @@ public class StringUtil {
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(input, timeFormatter);
         return Date.from(Instant.from(offsetDateTime)).toString();
     }
-    public static String makeSponsorBold(String input) {
-        Pattern stringPattern = Pattern.compile("^[[A-Z1-9]]+");
-        Matcher matcher = stringPattern.matcher(input);
-        return input.replaceAll(matcher.group(1), "**" + matcher.group(1) + "**");
-    }
     public static String bold(String input) {
         return "**" + input + "**";
     }
