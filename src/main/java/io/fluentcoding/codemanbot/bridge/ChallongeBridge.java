@@ -22,7 +22,7 @@ public class ChallongeBridge {
     public static List<ParticipantEntry> getParticipants(String tournamentName) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpGet get = new HttpGet(URI
-                    + "tournaments/"
+                    + "/tournaments/"
                     + tournamentName
                     + "/participants.json");
             HttpResponse response = client.execute(get);
@@ -54,7 +54,7 @@ public class ChallongeBridge {
     public static TournamentEntry getTournament(String tournamentName) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpGet get = new HttpGet(URI
-                    + "tournaments/"
+                    + "/tournaments/"
                     + tournamentName
                     + ".json");
             HttpResponse response = client.execute(get);
