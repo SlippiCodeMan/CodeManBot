@@ -34,7 +34,7 @@ public class ChallongeBridge {
             else {
                 List<ParticipantEntry> participants = new ArrayList<>();
                 for (int i = 0; i < entries.length(); i++) {
-                    JSONObject participant = entries.getJSONObject(i);
+                    JSONObject participant = entries.getJSONObject(i).getJSONObject("participant");
                     participants.add(new ParticipantEntry(
                         participant.getString("display_name"),
                         participant.getString("username"), 
