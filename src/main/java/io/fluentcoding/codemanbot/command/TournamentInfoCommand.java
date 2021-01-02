@@ -1,24 +1,17 @@
 package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
-import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
-import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge.ParticipantEntry;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge.TournamentEntry;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
-import io.fluentcoding.codemanbot.container.PagingContainer;
+import io.fluentcoding.codemanbot.util.tournament.RankEmotes;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class TournamentInfoCommand extends CodeManCommand {
@@ -54,9 +47,11 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (tournament.getState().equals("complete")) {
                     builder.addField("Final Results", participants.stream()
                             .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
-                            .map(participant ->
-                                + participant.getFinalRank()
+                            .map(participant -> "<"
+                                + Arrays.stream(RankEmotes.values())
+                                    .filter(emote -> participant.getFinalRank() == emote.getNumber())
                                 + " "
+                                + participant.getFinalRank()
                                 + participant.getDisplayName())
                             .collect(Collectors.joining("\n")), false);
                 } else {
@@ -76,5 +71,4 @@ public class TournamentInfoCommand extends CodeManCommand {
         }
         e.getChannel().sendMessage(builder.build()).queue();
     }
-
 }
