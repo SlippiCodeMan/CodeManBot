@@ -52,9 +52,11 @@ public class TournamentInfoCommand extends CodeManCommand {
             builder.addField("Status", tournament.getState(), false);
             if (participants != null) {
                 if (tournament.getState().equals("complete")) {
-                    builder.addField("Attendees", participants.stream()
-                            .map(participant -> participant.getFinalRank()
-                                + " | "
+                    builder.addField("Final Results", participants.stream()
+                            .filter(participant -> participant.getFinalRank() >= 3)
+                            .map(participant ->
+                                + participant.getFinalRank()
+                                + " "
                                 + participant.getDisplayName())
                             .collect(Collectors.joining("\n")), false);
                 } else {
