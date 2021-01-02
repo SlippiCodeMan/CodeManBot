@@ -51,7 +51,6 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     .filter(emote -> participant.getFinalRank() == emote.getNumber())
                                     .findFirst().orElse(null).getEmote()
                                 + " "
-                                + participant.getFinalRank()
                                 + participant.getDisplayName())
                             .collect(Collectors.joining("\n")), false);
                 } else {
