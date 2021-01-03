@@ -78,14 +78,15 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (participants != null) {
                     if (tournament.getState().equals("complete")) {
                         newBuilder.addField("Final Results", participants.stream()
-                                .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
+                                .filter(participant -> participant.getFinalRank() <= 5 && participant.getFinalRank() != 0)
                                 .map(participant -> {
                                     Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
                                             participant.getDisplayName()
                                     );
-                                    return Arrays.stream(RankEmotes.values())
+                                    RankEmotes rankEmote = Arrays.stream(RankEmotes.values())
                                             .filter(emote -> participant.getFinalRank() == emote.getNumber())
-                                            .findFirst().orElse(null).getEmote()
+                                            .findFirst().orElse(null);
+                                    return rankEmote == null ? StringUtil.bold(participant.getFinalRank() + ". ") : rankEmote.getEmote()
                                             + " "
                                             + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
                                             + " "
