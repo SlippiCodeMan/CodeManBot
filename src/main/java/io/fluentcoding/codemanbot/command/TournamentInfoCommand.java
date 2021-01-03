@@ -31,9 +31,11 @@ public class TournamentInfoCommand extends CodeManCommand {
 
         if (isUrl) {
             String subdomain = PatternChecker.getSubdomain(url);
-            System.out.println(subdomain);
-            finalUrl = (subdomain == null ? "" : subdomain + "-") + url.substring(url.lastIndexOf('/'));
-            System.out.println(finalUrl);
+            String urlCopy = url;
+            while (urlCopy.charAt(url.length() - 1) == '/')
+                urlCopy = urlCopy.substring(0, urlCopy.length() - 1);
+
+            finalUrl = (subdomain == null ? "" : subdomain + "-") + urlCopy.substring(urlCopy.lastIndexOf('/') + 1);
         } else {
             finalUrl = url;
         }
