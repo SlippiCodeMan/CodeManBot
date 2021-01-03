@@ -64,11 +64,10 @@ public class TournamentInfoCommand extends CodeManCommand {
                     if (participants != null) {
                         if (tournament.getState().equals("complete")) {
                             newBuilder.addField("Final Results", participants.stream()
-                                    .filter(participant -> participant.getFinalRank() <= 5 && participant.getFinalRank() != 0)
+                                    .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
                                     .map(participant -> Arrays.stream(RankEmotes.values())
                                             .filter(emote -> participant.getFinalRank() == emote.getNumber())
-                                            .map(emote -> emote == null ? String.valueOf(participant.getFinalRank()) : emote.getEmote())
-                                            .collect(Collectors.joining("")) // TEMP HACK
+                                            .findFirst().orElse(null)
                                         + " "
                                         + participant.getDisplayName())
                                     .collect(Collectors.joining("\n")), false);
