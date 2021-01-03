@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class StringUtil {
@@ -73,8 +75,14 @@ public class StringUtil {
         return "`" + input + "`";
     }
     public static Map<String, String> separateCodeFromUsername(String input) {
+        // Bad code, will be refactored and maybe put in another class
         String username = input.replaceAll("\\(([A-Za-z])+#[0-9]{1,3}\\)$", "");
-        String code = input.replaceAll(username, "").toUpperCase();
+        Pattern MY_PATTERN = Pattern.compile("^([A-Za-z])+#[0-9]{1,3}$");
+        Matcher m = MY_PATTERN.matcher(input);
+        String code = "";
+        while (m.find()) {
+            code = m.group(1);
+        }
         username = username.stripTrailing();
         Map<String, String> hm = new HashMap<String, String>();
         hm.put("username", username);
