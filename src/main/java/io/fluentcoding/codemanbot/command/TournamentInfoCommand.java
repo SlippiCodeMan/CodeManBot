@@ -78,7 +78,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                     if (tournament.getState().equals("complete")) {
                         newBuilder.addField("Final Results", participants.stream()
                                 .filter(participant -> participant.getFinalRank() <= 5 && participant.getFinalRank() != 0)
-                                .sorted((o1,o2)-> Integer.compare(o1.getFinalRank(), o2.getFinalRank()))
+                                .sorted((o1,o2) -> Integer.compare(o1.getFinalRank(), o2.getFinalRank()))
                                 .map(participant -> {
                                     Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
                                             participant.getDisplayName()
@@ -97,28 +97,10 @@ public class TournamentInfoCommand extends CodeManCommand {
                                                             seperateCodeFromUsername.get("code"))));
                                 })
                                 .collect(Collectors.joining("\n")), true);
-                    } else if (tournament.getState().equals("awaiting_review")) {
-                        newBuilder.addField("Current Results", participants.stream()
-                                .filter(participant -> participant.getFinalRank() <= 5 && participant.getFinalRank() != 0)
-                                .sorted((o1,o2)-> Integer.compare(o1.getFinalRank(), o2.getFinalRank()))
-                                .map(participant -> {
-                                    Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
-                                            participant.getDisplayName()
-                                    );
-                                    return StringUtil.bold(participant.getFinalRank()
-                                            + ". ")
-                                            + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
-                                            + " "
-                                            + StringUtil.getMainsFormatted(
-                                            DatabaseBridge.getMains(
-                                                    DatabaseBridge.getDiscordIdFromConnectCode(
-                                                            seperateCodeFromUsername.get("code"))));
-                                })
-                                .collect(Collectors.joining("\n")), true);
                     } else {
                         newBuilder.addField("Seeding", participants.stream()
                                 .filter(participant -> participant.getSeed() <= 9)
-                                .sorted((o1,o2)-> Integer.compare(o1.getSeed(), o2.getSeed()))
+                                .sorted((o1,o2) -> Integer.compare(o1.getSeed(), o2.getSeed()))
                                 .map(participant -> {
                                     Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
                                             participant.getDisplayName()
@@ -138,9 +120,9 @@ public class TournamentInfoCommand extends CodeManCommand {
                 }
 
                 newBuilder.addField("Infos", 
-                        "- " + StringUtil.bold("Type: ") + tournament.getType() + "\n"
-                        + "- " + StringUtil.bold("Attendees: ") + tournament.getParticipantsCount() + "\n"
-                        + "- " + StringUtil.bold("State: ") + tournament.getState()
+                        StringUtil.bold("- Type: ") + tournament.getType() + "\n"
+                        + StringUtil.bold("- Attendees: ") + tournament.getParticipantsCount() + "\n"
+                        + StringUtil.bold("- State: ") + tournament.getState()
                         , true);
 
                 newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
