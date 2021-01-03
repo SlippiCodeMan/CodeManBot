@@ -61,51 +61,46 @@ public class TournamentInfoCommand extends CodeManCommand {
             EmbedBuilder newBuilder = new EmbedBuilder();
 
             if (tournament != null) {
-                if (!tournament.getGameName().equals("Super Smash Bros. Melee")) {
-                    newBuilder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
-                    newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : "https://challonge.com/" + url);
+                newBuilder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
+                newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : "https://challonge.com/" + url);
 
-                    String description = tournament.getDescription();
-                    if (!description.isEmpty())
-                        newBuilder.setDescription(StringUtil.getTextFromHtml(description));
+                String description = tournament.getDescription();
+                if (!description.isEmpty())
+                    newBuilder.setDescription(StringUtil.getTextFromHtml(description));
 
-                    newBuilder.addField("Status", StringUtil.oneLineCodeBlock(tournament.getState()), false);
-                    if (participants != null) {
-                        if (tournament.getState().equals("complete")) {
-                            newBuilder.addField("Final Results", participants.stream()
-                                    .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
-                                    .map(participant -> Arrays.stream(RankEmotes.values())
-                                            .filter(emote -> participant.getFinalRank() == emote.getNumber())
-                                            .findFirst().orElse(null).getEmote()
-                                        + " "
-                                        + participant.getDisplayName())
-                                    .collect(Collectors.joining("\n")), false);
-                        } else {
-                            newBuilder.addField("Seeding", participants.stream()
-                                    .filter(participant -> participant.getSeed() <= 9)
-                                    .map(participant -> {
-                                        Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
-                                                participant.getDisplayName()
-                                        );
+                newBuilder.addField("Status", StringUtil.oneLineCodeBlock(tournament.getState()), false);
+                if (participants != null) {
+                    if (tournament.getState().equals("complete")) {
+                        newBuilder.addField("Final Results", participants.stream()
+                                .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
+                                .map(participant -> Arrays.stream(RankEmotes.values())
+                                        .filter(emote -> participant.getFinalRank() == emote.getNumber())
+                                        .findFirst().orElse(null).getEmote()
+                                    + " "
+                                    + participant.getDisplayName())
+                                .collect(Collectors.joining("\n")), false);
+                    } else {
+                        newBuilder.addField("Seeding", participants.stream()
+                                .filter(participant -> participant.getSeed() <= 9)
+                                .map(participant -> {
+                                    Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
+                                            participant.getDisplayName()
+                                    );
 
-                                        return StringUtil.bold(participant.getSeed()
-                                                + ". ")
-                                                + seperateCodeFromUsername.get("username")
-                                                + " "
-                                                + StringUtil.getMainsFormatted(
-                                                DatabaseBridge.getMains(
-                                                        DatabaseBridge.getDiscordIdFromConnectCode(
-                                                                seperateCodeFromUsername.get("code"))));
-                                    })
-                                    .collect(Collectors.joining("\n")), false);
-                        }
+                                    return StringUtil.bold(participant.getSeed()
+                                            + ". ")
+                                            + seperateCodeFromUsername.get("username")
+                                            + " "
+                                            + StringUtil.getMainsFormatted(
+                                            DatabaseBridge.getMains(
+                                                    DatabaseBridge.getDiscordIdFromConnectCode(
+                                                            seperateCodeFromUsername.get("code"))));
+                                })
+                                .collect(Collectors.joining("\n")), false);
                     }
-                    newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
-                    newBuilder.setColor(GlobalVar.CHALLONGE);
-                } else {
-                    newBuilder.setDescription("Operation failed: This is not a melee tournament!");
-                    newBuilder.setColor(GlobalVar.ERROR);
                 }
+                newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
+                newBuilder.setColor(GlobalVar.CHALLONGE);
             } else {
                 newBuilder.setDescription("Operation failed: Tournament not found!");
                 newBuilder.setColor(GlobalVar.ERROR);
