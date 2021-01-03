@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class StringUtil {
     public static String stripDiscordMarkdown(String input) {
-        return input.replaceAll("^(\\*|_|`|~|\\\\)$", "");
+        return input.replaceAll("(\\*|_|`|~|\\\\)", "");
     }
     public static String getPersonPrefixedString(boolean you, String suffix) {
         return (you ? "Your " : "Their ") + suffix;
