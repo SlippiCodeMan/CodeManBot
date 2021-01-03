@@ -25,6 +25,8 @@ public class TournamentInfoCommand extends CodeManCommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
+        e.getMessage().delete().queue();
+
         String url = args.get("url");
         boolean isUrl = PatternChecker.isChallongeLink(url);
         String finalUrl;
