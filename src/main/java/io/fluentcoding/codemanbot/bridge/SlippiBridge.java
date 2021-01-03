@@ -22,8 +22,8 @@ public class SlippiBridge {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\":\"" +
-                    "query fetch($code: String!) {" +
-                    " users(where:{connectCode:{_eq:$code}}){" +
+                    "query fetch($code:String!){" +
+                    "users(where:{connectCode:{_eq:$code}}){" +
                     "displayName status" +
                     "}" +
                     "}\"}"));
@@ -46,13 +46,11 @@ public class SlippiBridge {
     public static boolean userWithCodeExists(String code) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
-            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"fragment userDisplay on User {" +
-                        "status" +
+            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"" +
+                    "query fetch($code:String!) {" +
+                    "users(where:{connectCode:{_eq:$code}}){" +
+                    "status" +
                     "}" +
-                    "query fetch($code: String!) {" +
-                    "  users(where: { connectCode: { _eq: $code } }) {" +
-                    "    ...userDisplay" +
-                    "  }" +
                     "}\"}"));
             HttpResponse response = client.execute(post);
 
@@ -72,15 +70,11 @@ public class SlippiBridge {
     public static List<UserEntry> getCodesWithActualName(String name) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
-            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\": \"fragment userDisplay on User {" +
-                    "  displayName" +
-                    "  connectCode" +
-                    "  status" +
+            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\":\"" +
+                    "query fetch($name: String!){" +
+                    "users(where:{displayName:{_ilike:$name}}){" +
+                    "displayName connectCode status" +
                     "}" +
-                    "query fetch($name: String!) {" +
-                    "  users(where: { displayName: { _ilike: $name } }) {" +
-                    "    ...userDisplay" +
-                    "  }" +
                     "}\"}"));
             HttpResponse response = client.execute(post);
 
