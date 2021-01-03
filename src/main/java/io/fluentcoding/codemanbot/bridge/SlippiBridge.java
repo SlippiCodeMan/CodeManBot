@@ -21,14 +21,11 @@ public class SlippiBridge {
     public static String getName(String code) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
-            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"fragment userDisplay on User {" +
-                    "  displayName" +
-                    " status" +
-                    "}" +
+            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\":\"" +
                     "query fetch($code: String!) {" +
-                    "  users(where: { connectCode: { _eq: $code } }) {" +
-                    "    ...userDisplay" +
-                    "  }" +
+                    " users(where:{connectCode:{_eq:$code}}){" +
+                    "displayName status" +
+                    "}" +
                     "}\"}"));
             HttpResponse response = client.execute(post);
 
