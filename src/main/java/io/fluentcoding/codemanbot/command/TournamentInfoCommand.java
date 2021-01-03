@@ -25,9 +25,6 @@ public class TournamentInfoCommand extends CodeManCommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
-
-        // BIG WIP
-
         String url = args.get("url");
         // Gonna change this when challonge/smash.gg detection will be done
         //url = url.replace("https://challonge.com/", "");

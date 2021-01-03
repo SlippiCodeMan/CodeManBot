@@ -48,6 +48,9 @@ public class StringUtil {
         return input.replaceAll("<(.|\n)*?>", "");
     }
     public static String formatIsoDateAndTime(String input) {
+        if (input.equals("null"))
+            return "";
+
         DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(input, timeFormatter);
         DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy, hh:mm z");  
