@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -79,6 +80,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                     if (tournament.getState().equals("complete")) {
                         newBuilder.addField("Final Results", participants.stream()
                                 .filter(participant -> participant.getFinalRank() <= 5 && participant.getFinalRank() != 0)
+                                .sorted((o1,o2)-> Integer.compare(o1.getFinalRank(), o2.getFinalRank()))
                                 .map(participant -> {
                                     Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
                                             participant.getDisplayName()
