@@ -64,12 +64,12 @@ public class TournamentInfoCommand extends CodeManCommand {
                 newBuilder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
                 newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : "https://challonge.com/" + url);
 
-                String description = tournament.getDescription();
+                String description = StringUtil.getTextFromHtml(tournament.getDescription());
                 if (!description.isEmpty()) {
                     if (description.length() > 300)
                         description = description.substring(0, 301) + "...";
 
-                    newBuilder.setDescription(StringUtil.getTextFromHtml(description));
+                    newBuilder.setDescription(description);
                 }
 
                 newBuilder.addField("Status", StringUtil.oneLineCodeBlock(tournament.getState()), false);
