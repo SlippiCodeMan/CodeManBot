@@ -133,6 +133,11 @@ public class StatsCommand extends DevCodeManCommand {
             this.value = String.valueOf(value);
         }
 
+        public StatsEntry(String title, long value) {
+            this.title = title;
+            this.value = String.valueOf(value);
+        }
+
         public StatsEntry(String title, Supplier<String> valueRetriever) {
             this.title = title;
             this.valueRetriever = valueRetriever;
