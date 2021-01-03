@@ -104,6 +104,5 @@ public class StringUtil {
     }
     public static String removeUnderscores(String input) {
         return input.replace("_", " ");
-
     }
 }
