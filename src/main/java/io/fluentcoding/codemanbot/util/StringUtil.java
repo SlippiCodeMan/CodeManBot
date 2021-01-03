@@ -88,7 +88,10 @@ public class StringUtil {
     }
     public static Map<String, String> separateCodeFromUsername(String input) {
         String username = input.replaceAll("\\(([A-Za-z])+#[0-9]{1,3}\\)$", "").stripTrailing();
-        String code = Pattern.compile("([A-Za-z])+#[0-9]{1,3}").matcher(input).group(0).toUpperCase();
+        Matcher matcher = Pattern.compile("([A-Za-z])+#[0-9]{1,3}").matcher(input);
+        String code = "";
+        while(matcher.find())
+            code = matcher.group(0);
 
         Map<String, String> hm = new HashMap<String, String>();
         hm.put("username", username);
