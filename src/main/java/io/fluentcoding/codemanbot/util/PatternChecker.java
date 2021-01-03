@@ -13,7 +13,7 @@ public class PatternChecker {
         return input.length() <= 15;
     }
     public static boolean isChallongeLink(String input) {
-        return is(input, challongeUrlPrefixPattern);
+        return challongeUrlPrefixPattern.matcher(input).find();
     }
     private static boolean is(String input, Pattern pattern) {
         return pattern.matcher(input).matches();

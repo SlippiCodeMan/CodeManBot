@@ -54,7 +54,7 @@ public class TournamentInfoCommand extends CodeManCommand {
             EmbedBuilder newBuilder = new EmbedBuilder();
 
             if (tournament != null) {
-                if (tournament.getGameName() != "Super Smash Bros. Melee") {
+                if (!tournament.getGameName().equals("Super Smash Bros. Melee")) {
                     newBuilder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
                     newBuilder.setTitle(tournament.getName(), "https://challonge.com/" + url);
 
@@ -96,11 +96,11 @@ public class TournamentInfoCommand extends CodeManCommand {
                     newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
                     newBuilder.setColor(GlobalVar.CHALLONGE);
                 } else {
-                    newBuilder.setDescription("Operation failed: this is not an ssbm tournament !");
+                    newBuilder.setDescription("Operation failed: This is not a melee tournament!");
                     newBuilder.setColor(GlobalVar.ERROR);
                 }
             } else {
-                newBuilder.setDescription("Operation failed: tournament not found !");
+                newBuilder.setDescription("Operation failed: Tournament not found!");
                 newBuilder.setColor(GlobalVar.ERROR);
             }
             msg.editMessage(newBuilder.build()).queue();
