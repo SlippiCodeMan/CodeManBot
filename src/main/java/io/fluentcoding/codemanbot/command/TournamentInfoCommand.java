@@ -88,7 +88,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                             .findFirst().orElse(null);
                                     return rankEmote == null ? StringUtil.bold(participant.getFinalRank() + "th") : rankEmote.getEmote()
                                             + " "
-                                            + seperateCodeFromUsername.get("username")
+                                            + participant.getDisplayName()
                                             + " "
                                             + StringUtil.getMainsFormatted(
                                             DatabaseBridge.getMains(
