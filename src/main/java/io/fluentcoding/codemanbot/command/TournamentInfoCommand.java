@@ -59,7 +59,7 @@ public class TournamentInfoCommand extends CodeManCommand {
             if (tournament != null) {
                 if (!tournament.getGameName().equals("Super Smash Bros. Melee")) {
                     newBuilder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
-                    newBuilder.setTitle(tournament.getName(), isUrl ? url : "https://challonge.com/" + url);
+                    newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : "https://challonge.com/" + url);
 
                     String description = tournament.getDescription();
                     if (!description.isEmpty())

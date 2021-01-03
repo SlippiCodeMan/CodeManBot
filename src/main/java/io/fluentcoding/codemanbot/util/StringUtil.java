@@ -16,6 +16,12 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class StringUtil {
+    public static String makeUrlValid(String input) {
+        if (!input.startsWith("http://") && !input.startsWith("https://"))
+            return "https://" + input;
+
+        return input;
+    }
     public static String stripDiscordMarkdown(String input) {
         return input.replaceAll("(\\*|_|`|~|\\\\)", "");
     }
