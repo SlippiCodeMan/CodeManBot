@@ -87,7 +87,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                             .filter(emote -> participant.getFinalRank() == emote.getNumber())
                                             .findFirst().orElse(null).getEmote()
                                             + " "
-                                            + seperateCodeFromUsername.get("username")
+                                            + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
                                             + " "
                                             + StringUtil.getMainsFormatted(
                                             DatabaseBridge.getMains(
@@ -105,7 +105,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
                                     return StringUtil.bold(participant.getSeed()
                                             + ". ")
-                                            + seperateCodeFromUsername.get("username")
+                                            + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
                                             + " "
                                             + StringUtil.getMainsFormatted(
                                             DatabaseBridge.getMains(

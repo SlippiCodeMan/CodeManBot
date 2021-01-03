@@ -99,4 +99,7 @@ public class StringUtil {
         hm.put("code", code);
         return hm;
     }
+    public static String removeHardcodedSeeding(String input) {
+        return input.replaceAll("[0-9]+.\\s", "");
+    }
 }
