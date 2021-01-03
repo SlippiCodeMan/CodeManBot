@@ -75,7 +75,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                 .filter(participant -> participant.getSeed() <= 10)
                                 .map(participant -> participant.getSeed()
                                     + ". "
-                                    + StringUtil.separateCodeFromUsername(participant.getDisplayName()).get("username")
+                                    + StringUtil.separateCodeFromUsername(participant.getDisplayName()).get("code")
                                     + StringUtil.getMainsFormatted(
                                         DatabaseBridge.getMains(
                                             DatabaseBridge.getDiscordIdFromConnectCode(
