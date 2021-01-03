@@ -16,6 +16,9 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class StringUtil {
+    public static String stripDiscordMarkdown(String input) {
+        return input.replaceAll("^(\\*|_|`|~|\\\\)$", "");
+    }
     public static String getPersonPrefixedString(boolean you, String suffix) {
         return (you ? "Your " : "Their ") + suffix;
     }
@@ -78,7 +81,7 @@ public class StringUtil {
         return "`" + input + "`";
     }
     public static Map<String, String> separateCodeFromUsername(String input) {
-        // Bad code, will be refactored and maybe put in another class
+        // Bad code, will be refactored
         String username = input.replaceAll("\\(([A-Za-z])+#[0-9]{1,3}\\)$", "");
         Pattern MY_PATTERN = Pattern.compile("([A-Za-z])+#[0-9]{1,3}");
         Matcher m = MY_PATTERN.matcher(input);

@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.bridge;
 
+import io.fluentcoding.codemanbot.util.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -36,7 +37,7 @@ public class ChallongeBridge {
                 for (int i = 0; i < entries.length(); i++) {
                     JSONObject participant = entries.getJSONObject(i).getJSONObject("participant");
                     participants.add(new ParticipantEntry(
-                        participant.getString("display_name"),
+                        StringUtil.stripDiscordMarkdown(participant.getString("display_name")),
                         participant.isNull("username") ? "" : participant.getString("username"), 
                         participant.getBoolean("checked_in"),
                         participant.getInt("seed"),
