@@ -1,6 +1,7 @@
 package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
+import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge.ParticipantEntry;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge.TournamentEntry;
 import io.fluentcoding.codemanbot.util.*;
@@ -74,7 +75,13 @@ public class TournamentInfoCommand extends CodeManCommand {
                                 .filter(participant -> participant.getSeed() <= 10)
                                 .map(participant -> participant.getSeed()
                                     + ". "
-                                    + StringUtil.separateCodeFromUsername(participant.getDisplayName()).get("username"))
+                                    + StringUtil.separateCodeFromUsername(participant.getDisplayName()).get("username")
+                                    + StringUtil.getMainsFormatted(
+                                        DatabaseBridge.getMains(
+                                            DatabaseBridge.getDiscordIdFromConnectCode(
+                                                StringUtil.separateCodeFromUsername(
+                                                    participant.getDisplayName()
+                                        ).get("code")))))
                                 .collect(Collectors.joining("\n")) + "\n```", false);
                     }
                 }
