@@ -25,6 +25,8 @@ public class TournamentInfoCommand extends CodeManCommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
+        e.getMessage().delete().queue();
+
         String url = args.get("url");
         boolean isUrl = PatternChecker.isChallongeLink(url);
         String finalUrl;
@@ -61,7 +63,7 @@ public class TournamentInfoCommand extends CodeManCommand {
             EmbedBuilder newBuilder = new EmbedBuilder();
 
             if (tournament != null) {
-                newBuilder.setAuthor("Challonge", "https://challonge.com", "https://codeman.rocks/assets/challonge.png");
+                newBuilder.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
                 newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : "https://challonge.com/" + url);
 
                 String description = StringUtil.getTextFromHtml(tournament.getDescription());
