@@ -68,7 +68,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     .map(participant -> Arrays.stream(RankEmotes.values())
                                             .filter(emote -> participant.getFinalRank() == emote.getNumber())
                                             .map(emote -> emote == null ? StringUtil.bold(participant.getFinalRank() + ".") : emote.getEmote())
-                                            .findFirst()
+                                            .collect(Collectors.joining("")) // TEMP HACK
                                         + " "
                                         + participant.getDisplayName())
                                     .collect(Collectors.joining("\n")), false);
