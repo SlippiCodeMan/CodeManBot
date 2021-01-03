@@ -23,8 +23,8 @@ public class PatternChecker {
             pos = input.indexOf('/') + 2;
         }
 
-        Matcher m = subdomainPrefixPattern.matcher(input);
-        if (!m.find(pos))
+        Matcher m = subdomainPrefixPattern.matcher(input.substring(pos));
+        if (!m.find())
             return null;
         return m.group();
     }
