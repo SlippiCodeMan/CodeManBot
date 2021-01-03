@@ -86,9 +86,10 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     RankEmotes rankEmote = Arrays.stream(RankEmotes.values())
                                             .filter(emote -> participant.getFinalRank() == emote.getNumber())
                                             .findFirst().orElse(null);
-                                    return rankEmote == null ? StringUtil.bold(participant.getFinalRank() + "th") : rankEmote.getEmote()
+                                    String prefix = rankEmote == null ? StringUtil.bold(participant.getFinalRank() + "th") : rankEmote.getEmote();
+                                    return  prefix
                                             + " "
-                                            + participant.getDisplayName()
+                                            + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
                                             + " "
                                             + StringUtil.getMainsFormatted(
                                             DatabaseBridge.getMains(
