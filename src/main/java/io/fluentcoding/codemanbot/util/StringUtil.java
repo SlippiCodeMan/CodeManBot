@@ -87,7 +87,7 @@ public class StringUtil {
         return "`" + input + "`";
     }
     public static Map<String, String> separateCodeFromUsername(String input) {
-        String username = input.replaceAll("\\(([A-Za-z])+#[0-9]{1,3}\\)$", "").stripTrailing();
+        String username = input.replaceAll("[\\(\\[]?([A-Za-z])+#[0-9]{1,3}[\\]\\)]?$", "").stripTrailing();
 
         String code = "";
         Matcher matcher = Pattern.compile("([A-Za-z])+#[0-9]{1,3}").matcher(input);
