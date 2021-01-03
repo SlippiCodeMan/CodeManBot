@@ -120,10 +120,10 @@ public class TournamentInfoCommand extends CodeManCommand {
                 }
 
                 newBuilder.addField("Infos", 
-                        StringUtil.bold("- Game: ") + tournament.getGameName() + "\n"
-                        + StringUtil.bold("- Type: ") + tournament.getType() + "\n"
+                        StringUtil.bold("- Game: ") + StringUtil.prettify(tournament.getGameName()) + "\n"
+                        + StringUtil.bold("- Type: ") + StringUtil.prettify(tournament.getType()) + "\n"
                         + StringUtil.bold("- Attendees: ") + tournament.getParticipantsCount() + "\n"
-                        + StringUtil.bold("- State: ") + tournament.getState()
+                        + StringUtil.bold("- State: ") + StringUtil.prettify(tournament.getState())
                         , true);
 
                 newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
