@@ -87,6 +87,8 @@ public class TournamentInfoCommand extends CodeManCommand {
                                             .filter(emote -> participant.getFinalRank() == emote.getNumber())
                                             .findFirst().orElse(null).getEmote()
                                             + " "
+                                            + seperateCodeFromUsername.get("username")
+                                            + " "
                                             + StringUtil.getMainsFormatted(
                                             DatabaseBridge.getMains(
                                                     DatabaseBridge.getDiscordIdFromConnectCode(
