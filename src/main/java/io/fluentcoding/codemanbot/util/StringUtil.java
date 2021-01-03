@@ -102,8 +102,8 @@ public class StringUtil {
     public static String removeHardcodedSeeding(String input) {
         return input.replaceAll("[0-9]+.\\s", "");
     }
-    public static String prettify(String input) {
-        return (input.substring(0, 1).toUpperCase() + input.substring(1)).replace("_", "");
+    public static String removeUnderscores(String input) {
+        return input.replace("_", "");
 
     }
 }
