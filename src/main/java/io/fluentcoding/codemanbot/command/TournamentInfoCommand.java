@@ -102,6 +102,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                     } else {
                         newBuilder.addField("Seeding", participants.stream()
                                 .filter(participant -> participant.getSeed() <= 9)
+                                .sorted((o1,o2)-> Integer.compare(o1.getSeed(), o2.getSeed()))
                                 .map(participant -> {
                                     Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
                                             participant.getDisplayName()
