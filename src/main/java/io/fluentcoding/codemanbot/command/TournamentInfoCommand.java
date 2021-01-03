@@ -71,18 +71,19 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     + participant.getDisplayName())
                                 .collect(Collectors.joining("\n")), false);
                     } else {
-                        newBuilder.addField("Seeding", "```md\n" + participants.stream()
+                        newBuilder.addField("Seeding", participants.stream()
                                 .filter(participant -> participant.getSeed() <= 10)
-                                .map(participant -> participant.getSeed()
-                                    + ". "
+                                .map(participant -> StringUtil.bold(participant.getSeed()
+                                    + ". ")
                                     + StringUtil.separateCodeFromUsername(participant.getDisplayName()).get("username")
+                                    + " "
                                     + StringUtil.getMainsFormatted(
                                         DatabaseBridge.getMains(
                                             DatabaseBridge.getDiscordIdFromConnectCode(
                                                 StringUtil.separateCodeFromUsername(
                                                     participant.getDisplayName()
                                         ).get("code")))))
-                                .collect(Collectors.joining("\n")) + "\n```", false);
+                                .collect(Collectors.joining("\n")), false);
                     }
                 }
                 newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
