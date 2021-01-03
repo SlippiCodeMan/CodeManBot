@@ -77,7 +77,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
                 newBuilder.addField("Infos", 
                         "- " + StringUtil.oneLineCodeBlock("type: ") + tournament.getType()
-                        + "- " + StringUtil.oneLineCodeBlock("attendees: ") + tournament.getParticipantCount()
+                        + "- " + StringUtil.oneLineCodeBlock("attendees: ") + tournament.getParticipantsCount()
                         + "- " + StringUtil.oneLineCodeBlock("state: ") + tournament.getState()
                         , false);
 

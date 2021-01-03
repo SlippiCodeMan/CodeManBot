@@ -71,7 +71,7 @@ public class ChallongeBridge {
                     tournament.getString("tournament_type"),
                     tournament.getString("start_at"),
                     tournament.getString("state"),
-                    tournament.getInt("participant_count")
+                    tournament.getInt("participants_count")
                 );
             }
         } catch(Exception e) {
@@ -111,6 +111,6 @@ public class ChallongeBridge {
         private String type;
         private String startsAt;
         private String state;
-        private int participantCount;
+        private int participantsCount;
     }
 }
