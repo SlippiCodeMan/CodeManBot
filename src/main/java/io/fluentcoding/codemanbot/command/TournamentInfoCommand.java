@@ -74,12 +74,6 @@ public class TournamentInfoCommand extends CodeManCommand {
                     newBuilder.setDescription(description);
                 }
 
-                newBuilder.addField("Infos", 
-                        "- " + StringUtil.bold("Type: ") + tournament.getType() + "\n"
-                        + "- " + StringUtil.bold("Attendees: ") + tournament.getParticipantsCount() + "\n"
-                        + "- " + StringUtil.bold("State: ") + tournament.getState()
-                        , false);
-
                 if (participants != null) {
                     if (tournament.getState().equals("complete")) {
                         newBuilder.addField("Final Results", participants.stream()
@@ -102,7 +96,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                                     DatabaseBridge.getDiscordIdFromConnectCode(
                                                             seperateCodeFromUsername.get("code"))));
                                 })
-                                .collect(Collectors.joining("\n")), false);
+                                .collect(Collectors.joining("\n")), true);
                     } else if (tournament.getState().equals("awaiting_review")) {
                         newBuilder.addField("Current Results", participants.stream()
                                 .filter(participant -> participant.getFinalRank() <= 5 && participant.getFinalRank() != 0)
@@ -120,7 +114,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                                     DatabaseBridge.getDiscordIdFromConnectCode(
                                                             seperateCodeFromUsername.get("code"))));
                                 })
-                                .collect(Collectors.joining("\n")), false);
+                                .collect(Collectors.joining("\n")), true);
                     } else {
                         newBuilder.addField("Seeding", participants.stream()
                                 .filter(participant -> participant.getSeed() <= 9)
@@ -139,9 +133,16 @@ public class TournamentInfoCommand extends CodeManCommand {
                                                     DatabaseBridge.getDiscordIdFromConnectCode(
                                                             seperateCodeFromUsername.get("code"))));
                                 })
-                                .collect(Collectors.joining("\n")), false);
+                                .collect(Collectors.joining("\n")), true);
                     }
                 }
+
+                newBuilder.addField("Infos", 
+                        "- " + StringUtil.bold("Type: ") + tournament.getType() + "\n"
+                        + "- " + StringUtil.bold("Attendees: ") + tournament.getParticipantsCount() + "\n"
+                        + "- " + StringUtil.bold("State: ") + tournament.getState()
+                        , true);
+
                 newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
                 newBuilder.setColor(GlobalVar.CHALLONGE);
             } else {
