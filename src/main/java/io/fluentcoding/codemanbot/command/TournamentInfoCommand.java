@@ -103,6 +103,24 @@ public class TournamentInfoCommand extends CodeManCommand {
                                                             seperateCodeFromUsername.get("code"))));
                                 })
                                 .collect(Collectors.joining("\n")), false);
+                    } else if (tournament.getState().equals("awaiting_review")) {
+                        newBuilder.addField("Current Results", participants.stream()
+                                .filter(participant -> participant.getFinalRank() <= 5 && participant.getFinalRank() != 0)
+                                .sorted((o1,o2)-> Integer.compare(o1.getFinalRank(), o2.getFinalRank()))
+                                .map(participant -> {
+                                    Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
+                                            participant.getDisplayName()
+                                    );
+                                    return StringUtil.bold(participant.getFinalRank()
+                                            + ". ")
+                                            + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
+                                            + " "
+                                            + StringUtil.getMainsFormatted(
+                                            DatabaseBridge.getMains(
+                                                    DatabaseBridge.getDiscordIdFromConnectCode(
+                                                            seperateCodeFromUsername.get("code"))));
+                                })
+                                .collect(Collectors.joining("\n")), false);
                     } else {
                         newBuilder.addField("Seeding", participants.stream()
                                 .filter(participant -> participant.getSeed() <= 9)
