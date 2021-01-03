@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.command;
 
+import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
@@ -29,18 +30,6 @@ public class StatsCommand extends DevCodeManCommand {
     public void handleOnSuccess(GuildMessageReceivedEvent e, Map<String, String> args) {
         SystemUtil.MemoryStats memoryStats = SystemUtil.memoryStats();
 
-        Map.of(
-                "Total memory", mb(memoryStats.getTotalMemory()),
-                "Maximum memory", mb(memoryStats.getMaxMemory()),
-                "Free memory", mb(memoryStats.getFreeMemory()),
-                "Used memory", mb(memoryStats.getUsedMemory()),
-                "Discord API Response time", e.getJDA().getGatewayPing() + "ms",
-                "Slippi API Response time", (Supplier) () -> SlippiBridge.ping() + "ms",
-                "Servers", e.getJDA().getGuilds().size(),
-                "Connected users", DatabaseBridge.countDatabase(),
-                "Users with mains", DatabaseBridge.usersWithMains(),
-                "Active ListenerHooks", ListenerHook.getActiveListenerHooks()
-        );
         create(e,
             new StatsEntry("Total memory", mb(memoryStats.getTotalMemory())),
             new StatsEntry("Maximum memory", mb(memoryStats.getMaxMemory())),
@@ -48,6 +37,7 @@ public class StatsCommand extends DevCodeManCommand {
             new StatsEntry("Used memory", mb(memoryStats.getUsedMemory())),
             new StatsEntry("Discord API Response time", e.getJDA().getGatewayPing() + "ms"),
             new StatsEntry("Slippi API Response time", () -> SlippiBridge.ping() + "ms"),
+            new StatsEntry("Challonge API Response time", () -> ChallongeBridge.ping() + "ms"),
             new StatsEntry("Servers", e.getJDA().getGuilds().size()),
             new StatsEntry("Connected users", DatabaseBridge.countDatabase()),
             new StatsEntry("Users with mains", DatabaseBridge.usersWithMains()),
