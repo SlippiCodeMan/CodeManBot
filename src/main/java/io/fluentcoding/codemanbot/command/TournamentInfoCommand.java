@@ -26,14 +26,19 @@ public class TournamentInfoCommand extends CodeManCommand {
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         String url = args.get("url");
-        // Gonna change this when challonge/smash.gg detection will be done
-        //url = url.replace("https://challonge.com/", "");
+        String finalUrl;
+
+        if (PatternChecker.isChallongeLink(url))
+            finalUrl = url.substring(url.lastIndexOf('/'));
+        else
+            finalUrl = url;
+
         EmbedBuilder builder = new EmbedBuilder();
 
         builder.setTitle(GlobalVar.LOADING_EMOJI);
         builder.setColor(GlobalVar.LOADING);
-        Future<TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(url));
-        Future<List<ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(url));
+        Future<TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(finalUrl));
+        Future<List<ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(finalUrl));
         e.getChannel().sendMessage(builder.build()).queue(msg -> {
             TournamentEntry tournament;
             List<ParticipantEntry> participants;
