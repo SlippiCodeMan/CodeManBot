@@ -65,8 +65,12 @@ public class TournamentInfoCommand extends CodeManCommand {
                 newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : "https://challonge.com/" + url);
 
                 String description = tournament.getDescription();
-                if (!description.isEmpty())
+                if (!description.isEmpty()) {
+                    if (description.length() > 300)
+                        description = description.substring(0, 301) + "...";
+
                     newBuilder.setDescription(StringUtil.getTextFromHtml(description));
+                }
 
                 newBuilder.addField("Status", StringUtil.oneLineCodeBlock(tournament.getState()), false);
                 if (participants != null) {
