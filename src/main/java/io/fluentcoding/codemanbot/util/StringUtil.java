@@ -2,11 +2,20 @@ package io.fluentcoding.codemanbot.util;
 
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class StringUtil {
-
     public static String getPersonPrefixedString(boolean you, String suffix) {
         return (you ? "Your " : "Their ") + suffix;
     }
@@ -35,7 +44,15 @@ public class StringUtil {
         String result = String.format("\\u%04x", (int) unicode.charAt(0));
         return Character.getNumericValue(result.charAt(5));
     }
-
+    public static String getTextFromHtml(String input) {
+        return input.replaceAll("<(.|\n)*?>", "");
+    }
+    public static String formatIsoDateAndTime(String input) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
+        OffsetDateTime offsetDateTime = OffsetDateTime.parse(input, timeFormatter);
+        DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy, hh:mm z");  
+        return dateFormat.format(Date.from(Instant.from(offsetDateTime)));
+    }
     public static String bold(String input) {
         return "**" + input + "**";
     }
@@ -53,5 +70,23 @@ public class StringUtil {
     }
     public static String oneLineCodeBlock(String input) {
         return "`" + input + "`";
+    }
+    public static String oneLineCodeBlock(int input) {
+        return "`" + input + "`";
+    }
+    public static Map<String, String> separateCodeFromUsername(String input) {
+        // Bad code, will be refactored and maybe put in another class
+        String username = input.replaceAll("\\(([A-Za-z])+#[0-9]{1,3}\\)$", "");
+        Pattern MY_PATTERN = Pattern.compile("([A-Za-z])+#[0-9]{1,3}");
+        Matcher m = MY_PATTERN.matcher(input);
+        String code = "";
+        while (m.find()) {
+            code = m.group(0).toUpperCase();
+        }
+        username = username.stripTrailing();
+        Map<String, String> hm = new HashMap<String, String>();
+        hm.put("username", username);
+        hm.put("code", code);
+        return hm;
     }
 }

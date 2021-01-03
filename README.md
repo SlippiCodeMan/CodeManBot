@@ -45,7 +45,7 @@ gradle docker
 
 To start your container:
 ```bash
-gradle dockerStart
+gradle dockerRun
 ```
 
 To stop your container:
@@ -58,7 +58,6 @@ gradle dockerStop
 ## Contributing
 
 We only accept pull requests on the dev branch which has autodeployement on the dev bot.
-When we feel everything is stable we merge dev into main which has autodeployement on the production bot.
 
 If your change is huge please open an issue first.
 

@@ -15,7 +15,8 @@ public class GlobalVar {
     public static Color SUCCESS = new Color(68, 169, 99),
             ERROR = new Color(168, 67, 104),
             LOADING = new Color(47, 49, 54),
-            WAITING = new Color(243, 193, 120);
+            WAITING = new Color(243, 193, 120),
+            CHALLONGE = new Color(255, 115, 36);
 
     public static int MAX_ITEMS_PER_PAGE = 10;
 
