@@ -65,6 +65,7 @@ public class TournamentInfoCommand extends CodeManCommand {
             if (tournament != null) {
                 newBuilder.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
                 newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : "https://challonge.com/" + url);
+                newBuilder.setThumbnail("https://codeman.rocks/assets/challonge.png");
 
                 String description = StringUtil.getTextFromHtml(tournament.getDescription());
                 if (!description.isEmpty()) {
