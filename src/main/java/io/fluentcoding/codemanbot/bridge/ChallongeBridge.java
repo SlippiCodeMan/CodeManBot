@@ -38,7 +38,6 @@ public class ChallongeBridge {
                     JSONObject participant = entries.getJSONObject(i).getJSONObject("participant");
                     participants.add(new ParticipantEntry(
                         StringUtil.stripDiscordMarkdown(participant.getString("display_name")),
-                        participant.isNull("username") ? "" : participant.getString("username"), 
                         participant.getBoolean("checked_in"),
                         participant.getInt("seed"),
                         participant.isNull("final_rank") ? 0 : participant.getInt("final_rank")
@@ -97,7 +96,6 @@ public class ChallongeBridge {
     @Getter
     public static class ParticipantEntry {
         private String displayName;
-        private String username;
         private boolean checkedIn;
         private int seed;
         private int finalRank;
