@@ -103,7 +103,7 @@ public class StringUtil {
         return input.replaceAll("[0-9]+.\\s", "");
     }
     public static String removeUnderscores(String input) {
-        return input.replace("_", "");
+        return input.replace("_", " ");
 
     }
 }
