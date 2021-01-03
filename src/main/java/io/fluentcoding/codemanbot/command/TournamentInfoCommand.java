@@ -25,8 +25,6 @@ public class TournamentInfoCommand extends CodeManCommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
-        e.getMessage().delete().queue();
-
         String url = args.get("url");
         boolean isUrl = PatternChecker.isChallongeLink(url);
         String finalUrl;
@@ -79,11 +77,19 @@ public class TournamentInfoCommand extends CodeManCommand {
                     if (tournament.getState().equals("complete")) {
                         newBuilder.addField("Final Results", participants.stream()
                                 .filter(participant -> participant.getFinalRank() <= 3 && participant.getFinalRank() != 0)
-                                .map(participant -> Arrays.stream(RankEmotes.values())
-                                        .filter(emote -> participant.getFinalRank() == emote.getNumber())
-                                        .findFirst().orElse(null).getEmote()
-                                    + " "
-                                    + participant.getDisplayName())
+                                .map(participant -> {
+                                    Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
+                                            participant.getDisplayName()
+                                    );
+                                    return Arrays.stream(RankEmotes.values())
+                                            .filter(emote -> participant.getFinalRank() == emote.getNumber())
+                                            .findFirst().orElse(null).getEmote()
+                                            + " "
+                                            + StringUtil.getMainsFormatted(
+                                            DatabaseBridge.getMains(
+                                                    DatabaseBridge.getDiscordIdFromConnectCode(
+                                                            seperateCodeFromUsername.get("code"))));
+                                })
                                 .collect(Collectors.joining("\n")), false);
                     } else {
                         newBuilder.addField("Seeding", participants.stream()
