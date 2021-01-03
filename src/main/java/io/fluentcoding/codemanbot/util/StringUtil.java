@@ -81,7 +81,7 @@ public class StringUtil {
         Matcher m = MY_PATTERN.matcher(input);
         String code = "";
         while (m.find()) {
-            code = m.group(0);
+            code = m.group(0).toUpperCase();
         }
         username = username.stripTrailing();
         Map<String, String> hm = new HashMap<String, String>();
