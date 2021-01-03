@@ -87,7 +87,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                             .filter(emote -> participant.getFinalRank() == emote.getNumber())
                                             .findFirst().orElse(null);
                                     String prefix = rankEmote == null ? StringUtil.bold(participant.getFinalRank() + "th") : rankEmote.getEmote();
-                                    return  prefix
+                                    return prefix
                                             + " "
                                             + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
                                             + " "
