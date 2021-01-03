@@ -71,16 +71,20 @@ public class TournamentInfoCommand extends CodeManCommand {
                         } else {
                             newBuilder.addField("Seeding", participants.stream()
                                     .filter(participant -> participant.getSeed() <= 9)
-                                    .map(participant -> StringUtil.bold(participant.getSeed()
-                                        + ". ")
-                                        + StringUtil.separateCodeFromUsername(participant.getDisplayName()).get("username")
-                                        + " "
-                                        + StringUtil.getMainsFormatted(
-                                            DatabaseBridge.getMains(
-                                                DatabaseBridge.getDiscordIdFromConnectCode(
-                                                    StringUtil.separateCodeFromUsername(
-                                                        participant.getDisplayName()
-                                            ).get("code")))))
+                                    .map(participant -> {
+                                        Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
+                                                participant.getDisplayName()
+                                        );
+
+                                        return StringUtil.bold(participant.getSeed()
+                                                + ". ")
+                                                + seperateCodeFromUsername.get("username")
+                                                + " "
+                                                + StringUtil.getMainsFormatted(
+                                                DatabaseBridge.getMains(
+                                                        DatabaseBridge.getDiscordIdFromConnectCode(
+                                                                seperateCodeFromUsername.get("code"))));
+                                    })
                                     .collect(Collectors.joining("\n")), false);
                         }
                     }
