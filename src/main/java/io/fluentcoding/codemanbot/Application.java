@@ -39,7 +39,7 @@ public class Application {
                 new MainCommand(new CodeManArgumentSet().setOptionalArguments("char").setLastArgumentVarArg(),
                         "Toggle a character main", "main", "mains", "m"),
                 new TournamentInfoCommand(new CodeManArgumentSet().setNecessaryArguments("url").setLastArgumentVarArg(),
-                        "Displays the info of a challonge or smash.gg tournament", "tournamentinfo", "ti"),
+                        "Displays the info of a challonge or smash.gg tournament", "tournamentinfo", "tinfo", "ti"),
                 new AskCommand("Creates a netplay request", "ask", "a"),
                 new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect"),
 
