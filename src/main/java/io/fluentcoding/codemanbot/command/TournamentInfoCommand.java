@@ -30,7 +30,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
         String url = args.get("url");
         boolean isUrl = PatternChecker.isChallongeLink(url);
-        String finalUrl;
+        String slug;
 
         if (isUrl) {
             String subdomain = PatternChecker.getSubdomain(url);
@@ -38,9 +38,9 @@ public class TournamentInfoCommand extends CodeManCommand {
             while (urlCopy.charAt(url.length() - 1) == '/')
                 urlCopy = urlCopy.substring(0, urlCopy.length() - 1);
 
-            finalUrl = (subdomain == null ? "" : subdomain + "-") + urlCopy.substring(urlCopy.lastIndexOf('/') + 1);
+            slug = (subdomain == null ? "" : subdomain + "-") + urlCopy.substring(urlCopy.lastIndexOf('/') + 1);
         } else {
-            finalUrl = url;
+            slug = url;
         }
 
         Platforms platform = Arrays.stream(Platforms.values())
@@ -53,8 +53,8 @@ public class TournamentInfoCommand extends CodeManCommand {
         builder.setTitle(GlobalVar.LOADING_EMOJI);
         builder.setColor(GlobalVar.LOADING);
         if (platform == Platforms.CHALLONGE) {
-            Future<TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(finalUrl));
-            Future<List<ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(finalUrl));
+            Future<TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(slug));
+            Future<List<ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(slug));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
                 TournamentEntry tournament;
                 List<ParticipantEntry> participants;

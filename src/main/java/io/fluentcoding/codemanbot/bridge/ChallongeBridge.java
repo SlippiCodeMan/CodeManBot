@@ -20,12 +20,9 @@ import java.util.List;
 public class ChallongeBridge {
     private final static String URI = GlobalVar.dotenv.get("CHALLONGE_URI");
 
-    public static List<ParticipantEntry> getParticipants(String tournamentName) {
+    public static List<ParticipantEntry> getParticipants(String slug) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpGet get = new HttpGet(URI
-                    + "/tournaments/"
-                    + tournamentName
-                    + "/participants.json");
+            HttpGet get = new HttpGet(URI + "/tournaments/" + slug + "/participants.json");
             HttpResponse response = client.execute(get);
 
             String json = EntityUtils.toString(response.getEntity());
@@ -51,12 +48,9 @@ public class ChallongeBridge {
         }
     }
 
-    public static TournamentEntry getTournament(String tournamentName) {
+    public static TournamentEntry getTournament(String slug) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
-            HttpGet get = new HttpGet(URI
-                    + "/tournaments/"
-                    + tournamentName
-                    + ".json");
+            HttpGet get = new HttpGet(URI + "/tournaments/" + slug + ".json");
             HttpResponse response = client.execute(get);
 
             String json = EntityUtils.toString(response.getEntity());
