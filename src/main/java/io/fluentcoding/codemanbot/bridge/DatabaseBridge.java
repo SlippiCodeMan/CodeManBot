@@ -62,6 +62,9 @@ public class DatabaseBridge {
 
     @Nullable
     public static List<SSBMCharacter> getMains(long discordId) {
+        if (discordId == -1)
+            return null;
+
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
