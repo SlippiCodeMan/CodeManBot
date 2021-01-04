@@ -6,11 +6,12 @@ gitBranch="$(git branch --show-current)"
 
 "$rootDir"/gradlew shadowjar
 if [ $? -eq 0 ]; then
-    echo OK
+    echo ":: ($gitBranch) OK"
     "$rootDir"/gradlew docker
     "$rootDir"/gradlew dockerStop
     "$rootDir"/gradlew dockerRun
     exit 0
 else
+    echo ":: ($gitBranch) FAIL"
     exit 1
 fi
