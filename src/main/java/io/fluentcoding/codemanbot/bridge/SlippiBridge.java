@@ -50,7 +50,7 @@ public class SlippiBridge {
             JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
             content.put("variables", new JSONObject().put("code", code));
-            content.put("query", "query fetch($code:String!){users(where:{connectCode:{_eq:$code}}){ status }}");
+            content.put("query", "query fetch($code:String!){users(where:{connectCode:{_eq:$code}}){status}}");
 
             post.setEntity(new StringEntity(content.toString()));
             HttpResponse response = client.execute(post);
