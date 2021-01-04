@@ -144,7 +144,7 @@ public class TournamentInfoCommand extends CodeManCommand {
         } else if (platform == Platforms.SMASHGG) {
             // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
-            newBuilder.setDescription("Operation failed:" + StringUtil.oneLineCodeBlock("Smash.gg") + "is not supported yet!");
+            newBuilder.setDescription("Operation failed:" + StringUtil.oneLineCodeBlock("smash.gg") + "is not supported yet!");
             newBuilder.setColor(GlobalVar.ERROR);
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
