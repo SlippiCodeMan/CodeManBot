@@ -46,8 +46,8 @@ public class SlippiBridge {
     public static boolean userWithCodeExists(String code) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
-            JSONObject content = new JSONObject();
 
+            JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
             content.put("variables", new JSONObject().put("code", code));
             content.put("query", "query fetch($code:String!){users(where:{connectCode:{_eq:$code}}){ status }}");
