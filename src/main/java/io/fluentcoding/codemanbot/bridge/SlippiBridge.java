@@ -47,6 +47,7 @@ public class SlippiBridge {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
             JSONObject content = new JSONObject();
+
             content.put("operationName", "fetch");
             content.put("variables", new JSONObject().put("code", code));
             content.put("query", "query fetch($code:String!){users(where:{connectCode:{_eq:$code}}){ status }}");
@@ -70,10 +71,12 @@ public class SlippiBridge {
     public static List<UserEntry> getCodesWithActualName(String name) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
+
             JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
             content.put("variables", new JSONObject().put("name", name));
             content.put("query", "query fetch($name: String!){users(where:{displayName:{_ilike:$name}}){displayName connectCode status}}");
+
             post.setEntity(new StringEntity(content.toString()));
             HttpResponse response = client.execute(post);
 
