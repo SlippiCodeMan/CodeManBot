@@ -142,9 +142,11 @@ public class TournamentInfoCommand extends CodeManCommand {
                 msg.editMessage(newBuilder.build()).queue();
             });
         } else if (platform == Platforms.SMASHGG) {
-            builder.setDescription("Operation failed:" + StringUtil.oneLineCodeBlock("Smash.gg") + "is not supported yet!");
-            builder.setColor(GlobalVar.ERROR);
-            e.getChannel().sendMessage(builder.build()).queue();
+            // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
+            EmbedBuilder newBuilder = new EmbedBuilder();
+            newBuilder.setDescription("Operation failed:" + StringUtil.oneLineCodeBlock("Smash.gg") + "is not supported yet!");
+            newBuilder.setColor(GlobalVar.ERROR);
+            e.getChannel().sendMessage(newBuilder.build()).queue();
         }
     }
 }
