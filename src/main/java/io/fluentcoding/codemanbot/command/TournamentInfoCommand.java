@@ -46,12 +46,12 @@ public class TournamentInfoCommand extends CodeManCommand {
         } else {
             slug = url;
         }
-        */
 
         Platforms platform = Arrays.stream(Platforms.values())
                 .filter(item -> url.contains(item.getUrl()))
-                .findFirst().orElse(Platforms.SMASHGG); // MUST BE CHANGED BACK TO NULL
-
+                .findFirst().orElse(null);
+        */
+        Platforms platform = Platforms.SMASHGG;
 
         EmbedBuilder builder = new EmbedBuilder();
 
@@ -149,7 +149,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 }
                 msg.editMessage(newBuilder.build()).queue();
             });
-        } else {
+        } else if (platform == Platforms.SMASHGG) {
             // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
             SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
