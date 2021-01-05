@@ -38,10 +38,10 @@ public class SmashggBridge {
             String json = EntityUtils.toString(response.getEntity());
             JSONObject object = new JSONObject(json).getJSONObject("data");
             JSONObject tournamentObject = object.getJSONObject("tournament");
-            JSONObject ownerObject = tournamentObject.getJSONObject("owner");
+            //JSONObject ownerObject = tournamentObject.getJSONObject("owner");
             JSONArray eventArray = tournamentObject.getJSONArray("events");
 
-            OwnerEntry owner = new OwnerEntry(ownerObject.getString("name"), ownerObject.getJSONArray("images").getJSONObject(0).getString("url"));
+            //OwnerEntry owner = new OwnerEntry(ownerObject.getString("name"), ownerObject.getJSONArray("images").getJSONObject(0).getString("url"));
 
             if (eventArray.length() == 0)
                 return null;
@@ -58,7 +58,7 @@ public class SmashggBridge {
                             JSONObject participant = participantArray.getJSONObject(j);
                             participants.add(new ParticipantEntry(
                                 participant.getJSONObject("entrant").getString("name"),
-                                participant.getJSONObject("entrant").getJSONArray("participants").getJSONObject(0).getJSONObject("connectedAccounts").getJSONObject("slippi").getString("value"),
+                                //participant.getJSONObject("entrant").getJSONArray("participants").getJSONObject(0).getJSONObject("connectedAccounts").getJSONObject("slippi").getString("value"),
                                 participant.getJSONObject("entrant").getJSONArray("seeds").getJSONObject(0).getInt("seedNum"),
                                 participant.getInt("placement"),
                                 participant.getBoolean("isFinal")
@@ -72,7 +72,7 @@ public class SmashggBridge {
                     tournamentObject.getJSONArray("images").getJSONObject(0).getString("url"),
                     tournamentObject.getLong("startAt"),
                     tournamentObject.getBoolean("isOnline"),
-                    owner,
+                    //owner,
                     events
                 );
             }
@@ -86,7 +86,7 @@ public class SmashggBridge {
     @Getter
     public static class ParticipantEntry {
         private String name;
-        private String connectCode;
+        //private String connectCode;
         private int seed;
         private int placement;
         private boolean isPlacementFinal;
@@ -110,7 +110,7 @@ public class SmashggBridge {
         private String image;
         private long startsAt;
         private boolean isOnline;
-        private OwnerEntry owner;
+        //private OwnerEntry owner;
         private List<EventEntry> events;
     }
 }
