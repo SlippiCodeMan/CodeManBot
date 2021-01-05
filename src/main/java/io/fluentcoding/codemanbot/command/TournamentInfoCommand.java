@@ -172,7 +172,11 @@ public class TournamentInfoCommand extends CodeManCommand {
                 newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
                 newBuilder.setImage(tournament.getImageBanner().isEmpty() ? null : tournament.getImageBanner());
                 newBuilder.setColor(GlobalVar.SUCCESS);
+
             }
+            else
+                newBuilder.setTitle("Tournament object is `null` !");
+                newBuilder.setColor(GlobalVar.SUCCESS);
 
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
