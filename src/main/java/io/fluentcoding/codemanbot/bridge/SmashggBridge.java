@@ -43,8 +43,9 @@ public class SmashggBridge {
 
             OwnerEntry owner = new OwnerEntry(
                 ownerObject.optString("name"),
-                ownerObject.optString("slug"),
-                ownerObject.getJSONArray("images").optJSONObject(0).optString("url"));
+                ownerObject.optString("slug")//,
+                //ownerObject.getJSONArray("images").optJSONObject(0).optString("url")
+            );
 
             if (eventArray.length() == 0)
                 return null;
@@ -79,7 +80,6 @@ public class SmashggBridge {
                 JSONArray images = tournamentObject.getJSONArray("images");
                 String imageProfile = "";
                 String imageBanner = "";
-                /*
                 if (images.length() > 0) {
                     for (int i = 0; i < images.length(); i++) {
                         JSONObject image = images.getJSONObject(i);
@@ -94,14 +94,13 @@ public class SmashggBridge {
                     }
 
                 }
-                */
 
                 return new TournamentEntry(
-                    tournamentObject.optString("name"),
+                    tournamentObject.getString("name"),
                     imageProfile,
                     imageBanner,
-                    tournamentObject.optLong("startAt"),
-                    tournamentObject.optBoolean("isOnline"),
+                    tournamentObject.getLong("startAt"),
+                    tournamentObject.getBoolean("isOnline"),
                     owner,
                     events
                 );
@@ -126,7 +125,7 @@ public class SmashggBridge {
     public static class OwnerEntry {
         private String name;
         private String slug;
-        private String image;
+        //private String image;
     }
     @AllArgsConstructor
     @Getter

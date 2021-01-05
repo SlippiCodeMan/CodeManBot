@@ -158,7 +158,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 List<SmashggBridge.EventEntry> events = tournament.getEvents();
 
                 newBuilder.setTitle(tournament.getName(), platform.getUrl() + slug);
-                newBuilder.setAuthor(owner.getName(), platform.getUrl() + owner.getSlug(), owner.getImage().isEmpty() ? null : owner.getImage());
+                newBuilder.setAuthor(owner.getName(), /* platform.getUrl() + owner.getSlug(), owner.getImage().isEmpty() ? null : owner.getImage() */ null);
 
                 if (events.size() == 1) {
                     List<SmashggBridge.ParticipantEntry> participants = events.get(0).getStandings();
