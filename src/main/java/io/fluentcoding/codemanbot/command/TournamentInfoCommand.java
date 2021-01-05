@@ -56,7 +56,7 @@ public class TournamentInfoCommand extends CodeManCommand {
         builder.setTitle(GlobalVar.LOADING_EMOJI);
         builder.setColor(GlobalVar.LOADING);
 
-        if (platform.equals(Platforms.CHALLONGE)) {
+        if (platform == Platforms.CHALLONGE) {
             Future<ChallongeBridge.TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(slug));
             Future<List<ChallongeBridge.ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(slug));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
@@ -148,7 +148,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 }
                 msg.editMessage(newBuilder.build()).queue();
             });
-        } else if (platform.equals(Platforms.SMASHGG)) {
+        } else if (platform == Platforms.SMASHGG) {
             // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
             SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
