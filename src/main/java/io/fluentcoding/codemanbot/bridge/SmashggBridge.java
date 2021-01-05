@@ -63,11 +63,11 @@ public class SmashggBridge {
                             participants.add(new ParticipantEntry(
                                 participant.getJSONObject("entrant").optString("name"),
                                 participant.getJSONObject("entrant")
-                                        .getJSONArray("participant")
+                                        .getJSONArray("participants")
                                         .getJSONObject(0)
                                         .isNull("connectedAccounts") ? "" :
                                         participant.getJSONObject("entrant")
-                                                .getJSONArray("participant")
+                                                .getJSONArray("participants")
                                                 .getJSONObject(0)
                                                 .getJSONObject("connectedAccount")
                                                 .optJSONObject("slippi")
