@@ -67,12 +67,12 @@ public class SmashggBridge {
                     }
                 }
                 return new TournamentEntry(
-                    tournamentObject.getString("name"),
-                    tournamentObject.getJSONArray("images").getJSONObject(0).getString("url"),
-                    tournamentObject.getLong("startAt"),
-                    tournamentObject.getBoolean("isOnline"),
-                    owner,
-                    events
+                    tournamentObject.getString("name")//,
+                    //tournamentObject.getJSONArray("images").getJSONObject(0).getString("url"),
+                    //tournamentObject.getLong("startAt"),
+                    //tournamentObject.getBoolean("isOnline"),
+                    //owner,
+                    //events
                 );
             }
         } catch(Exception e) {
@@ -106,11 +106,11 @@ public class SmashggBridge {
     @Getter
     public static class TournamentEntry {
         private String name;
-        private String image;
-        private long startsAt;
-        private boolean isOnline;
-        private OwnerEntry owner;
-        private List<EventEntry> events;
+        //private String image;
+        //private long startsAt;
+        //private boolean isOnline;
+        //private OwnerEntry owner;
+        //private List<EventEntry> events;
 
     }
 }
