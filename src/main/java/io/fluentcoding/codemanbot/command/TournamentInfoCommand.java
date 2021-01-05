@@ -152,10 +152,14 @@ public class TournamentInfoCommand extends CodeManCommand {
             // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
             SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
-            if (tournament != null)
+            if (tournament != null) {
                 newBuilder.setTitle(tournament.getName());
-            else
+                newBuilder.setAuthor(tournament.getOwner().getName());
+                if (tournament.getOwner().getImage() != null)
+                    newBuilder.setAuthor(tournament.getOwner().getImage());
+            } else {
                 newBuilder.setTitle("tournament is `null`");
+            }
 
             newBuilder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(newBuilder.build()).queue();
