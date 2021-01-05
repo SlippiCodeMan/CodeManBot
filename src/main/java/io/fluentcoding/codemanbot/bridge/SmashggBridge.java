@@ -40,7 +40,6 @@ public class SmashggBridge {
             JSONObject ownerObject = tournamentObject.getJSONObject("owner");
             JSONArray eventArray = tournamentObject.getJSONArray("events");
 
-            TournamentEntry tournament = null;
             OwnerEntry owner = new OwnerEntry(ownerObject.getString("name"), ownerObject.getJSONArray("images").getJSONObject(0).getString("url"));
 
             if (eventArray.length() == 0)
@@ -66,16 +65,15 @@ public class SmashggBridge {
                         }
                         events.add(new EventEntry(event.getString("name"), participants));
                     }
-                    tournament = new TournamentEntry(
-                        tournamentObject.getString("name"),
-                        tournamentObject.getJSONArray("images").getJSONObject(0).getString("url"),
-                        tournamentObject.getLong("startAt"),
-                        tournamentObject.getBoolean("isOnline"),
-                        owner,
-                        events
-                    );
                 }
-                return tournament;
+                return new TournamentEntry(
+                    tournamentObject.getString("name"),
+                    tournamentObject.getJSONArray("images").getJSONObject(0).getString("url"),
+                    tournamentObject.getLong("startAt"),
+                    tournamentObject.getBoolean("isOnline"),
+                    owner,
+                    events
+                );
             }
         } catch(Exception e) {
             e.printStackTrace();
