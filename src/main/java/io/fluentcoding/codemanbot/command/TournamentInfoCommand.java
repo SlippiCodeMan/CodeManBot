@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class TournamentInfoCommand extends CodeManCommand {
@@ -153,11 +154,21 @@ public class TournamentInfoCommand extends CodeManCommand {
             EmbedBuilder newBuilder = new EmbedBuilder();
             SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
 
+            SmashggBridge.OwnerEntry owner = tournament.getOwner();
+            List<SmashggBridge.EventEntry> events = tournament.getEvents();
+
             if (tournament != null) {
-                newBuilder.setTitle(tournament.getName());
-                newBuilder.setAuthor(tournament.getOwner().getName(), platform.getUrl() + tournament.getOwner().getSlug(), tournament.getOwner().getImage());
-            } else {
-                newBuilder.setTitle("tournament is `null`");
+                newBuilder.setTitle(tournament.getName(), platform.getUrl() + slug);
+                newBuilder.setAuthor(owner.getName(), platform.getUrl() + owner.getSlug(), owner.getImage());
+            }
+
+            if (events.size() == 1) {
+                List<SmashggBridge.ParticipantEntry> participants = events.get(0).getStandings();
+                newBuilder.addField(events.get(0).getName(), participants.stream()
+                        .map(participant -> {
+                            return participant.getPlacement() + participant.getName();
+                        })
+                        .collect(Collectors.joining("\n")), true);
             }
 
             newBuilder.setColor(GlobalVar.SUCCESS);
