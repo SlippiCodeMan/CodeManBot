@@ -59,7 +59,7 @@ public class SmashggBridge {
                             participants.add(new ParticipantEntry(
                                 participant.getJSONObject("entrant").getString("name"),
                                 participant.getJSONObject("entrant").getJSONArray("participants").getJSONObject(0).getJSONObject("connectedAccounts").getJSONObject("slippi").getString("value"),
-                                participant.getJSONObject("entrant").getJSONArray("seeds").getJSONObject(participant.getJSONArray("seeds").length()).getInt("seedNum"),
+                                participant.getJSONObject("entrant").getJSONArray("seeds").getJSONObject(participant.getJSONArray("seeds").length()-1).getInt("seedNum"),
                                 participant.getInt("placement"),
                                 participant.getBoolean("isFinal")
                             ));
