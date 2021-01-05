@@ -7,6 +7,7 @@ import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.tournament.Platforms;
 import io.fluentcoding.codemanbot.util.tournament.RankEmotes;
+import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -158,7 +159,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (tournament.getOwner().getImage() != null)
                     newBuilder.setAuthor(tournament.getOwner().getImage());
             } else {
-                newBuilder.setTitle("tournament is `null`, ");
+                newBuilder.setTitle("tournament is `null`, auth: " + GlobalVar.dotenv.get("SMASHGG_AUTH"));
             }
             newBuilder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(newBuilder.build()).queue();
