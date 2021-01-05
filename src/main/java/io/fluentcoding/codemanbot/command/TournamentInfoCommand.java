@@ -153,10 +153,10 @@ public class TournamentInfoCommand extends CodeManCommand {
             EmbedBuilder newBuilder = new EmbedBuilder();
             SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
 
-            SmashggBridge.OwnerEntry owner = tournament.getOwner();
-            List<SmashggBridge.EventEntry> events = tournament.getEvents();
-
             if (tournament != null) {
+                SmashggBridge.OwnerEntry owner = tournament.getOwner();
+                List<SmashggBridge.EventEntry> events = tournament.getEvents();
+
                 newBuilder.setTitle(tournament.getName(), platform.getUrl() + slug);
                 newBuilder.setAuthor(owner.getName(), platform.getUrl() + owner.getSlug(), owner.getImage().isEmpty() ? null : owner.getImage());
 
@@ -172,11 +172,10 @@ public class TournamentInfoCommand extends CodeManCommand {
                 newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
                 newBuilder.setImage(tournament.getImageBanner().isEmpty() ? null : tournament.getImageBanner());
                 newBuilder.setColor(GlobalVar.SUCCESS);
-
-            }
-            else
-                newBuilder.setTitle("Tournament object is `null` !");
+            } else {
+                newBuilder.setTitle("Tournament is `null`");
                 newBuilder.setColor(GlobalVar.SUCCESS);
+            }
 
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
