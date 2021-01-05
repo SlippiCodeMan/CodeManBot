@@ -16,6 +16,9 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
+
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
 
 public class SmashggBridge {
     private final static String SMASHGG_GRAPHQL_URL = "https://api.smash.gg/gql/alpha";
@@ -44,7 +47,7 @@ public class SmashggBridge {
             OwnerEntry owner = new OwnerEntry(
                 ownerObject.getString("name"),
                 ownerObject.getString("slug"),
-                ownerObject.getJSONArray("images").isNull(0) ? "" : ownerObject.getJSONArray("images").getJSONObject(0).getString("url"));
+                ownerObject.getJSONArray("images").optJSONObject(0).optString("url"));
 
             if (eventArray.length() == 0)
                 return null;
@@ -60,30 +63,46 @@ public class SmashggBridge {
                         for (int j = 0; j < participantArray.length(); j++) {
                             JSONObject participant = participantArray.getJSONObject(j);
                             participants.add(new ParticipantEntry(
-                                participant.getJSONObject("entrant").getString("name"),
+                                participant.getJSONObject("entrant").optString("name"),
                                 participant.getJSONObject("entrant")
                                         .getJSONArray("participants")
                                         .getJSONObject(0)
-                                        .isNull("connectedAccounts") ? "" :
-                                        participant.getJSONObject("entrant")
-                                                .getJSONArray("participants")
-                                                .getJSONObject(0)
-                                                .getJSONObject("connectedAccounts")
-                                                .getJSONObject("slippi")
-                                                .getString("value"),
-                                participant.getJSONObject("entrant").getJSONArray("seeds").getJSONObject(0).getInt("seedNum"),
-                                participant.getInt("placement"),
-                                participant.getBoolean("isFinal")
+                                        .getJSONObject("connectedAccounts")
+                                        .optJSONObject("slippi")
+                                        .optString("value"),
+                                participant.getJSONObject("entrant").getJSONArray("seeds").getJSONObject(0).optInt("seedNum"),
+                                participant.optInt("placement"),
+                                participant.optBoolean("isFinal")
                             ));
                         }
                         events.add(new EventEntry(event.getString("name"), participants));
                     }
                 }
+
+                JSONArray images = tournamentObject.getJSONArray("images");
+                String imageProfile = "";
+                String imageBanner = "";
+                if (images.length() > 0) {
+                    for (int i = 0; i < images.length(); i++) {
+                        JSONObject image = images.getJSONObject(i);
+                        switch (image.getString("type")) {
+                            case "profile":
+                                imageProfile = image.getString("url");
+                                break;
+                            case "banner":
+                                imageBanner = image.getString("url");
+                                break;
+                        }
+                    }
+
+                }
+
                 return new TournamentEntry(
-                    tournamentObject.getString("name"),
-                    tournamentObject.getJSONArray("images").getJSONObject(tournamentObject.getJSONArray("images").length()-1).getString("url"),
-                    tournamentObject.getLong("startAt"),
-                    tournamentObject.getBoolean("isOnline"),
+                    tournamentObject.optString("name"),
+                    imageProfile,
+                    imageBanner,
+                    tournamentObject.optLong("startAt"),
+                    tournamentObject.optBoolean("isOnline"),
                     owner,
                     events
                 );
@@ -120,7 +139,8 @@ public class SmashggBridge {
     @Getter
     public static class TournamentEntry {
         private String name;
-        private String image;
+        private String imageProfile;
+        private String imageBanner;
         private long startsAt;
         private boolean isOnline;
         private OwnerEntry owner;

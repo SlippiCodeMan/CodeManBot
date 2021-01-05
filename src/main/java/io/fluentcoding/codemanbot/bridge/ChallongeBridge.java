@@ -34,10 +34,10 @@ public class ChallongeBridge {
                 for (int i = 0; i < entries.length(); i++) {
                     JSONObject participant = entries.getJSONObject(i).getJSONObject("participant");
                     participants.add(new ParticipantEntry(
-                        StringUtil.stripDiscordMarkdown(participant.getString("display_name")),
-                        participant.getBoolean("checked_in"),
-                        participant.getInt("seed"),
-                        participant.isNull("final_rank") ? 0 : participant.getInt("final_rank")
+                        StringUtil.stripDiscordMarkdown(participant.optString("display_name")),
+                        participant.optBoolean("checked_in"),
+                        participant.optInt("seed"),
+                        participant.optInt("final_rank")
                     ));
                 }
                 return participants;
@@ -59,13 +59,13 @@ public class ChallongeBridge {
                 return null;
             else {
                 return new TournamentEntry(
-                    tournament.getString("name"),
-                    tournament.getString("description"),
-                    tournament.getString("game_name"),
-                    tournament.getString("tournament_type"),
-                    tournament.getString("start_at"),
-                    tournament.getString("state"),
-                    tournament.getInt("participants_count")
+                    tournament.optString("name"),
+                    tournament.optString("description"),
+                    tournament.optString("game_name"),
+                    tournament.optString("tournament_type"),
+                    tournament.optString("start_at"),
+                    tournament.optString("state"),
+                    tournament.optInt("participants_count")
                 );
             }
         } catch(Exception e) {

@@ -170,7 +170,8 @@ public class TournamentInfoCommand extends CodeManCommand {
                             .collect(Collectors.joining("\n")), true);
                 }
 
-                newBuilder.setThumbnail(tournament.getImage());
+                newBuilder.setThumbnail(tournament.getImageProfile());
+                newBuilder.setImage(tournament.getImageBanner());
                 newBuilder.setColor(GlobalVar.SUCCESS);
             }
 
