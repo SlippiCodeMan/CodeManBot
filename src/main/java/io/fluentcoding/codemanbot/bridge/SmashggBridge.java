@@ -43,8 +43,8 @@ public class SmashggBridge {
 
             OwnerEntry owner = new OwnerEntry(
                 ownerObject.optString("name"),
-                ownerObject.optString("slug")//,
-                //ownerObject.getJSONArray("images").optJSONObject(0).optString("url")
+                ownerObject.optString("slug"),
+                ownerObject.getJSONArray("images").isNull(0) ? "" : ownerObject.getJSONArray("images").getJSONObject(0).getString("url")
             );
 
             if (eventArray.length() == 0)
@@ -65,9 +65,13 @@ public class SmashggBridge {
                                 participant.getJSONObject("entrant")
                                         .getJSONArray("participants")
                                         .getJSONObject(0)
-                                        .getJSONObject("connectedAccounts")
-                                        .optJSONObject("slippi")
-                                        .optString("value"),
+                                        .isNull("connectedAccounts") ? "" :
+                                        participant.getJSONObject("entrant")
+                                                .getJSONArray("participant")
+                                                .getJSONObject(0)
+                                                .getJSONObject("connectedAccounts")
+                                                .getJSONObject("slippi")
+                                                .optString("value"),
                                 participant.getJSONObject("entrant").getJSONArray("seeds").getJSONObject(0).optInt("seedNum"),
                                 participant.optInt("placement"),
                                 participant.optBoolean("isFinal")
@@ -125,7 +129,7 @@ public class SmashggBridge {
     public static class OwnerEntry {
         private String name;
         private String slug;
-        //private String image;
+        private String image;
     }
     @AllArgsConstructor
     @Getter
