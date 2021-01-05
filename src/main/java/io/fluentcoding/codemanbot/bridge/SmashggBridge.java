@@ -69,8 +69,8 @@ public class SmashggBridge {
                                         participant.getJSONObject("entrant")
                                                 .getJSONArray("participant")
                                                 .getJSONObject(0)
-                                                .getJSONObject("connectedAccounts")
-                                                .getJSONObject("slippi")
+                                                .getJSONObject("connectedAccount")
+                                                .optJSONObject("slippi")
                                                 .optString("value"),
                                 participant.getJSONObject("entrant").getJSONArray("seeds").getJSONObject(0).optInt("seedNum"),
                                 participant.optInt("placement"),
