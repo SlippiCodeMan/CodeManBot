@@ -2,6 +2,7 @@ package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
+import io.fluentcoding.codemanbot.bridge.SmashggBridge;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge.ParticipantEntry;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge.TournamentEntry;
 import io.fluentcoding.codemanbot.util.*;
@@ -151,8 +152,9 @@ public class TournamentInfoCommand extends CodeManCommand {
         } else if (platform == Platforms.SMASHGG) {
             // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
-            newBuilder.setDescription("Operation failed:" + StringUtil.oneLineCodeBlock("smash.gg") + "is not supported yet!");
-            newBuilder.setColor(GlobalVar.ERROR);
+            SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
+            newBuilder.setTitle(tournament.getName());
+            newBuilder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
     }
