@@ -67,11 +67,11 @@ public class SmashggBridge {
                     }
                 }
                 return new TournamentEntry(
-                    tournamentObject.getString("name")//,
+                    tournamentObject.getString("name"),
                     //tournamentObject.getJSONArray("images").getJSONObject(0).getString("url"),
                     //tournamentObject.getLong("startAt"),
                     //tournamentObject.getBoolean("isOnline"),
-                    //owner,
+                    owner//,
                     //events
                 );
             }
@@ -109,7 +109,7 @@ public class SmashggBridge {
         //private String image;
         //private long startsAt;
         //private boolean isOnline;
-        //private OwnerEntry owner;
+        private OwnerEntry owner;
         //private List<EventEntry> events;
 
     }
