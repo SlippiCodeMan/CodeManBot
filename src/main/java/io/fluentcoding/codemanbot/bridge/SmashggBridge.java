@@ -55,7 +55,7 @@ public class SmashggBridge {
                     else {
                         List<ParticipantEntry> participants = new ArrayList<>();
                         for (int j = 0; j < eventArray.length(); j++) {
-                            JSONObject participant = participantArray.getJSONObject(i);
+                            JSONObject participant = participantArray.getJSONObject(j);
                             participants.add(new ParticipantEntry(
                                 participant.getJSONObject("entrant").getString("name"),
                                 participant.getJSONObject("entrant").getJSONArray("participants").getJSONObject(0).getJSONObject("connectedAccounts").getJSONObject("slippi").getString("value"),
