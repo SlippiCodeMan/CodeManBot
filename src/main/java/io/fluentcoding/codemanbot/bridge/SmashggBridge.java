@@ -43,14 +43,14 @@ public class SmashggBridge {
             OwnerEntry owner = new OwnerEntry(ownerObject.getString("name"), ownerObject.getJSONArray("images").getJSONObject(0).getString("url"));
 
             if (eventArray.length() == 0)
-                return null;
+                return "event empty";
             else {
                 List<EventEntry> events = new ArrayList<>();
                 for (int i = 0; i < eventArray.length(); i++) {
                     JSONObject event = eventArray.getJSONObject(i);
                     JSONArray participantArray = event.getJSONObject("standings").getJSONArray("nodes");
                     if (participantArray.length() == 0)
-                        return null;
+                        return "participant empty";
                     else {
                         List<ParticipantEntry> participants = new ArrayList<>();
                         for (int j = 0; j < eventArray.length(); j++) {
