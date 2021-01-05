@@ -25,6 +25,7 @@ public class SmashggBridge {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SMASHGG_GRAPHQL_URL);
             post.addHeader("Authorization", "Bearer " + SMASHGG_AUTH);
+            post.addHeader("Content-Type", "application/json");
 
             JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
