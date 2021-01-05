@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ public class SmashggBridge {
             content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name startAt isOnline images{url} events{name standings(query:{page:1 perPage:9}){nodes{placement isFinal entrant{name participants{connectedAccounts}seeds{seedNum}}}}}owner{name images{url}}}}");
 
             post.setEntity(new StringEntity(content.toString()));
-            post.setHeader("Authorization", "Bearer " + SMASHGG_AUTH);
+            post.setHeader(new BasicHeader("Authorization", "Bearer " + SMASHGG_AUTH));
             HttpResponse response = client.execute(post);
 
             String json = EntityUtils.toString(response.getEntity());
