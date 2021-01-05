@@ -30,7 +30,7 @@ public class TournamentInfoCommand extends CodeManCommand {
         e.getMessage().delete().queue();
 
         String url = args.get("url");
-        boolean isUrl = PatternChecker.isChallongeLink(url);
+        //boolean isUrl = PatternChecker.isChallongeLink(url);
         String slug = url;
 
         // DEBUG
@@ -79,7 +79,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                          platform.getUrl(),
                                          "https://codeman.rocks/assets/" + platform.getName().toLowerCase() + ".png"
                     );
-                    newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : platform.getUrl() + url);
+                    //newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : platform.getUrl() + url);
 
                     String description = StringUtil.getTextFromHtml(tournament.getDescription());
                     if (!description.isEmpty()) {
