@@ -3,8 +3,6 @@ package io.fluentcoding.codemanbot.command;
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SmashggBridge;
-import io.fluentcoding.codemanbot.bridge.ChallongeBridge.ParticipantEntry;
-import io.fluentcoding.codemanbot.bridge.ChallongeBridge.TournamentEntry;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.tournament.Platforms;
@@ -57,12 +55,13 @@ public class TournamentInfoCommand extends CodeManCommand {
 
         builder.setTitle(GlobalVar.LOADING_EMOJI);
         builder.setColor(GlobalVar.LOADING);
+
         if (platform.equals(Platforms.CHALLONGE)) {
-            Future<TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(slug));
-            Future<List<ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(slug));
+            Future<ChallongeBridge.TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(slug));
+            Future<List<ChallongeBridge.ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(slug));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                TournamentEntry tournament;
-                List<ParticipantEntry> participants;
+                ChallongeBridge.TournamentEntry tournament;
+                List<ChallongeBridge.ParticipantEntry> participants;
                 try {
                     tournament = tournamentFuture.get();
                     participants = participantFuture.get();
