@@ -74,7 +74,7 @@ public class SmashggBridge {
                     //owner,
                     //events
                 //);
-                return json;
+                return json.isEmpty() ? "empty response" : json;
             }
         } catch(Exception e) {
             e.printStackTrace();
