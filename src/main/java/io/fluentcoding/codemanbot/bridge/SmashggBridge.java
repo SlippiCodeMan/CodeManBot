@@ -16,9 +16,6 @@ import io.fluentcoding.codemanbot.util.GlobalVar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
-
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
 
 public class SmashggBridge {
     private final static String SMASHGG_GRAPHQL_URL = "https://api.smash.gg/gql/alpha";
