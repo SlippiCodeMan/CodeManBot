@@ -24,6 +24,7 @@ public class SmashggBridge {
     public static /*TournamentEntry*/ String getTournament(String slug) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SMASHGG_GRAPHQL_URL);
+            post.addHeader("Authorization", "Bearer " + SMASHGG_AUTH);
 
             JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
@@ -31,7 +32,6 @@ public class SmashggBridge {
             content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name startAt isOnline images{url} events{name standings(query:{page:1 perPage:9}){nodes{placement isFinal entrant{name participants{connectedAccounts}seeds{seedNum}}}}}owner{name images{url}}}}");
 
             post.setEntity(new StringEntity(content.toString()));
-            post.addHeader("Authorization", "Bearer " + SMASHGG_AUTH);
             HttpResponse response = client.execute(post);
 
             String json = EntityUtils.toString(response.getEntity());
