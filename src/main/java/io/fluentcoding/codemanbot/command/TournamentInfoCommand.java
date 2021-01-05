@@ -159,7 +159,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (tournament.getOwner().getImage() != null)
                     newBuilder.setAuthor(tournament.getOwner().getImage());
             } else {
-                newBuilder.setTitle("tournament is `null`, auth: " + GlobalVar.dotenv.get("SMASHGG_AUTH"));
+                newBuilder.setTitle("tournament is `null`");
             }
             newBuilder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(newBuilder.build()).queue();
