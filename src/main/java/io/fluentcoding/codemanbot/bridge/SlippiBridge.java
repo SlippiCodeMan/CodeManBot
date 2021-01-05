@@ -46,12 +46,13 @@ public class SlippiBridge {
     public static boolean userWithCodeExists(String code) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
-            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"code\":\"" + code + "\"},\"query\": \"" +
-                    "query fetch($code:String!) {" +
-                    "users(where:{connectCode:{_eq:$code}}){" +
-                    "status" +
-                    "}" +
-                    "}\"}"));
+
+            JSONObject content = new JSONObject();
+            content.put("operationName", "fetch");
+            content.put("variables", new JSONObject().put("code", code));
+            content.put("query", "query fetch($code:String!){users(where:{connectCode:{_eq:$code}}){status}}");
+
+            post.setEntity(new StringEntity(content.toString()));
             HttpResponse response = client.execute(post);
 
             String json = EntityUtils.toString(response.getEntity());
@@ -70,12 +71,13 @@ public class SlippiBridge {
     public static List<UserEntry> getCodesWithActualName(String name) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SLIPPI_GRAPHQL_URL);
-            post.setEntity(new StringEntity("{\"operationName\":\"fetch\",\"variables\":{\"name\":\"" + name + "\"},\"query\":\"" +
-                    "query fetch($name: String!){" +
-                    "users(where:{displayName:{_ilike:$name}}){" +
-                    "displayName connectCode status" +
-                    "}" +
-                    "}\"}"));
+
+            JSONObject content = new JSONObject();
+            content.put("operationName", "fetch");
+            content.put("variables", new JSONObject().put("name", name));
+            content.put("query", "query fetch($name: String!){users(where:{displayName:{_ilike:$name}}){displayName connectCode status}}");
+
+            post.setEntity(new StringEntity(content.toString()));
             HttpResponse response = client.execute(post);
 
             String json = EntityUtils.toString(response.getEntity());

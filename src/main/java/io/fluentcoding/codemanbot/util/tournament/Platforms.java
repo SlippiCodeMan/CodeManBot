@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum Platforms {
     CHALLONGE("challonge", "https://challonge.com/"),
-    SMASHGG("smash.gg", "https://smash.gg");
+    SMASHGG("smash.gg", "https://smash.gg/");
 
     String name;
     String url;
