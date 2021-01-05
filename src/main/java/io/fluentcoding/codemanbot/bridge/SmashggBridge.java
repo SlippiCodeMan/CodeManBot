@@ -35,6 +35,7 @@ public class SmashggBridge {
             HttpResponse response = client.execute(post);
 
             String json = EntityUtils.toString(response.getEntity());
+            /*
             JSONObject object = new JSONObject(json).getJSONObject("data");
             JSONObject tournamentObject = object.getJSONObject("tournament");
             JSONObject ownerObject = tournamentObject.getJSONObject("owner");
@@ -74,8 +75,9 @@ public class SmashggBridge {
                     //owner,
                     //events
                 //);
+                */
                 return json.isEmpty() ? "empty response" : json;
-            }
+            //}
         } catch(Exception e) {
             e.printStackTrace();
             return null;
