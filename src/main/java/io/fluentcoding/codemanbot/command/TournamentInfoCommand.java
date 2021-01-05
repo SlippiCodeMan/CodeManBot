@@ -49,7 +49,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
         Platforms platform = Arrays.stream(Platforms.values())
                 .filter(item -> url.contains(item.getUrl()))
-                .findFirst().orElse(null);
+                .findFirst().orElse(Platforms.SMASHGG); // MUST BE CHANGED BACK TO NULL
 
 
         EmbedBuilder builder = new EmbedBuilder();
