@@ -162,7 +162,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 newBuilder.setTitle("tournament is `null`");
             }
             */
-            newBuilder.setDescription(tournament);
+            newBuilder.setDescription("Lenght of the response: " + tournament.length());
             newBuilder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
