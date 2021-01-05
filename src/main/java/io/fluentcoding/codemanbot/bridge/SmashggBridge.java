@@ -28,7 +28,7 @@ public class SmashggBridge {
             JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
             content.put("variables", new JSONObject().put("slug", slug));
-            content.put("query", "query fetch(slug:String!)tournament(slug:$slug){name startAt isOnline images{url} events{name standings(query:{page:1 perPage:9}){nodes{placement isFinal entrant{name participants{connectedAccounts}seeds{seedNum}}}}}owner{name images{url}}}}");
+            content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name startAt isOnline images{url} events{name standings(query:{page:1 perPage:9}){nodes{placement isFinal entrant{name participants{connectedAccounts}seeds{seedNum}}}}}owner{name images{url}}}}");
 
             post.setEntity(new StringEntity(content.toString()));
             post.setHeader("Authorization", "Bearer " + SMASHGG_AUTH);
