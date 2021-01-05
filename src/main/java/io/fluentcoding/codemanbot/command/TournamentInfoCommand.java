@@ -30,8 +30,11 @@ public class TournamentInfoCommand extends CodeManCommand {
 
         String url = args.get("url");
         boolean isUrl = PatternChecker.isChallongeLink(url);
-        String slug;
+        String slug = url;
 
+        // DEBUG
+
+        /*
         if (isUrl) {
             String subdomain = PatternChecker.getSubdomain(url);
             String urlCopy = url;
@@ -42,6 +45,7 @@ public class TournamentInfoCommand extends CodeManCommand {
         } else {
             slug = url;
         }
+        */
 
         Platforms platform = Arrays.stream(Platforms.values())
                 .filter(item -> url.contains(item.getUrl()))
