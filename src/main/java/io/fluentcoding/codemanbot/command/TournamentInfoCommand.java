@@ -155,7 +155,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
             if (tournament != null) {
                 newBuilder.setTitle(tournament.getName());
-                newBuilder.setAuthor(tournament.getOwner().getName(), null, tournament.getOwner().getImage());
+                newBuilder.setAuthor(tournament.getOwner().getName(), platform.getUrl() + tournament.getOwner().getSlug(), tournament.getOwner().getImage());
             } else {
                 newBuilder.setTitle("tournament is `null`");
             }

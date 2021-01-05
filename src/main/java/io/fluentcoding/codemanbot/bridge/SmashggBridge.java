@@ -43,6 +43,7 @@ public class SmashggBridge {
 
             OwnerEntry owner = new OwnerEntry(
                 ownerObject.getString("name"),
+                ownerObject.getString("slug"),
                 ownerObject.getJSONArray("images").isNull(0) ? "" : ownerObject.getJSONArray("images").getJSONObject(0).getString("url"));
 
             if (eventArray.length() == 0)
@@ -106,6 +107,7 @@ public class SmashggBridge {
     @Getter
     public static class OwnerEntry {
         private String name;
+        private String slug;
         private String image;
     }
     @AllArgsConstructor
