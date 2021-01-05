@@ -79,6 +79,7 @@ public class SmashggBridge {
                 JSONArray images = tournamentObject.getJSONArray("images");
                 String imageProfile = "";
                 String imageBanner = "";
+                /*
                 if (images.length() > 0) {
                     for (int i = 0; i < images.length(); i++) {
                         JSONObject image = images.getJSONObject(i);
@@ -93,6 +94,7 @@ public class SmashggBridge {
                     }
 
                 }
+                */
 
                 return new TournamentEntry(
                     tournamentObject.optString("name"),
