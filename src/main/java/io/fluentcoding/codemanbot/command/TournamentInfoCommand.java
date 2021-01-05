@@ -151,8 +151,8 @@ public class TournamentInfoCommand extends CodeManCommand {
         } else if (platform == Platforms.SMASHGG) {
             // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
-            /*SmashggBridge.TournamentEntry*/ String tournament = SmashggBridge.getTournament(url);
-            /*
+            SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
+
             if (tournament != null) {
                 newBuilder.setTitle(tournament.getName());
                 newBuilder.setAuthor(tournament.getOwner().getName());
@@ -161,8 +161,7 @@ public class TournamentInfoCommand extends CodeManCommand {
             } else {
                 newBuilder.setTitle("tournament is `null`");
             }
-            */
-            newBuilder.setDescription(tournament);
+
             newBuilder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
