@@ -8,7 +8,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +31,7 @@ public class SmashggBridge {
             content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name startAt isOnline images{url} events{name standings(query:{page:1 perPage:9}){nodes{placement isFinal entrant{name participants{connectedAccounts}seeds{seedNum}}}}}owner{name images{url}}}}");
 
             post.setEntity(new StringEntity(content.toString()));
-            post.setHeader(new BasicHeader("Authorization", "Bearer " + SMASHGG_AUTH));
+            post.setHeader("Authorization", "Bearer " + SMASHGG_AUTH);
             HttpResponse response = client.execute(post);
 
             String json = EntityUtils.toString(response.getEntity());
@@ -59,7 +58,7 @@ public class SmashggBridge {
                             JSONObject participant = participantArray.getJSONObject(j);
                             participants.add(new ParticipantEntry(
                                 participant.getJSONObject("entrant").getString("name"),
-                                participant.getJSONObject("entrant").getJSONArray("participants").getJSONObject(0).getJSONObject("connectedAccounts").getJSONObject("slippi").getString("value"),
+                                //participant.getJSONObject("entrant").getJSONArray("participants").getJSONObject(0).getJSONObject("connectedAccounts").getJSONObject("slippi").getString("value"),
                                 participant.getJSONObject("entrant").getJSONArray("seeds").getJSONObject(participant.getJSONArray("seeds").length()-1).getInt("seedNum"),
                                 participant.getInt("placement"),
                                 participant.getBoolean("isFinal")
@@ -88,7 +87,7 @@ public class SmashggBridge {
     @Getter
     public static class ParticipantEntry {
         private String name;
-        private String connectCode;
+        //private String connectCode;
         private int seed;
         private int placement;
         private boolean isPlacementFinal;
