@@ -160,8 +160,6 @@ public class TournamentInfoCommand extends CodeManCommand {
             } else {
                 newBuilder.setTitle("tournament is `null`, ");
             }
-            newBuilder.setDescription(tournament.toString());
-
             newBuilder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
