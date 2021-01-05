@@ -31,7 +31,7 @@ public class SmashggBridge {
             content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name startAt isOnline images{url} events{name standings(query:{page:1 perPage:9}){nodes{placement isFinal entrant{name participants{connectedAccounts}seeds{seedNum}}}}}owner{name images{url}}}}");
 
             post.setEntity(new StringEntity(content.toString()));
-            post.setHeader("Authorization", "Bearer " + SMASHGG_AUTH);
+            post.addHeader("Authorization", "Bearer " + SMASHGG_AUTH);
             HttpResponse response = client.execute(post);
 
             String json = EntityUtils.toString(response.getEntity());
@@ -74,7 +74,7 @@ public class SmashggBridge {
                     //owner,
                     //events
                 //);
-                return EntityUtils.toString(response.getEntity());
+                return json;
             }
         } catch(Exception e) {
             e.printStackTrace();
