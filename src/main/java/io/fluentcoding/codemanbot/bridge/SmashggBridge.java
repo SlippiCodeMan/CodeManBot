@@ -42,8 +42,8 @@ public class SmashggBridge {
             JSONArray eventArray = tournamentObject.getJSONArray("events");
 
             OwnerEntry owner = new OwnerEntry(
-                ownerObject.getString("name"),
-                ownerObject.getString("slug"),
+                ownerObject.optString("name"),
+                ownerObject.optString("slug"),
                 ownerObject.getJSONArray("images").optJSONObject(0).optString("url"));
 
             if (eventArray.length() == 0)
