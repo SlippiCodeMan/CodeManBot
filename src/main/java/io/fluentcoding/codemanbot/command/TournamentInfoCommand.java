@@ -27,7 +27,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
-        e.getMessage().delete().queue();
+        // e.getMessage().delete().queue();
 
         String url = args.get("url");
         //boolean isUrl = PatternChecker.isChallongeLink(url);
@@ -57,7 +57,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
         builder.setTitle(GlobalVar.LOADING_EMOJI);
         builder.setColor(GlobalVar.LOADING);
-        if (platform == Platforms.CHALLONGE) {
+        if (platform.equals(Platforms.CHALLONGE)) {
             Future<TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(slug));
             Future<List<ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(slug));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
@@ -149,7 +149,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 }
                 msg.editMessage(newBuilder.build()).queue();
             });
-        } else if (platform == Platforms.SMASHGG) {
+        } else if (platform.equals(Platforms.SMASHGG)) {
             // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
             SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
