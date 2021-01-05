@@ -81,7 +81,7 @@ public class SmashggBridge {
                 }
                 return new TournamentEntry(
                     tournamentObject.getString("name"),
-                    tournamentObject.getJSONArray("images").getJSONObject(0).getString("url"),
+                    tournamentObject.getJSONArray("images").getJSONObject(tournamentObject.getJSONArray("images").length()-1).getString("url"),
                     tournamentObject.getLong("startAt"),
                     tournamentObject.getBoolean("isOnline"),
                     owner,
