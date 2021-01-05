@@ -75,8 +75,8 @@ public class SmashggBridge {
                                 participant.getInt("placement"),
                                 participant.getBoolean("isFinal")
                             ));
+                            events.add(new EventEntry(event.getString("name"), participants));
                         }
-                        events.add(new EventEntry(event.getString("name"), participants));
                     }
                 }
                 return new TournamentEntry(
