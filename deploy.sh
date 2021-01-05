@@ -6,6 +6,7 @@ rootDir="$(git rev-parse --show-toplevel)"
 "$rootDir"/gradlew shadowjar
 if [ $? -eq 0 ]; then
     echo OK
+    "$rootDir"/gradlew dockerRunStatus
     "$rootDir"/gradlew docker
     "$rootDir"/gradlew dockerStop
     "$rootDir"/gradlew dockerRun
