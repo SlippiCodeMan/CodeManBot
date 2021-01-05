@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class TournamentInfoCommand extends CodeManCommand {
@@ -170,8 +169,8 @@ public class TournamentInfoCommand extends CodeManCommand {
                             .collect(Collectors.joining("\n")), true);
                 }
 
-                newBuilder.setThumbnail(tournament.getImageProfile());
-                newBuilder.setImage(tournament.getImageBanner());
+                newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
+                newBuilder.setImage(tournament.getImageBanner().isEmpty() ? null : tournament.getImageBanner());
                 newBuilder.setColor(GlobalVar.SUCCESS);
             }
 
