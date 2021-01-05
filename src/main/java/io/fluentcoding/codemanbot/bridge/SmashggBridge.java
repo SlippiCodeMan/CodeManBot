@@ -21,7 +21,7 @@ public class SmashggBridge {
     private final static String SMASHGG_GRAPHQL_URL = "https://api.smash.gg/gql/alpha";
     private final static String SMASHGG_AUTH = GlobalVar.dotenv.get("SMASHGG_AUTH");
 
-    public static TournamentEntry getTournament(String slug) {
+    public static /*TournamentEntry*/ String getTournament(String slug) {
         try(CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPost post = new HttpPost(SMASHGG_GRAPHQL_URL);
 
@@ -66,14 +66,15 @@ public class SmashggBridge {
                         events.add(new EventEntry(event.getString("name"), participants));
                     }
                 }
-                return new TournamentEntry(
-                    tournamentObject.getString("name"),
+                //return new TournamentEntry(
+                    //tournamentObject.getString("name"),
                     //tournamentObject.getJSONArray("images").getJSONObject(0).getString("url"),
                     //tournamentObject.getLong("startAt"),
                     //tournamentObject.getBoolean("isOnline"),
-                    owner//,
+                    //owner,
                     //events
-                );
+                //);
+                return EntityUtils.toString(response.getEntity());
             }
         } catch(Exception e) {
             e.printStackTrace();

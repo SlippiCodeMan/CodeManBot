@@ -7,7 +7,6 @@ import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.tournament.Platforms;
 import io.fluentcoding.codemanbot.util.tournament.RankEmotes;
-import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -152,7 +151,8 @@ public class TournamentInfoCommand extends CodeManCommand {
         } else if (platform == Platforms.SMASHGG) {
             // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
-            SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
+            /*SmashggBridge.TournamentEntry*/ String tournament = SmashggBridge.getTournament(slug);
+            /*
             if (tournament != null) {
                 newBuilder.setTitle(tournament.getName());
                 newBuilder.setAuthor(tournament.getOwner().getName());
@@ -161,6 +161,8 @@ public class TournamentInfoCommand extends CodeManCommand {
             } else {
                 newBuilder.setTitle("tournament is `null`");
             }
+            */
+            newBuilder.setDescription(tournament);
             newBuilder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
