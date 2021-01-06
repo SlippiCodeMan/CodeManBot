@@ -10,10 +10,7 @@ import io.fluentcoding.codemanbot.util.tournament.RankEmotes;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-import java.security.Provider;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -152,11 +149,13 @@ public class TournamentInfoCommand extends CodeManCommand {
             SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
 
             if (tournament != null) {
-                SmashggBridge.OwnerEntry owner = tournament.getOwner();
                 List<SmashggBridge.EventEntry> events = tournament.getEvents();
 
                 newBuilder.setTitle(tournament.getName(), platform.getUrl() + slug);
-                newBuilder.setAuthor(tournament.getName(), "codeman.rocks/" + platform.name().toLowerCase() + ".png");
+                newBuilder.setAuthor(platform.getName(),
+                        platform.getUrl(),
+                        "codeman.rocks/" + platform.name().toLowerCase() + ".png"
+                );
 
                 if (events.size() >= 1) {
                     events.stream().forEach(eventEntry -> {
