@@ -100,7 +100,6 @@ public class TournamentInfoCommand extends CodeManCommand {
                                         );
                                         String prefix = getRankingSuffix(participant.getFinalRank());
                                         return prefix
-                                                + " "
                                                 + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
                                                 + " "
                                                 + StringUtil.getMainsFormatted(
@@ -188,6 +187,6 @@ public class TournamentInfoCommand extends CodeManCommand {
         RankEmotes rankEmote = Arrays.stream(RankEmotes.values())
                 .filter(emote -> ranking == emote.getNumber())
                 .findFirst().orElse(null);
-        return rankEmote == null ? StringUtil.bold(ranking + (ranking == 1 ? "st" : (ranking == 2 ? "nd" : "th"))) : rankEmote.getEmote();
+        return (rankEmote == null ? StringUtil.bold(ranking + (ranking == 1 ? "st" : (ranking == 2 ? "nd" : "th"))) : rankEmote.getEmote()) + " ";
     }
 }
