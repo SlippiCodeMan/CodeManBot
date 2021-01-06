@@ -82,7 +82,7 @@ public class SmashggBridge {
                         events.add(new EventEntry(
                                 event.getString("name"),
                                 event.getLong("startAt") * 1000,
-                                event.getString("state").equals("COMPLETED"),
+                                event.getString("state").equals("ACTIVE"),
                                 participants));
                     }
                 }
