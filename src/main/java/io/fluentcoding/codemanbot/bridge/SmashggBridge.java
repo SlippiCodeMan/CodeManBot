@@ -30,7 +30,7 @@ public class SmashggBridge {
             JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
             content.put("variables", new JSONObject().put("slug", slug));
-            content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name,startAt,isOnline,images{url,type},events{name,standings(query:{page:1,perPage:9}){nodes{placement,isFinal,entrant{name,participants{connectedAccounts}seeds{seedNum}}}}}owner{name,slug,images{url}}}}");
+            content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name,startAt,isOnline,images{url,type},events{name,standings(query:{page:1,perPage:9}){nodes{placement,isFinal,entrant{name,participants{connectedAccounts}seeds{seedNum}}}}}owner{player{gamerTag},slug,images{url}}}}");
 
             post.setEntity(new StringEntity(content.toString()));
             HttpResponse response = client.execute(post);
@@ -38,11 +38,11 @@ public class SmashggBridge {
             String json = EntityUtils.toString(response.getEntity());
             JSONObject object = new JSONObject(json).getJSONObject("data");
             JSONObject tournamentObject = object.getJSONObject("tournament");
-            JSONObject ownerObject = tournamentObject.optJSONArray("admins").getJSONObject(0);
+            JSONObject ownerObject = tournamentObject.optJSONObject("owner");
             JSONArray eventArray = tournamentObject.getJSONArray("events");
 
             OwnerEntry owner = new OwnerEntry(
-                ownerObject.optString("name"),
+                ownerObject.optJSONObject("player").optString("gamerTag"),
                 ownerObject.optString("slug"),
                 ownerObject.getJSONArray("images").isNull(0) ? "" : ownerObject.getJSONArray("images").getJSONObject(0).getString("url")
             );
