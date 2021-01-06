@@ -201,6 +201,6 @@ public class TournamentInfoCommand extends CodeManCommand {
         RankEmotes rankEmote = Arrays.stream(RankEmotes.values())
                 .filter(emote -> ranking == emote.getNumber())
                 .findFirst().orElse(null);
-        return (rankEmote == null ? StringUtil.bold(ranking + (ranking == 1 ? "st" : (ranking == 2 ? "nd" : "th"))) : rankEmote.getEmote()) + " ";
+        return (rankEmote == null ? StringUtil.bold(ranking + (ranking == 1 ? "st" : (ranking == 2 ? "nd" : (ranking == 3 ? "rd" : "th")))) : rankEmote.getEmote()) + " ";
     }
 }
