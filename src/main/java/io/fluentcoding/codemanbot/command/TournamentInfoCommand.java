@@ -150,7 +150,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 msg.editMessage(newBuilder.build()).queue();
             });
         } else if (platform == Platforms.SMASHGG) {
-            // DIRTY UNTILL THE SMASHGG BRIDGE IS DONE
+            // DIRTY UNTIL THE SMASHGG BRIDGE IS DONE
             EmbedBuilder newBuilder = new EmbedBuilder();
             SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
 
