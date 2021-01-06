@@ -10,6 +10,7 @@ import io.fluentcoding.codemanbot.util.tournament.RankEmotes;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.security.Provider;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -77,7 +78,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (tournament != null) {
                     newBuilder.setAuthor(platform.getName(),
                                          platform.getUrl(),
-                                         "https://codeman.rocks/assets/" + platform.getName().toLowerCase() + ".png"
+                                         "https://codeman.rocks/assets/" + platform.name().toLowerCase() + ".png"
                     );
                     //newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : platform.getUrl() + url);
 
@@ -138,7 +139,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                             , true);
 
                     newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
-                    newBuilder.setColor(GlobalVar.CHALLONGE);
+                    newBuilder.setColor(platform.getColor());
                 } else {
                     newBuilder.setDescription("Operation failed: Tournament not found!");
                     newBuilder.setColor(GlobalVar.ERROR);
@@ -155,7 +156,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 List<SmashggBridge.EventEntry> events = tournament.getEvents();
 
                 newBuilder.setTitle(tournament.getName(), platform.getUrl() + slug);
-                newBuilder.setAuthor(owner.getName(), platform.getUrl() + owner.getSlug(), owner.getImage().isEmpty() ? null : owner.getImage());
+                newBuilder.setAuthor(tournament.getName(), "codeman.rocks/" + platform.name().toLowerCase() + ".png");
 
                 if (events.size() >= 1) {
                     events.stream().forEach(eventEntry -> {
@@ -187,7 +188,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 else
                     newBuilder.setImage(tournament.getImageBanner().isEmpty() ? null : tournament.getImageBanner());
                 
-                newBuilder.setColor(GlobalVar.SMASHGG);
+                newBuilder.setColor(platform.getColor());
             } else {
                 newBuilder.setDescription("Operation failed: Tournament not found!");
                 newBuilder.setColor(GlobalVar.ERROR);
