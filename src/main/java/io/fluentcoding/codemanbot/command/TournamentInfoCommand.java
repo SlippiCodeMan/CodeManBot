@@ -172,7 +172,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                 participants.stream()
                                 .map(participant -> {
                                     int number = eventEntry.isDone() ? participant.getPlacement() : participant.getSeed();
-                                    String prefix = eventEntry.isDone() ? getRankingSuffix(number) : number + ". ";
+                                    String prefix = eventEntry.isDone() ? getRankingSuffix(number) : StringUtil.bold(number + ". ");
 
                                     return prefix + participant.getName();
                                 })
