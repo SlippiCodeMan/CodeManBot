@@ -182,9 +182,11 @@ public class TournamentInfoCommand extends CodeManCommand {
                     if (events.size() == 1)
                         newBuilder.setTimestamp(new Date(events.get(0).getStartAt()).toInstant());
                 }
-
-                newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
-                newBuilder.setImage(tournament.getImageBanner().isEmpty() ? null : tournament.getImageBanner());
+                if (tournament.getImageBanner().isEmpty())
+                    newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
+                else
+                    newBuilder.setImage(tournament.getImageBanner().isEmpty() ? null : tournament.getImageBanner());
+                
                 newBuilder.setColor(GlobalVar.SUCCESS);
             } else {
                 newBuilder.setDescription("Operation failed: Tournament not found!");
