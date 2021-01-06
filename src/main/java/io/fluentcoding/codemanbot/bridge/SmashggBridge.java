@@ -38,7 +38,7 @@ public class SmashggBridge {
             String json = EntityUtils.toString(response.getEntity());
             JSONObject object = new JSONObject(json).getJSONObject("data");
             JSONObject tournamentObject = object.getJSONObject("tournament");
-            JSONObject ownerObject = tournamentObject.getJSONObject("owner");
+            JSONObject ownerObject = tournamentObject.optJSONArray("admins").getJSONObject(0);
             JSONArray eventArray = tournamentObject.getJSONArray("events");
 
             OwnerEntry owner = new OwnerEntry(
