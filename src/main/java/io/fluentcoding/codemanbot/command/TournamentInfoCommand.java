@@ -154,7 +154,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 newBuilder.setTitle(tournament.getName(), platform.getUrl() + slug);
                 newBuilder.setAuthor(platform.getName(),
                         platform.getUrl(),
-                        "codeman.rocks/assets/" + platform.name().toLowerCase() + ".png"
+                        "https://codeman.rocks/assets/" + platform.getName().toLowerCase() + ".png"
                 );
 
                 if (events.size() >= 1) {
