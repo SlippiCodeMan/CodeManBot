@@ -98,10 +98,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                         Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
                                                 participant.getDisplayName()
                                         );
-                                        RankEmotes rankEmote = Arrays.stream(RankEmotes.values())
-                                                .filter(emote -> participant.getFinalRank() == emote.getNumber())
-                                                .findFirst().orElse(null);
-                                        String prefix = rankEmote == null ? StringUtil.bold(participant.getFinalRank() + "th") : rankEmote.getEmote();
+                                        String prefix = getRankingSuffix(participant.getFinalRank());
                                         return prefix
                                                 + " "
                                                 + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
@@ -165,9 +162,12 @@ public class TournamentInfoCommand extends CodeManCommand {
                     events.stream().forEach(eventEntry -> {
                         List<SmashggBridge.ParticipantEntry> participants = eventEntry.getStandings();
                         newBuilder.addField(eventEntry.getName() + " **(" + (eventEntry.isDone() ? "Placements" : "Seeding") + "**)", participants.stream()
-                                .map(participant ->
-                                        StringUtil.bold((participant.getPlacement() != 0 ? participant.getPlacement() : participant.getSeed()) + ". ") + participant.getName()
-                                )
+                                .map(participant -> {
+                                    int number = eventEntry.isDone() ? participant.getPlacement() : participant.getSeed();
+                                    String prefix = eventEntry.isDone() ? getRankingSuffix(number) : number + ".";
+
+                                    return StringUtil.bold(prefix + participant.getName());
+                                })
                                 .collect(Collectors.joining("\n")), true);
                     });
                 }
@@ -182,5 +182,12 @@ public class TournamentInfoCommand extends CodeManCommand {
 
             e.getChannel().sendMessage(newBuilder.build()).queue();
         }
+    }
+
+    public String getRankingSuffix(int ranking) {
+        RankEmotes rankEmote = Arrays.stream(RankEmotes.values())
+                .filter(emote -> ranking == emote.getNumber())
+                .findFirst().orElse(null);
+        return rankEmote == null ? StringUtil.bold(ranking + (ranking == 1 ? "st" : (ranking == 2 ? "nd" : "th"))) : rankEmote.getEmote();
     }
 }
