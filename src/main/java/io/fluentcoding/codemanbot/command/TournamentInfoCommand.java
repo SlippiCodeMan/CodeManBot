@@ -160,9 +160,15 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (events.size() >= 1) {
                     events.stream().forEach(eventEntry -> {
                         List<SmashggBridge.ParticipantEntry> participants = eventEntry.getStandings();
+                        String date = null;
+                        if (events.size() > 1) {
+                            Date startsAt = new Date(eventEntry.getStartAt());
+                            date = "*" + (startsAt.after(new Date()) ? "Starts" : "Started") + " at: " + new SimpleDateFormat("MM/dd/yyyy").format(startsAt) + "*\n\n";
+                        }
+
                         newBuilder.addField(
                                 eventEntry.getName() + " **(" + (eventEntry.isDone() ? "Placements" : "Seeding") + "**)",
-                                (events.size() > 1 ? "*Starts at: " + new SimpleDateFormat("MM/dd/yyyy").format(new Date(eventEntry.getStartAt() * 1000)) + "*\n\n" : "") +
+                                (date == null ? "" : date) +
                                 participants.stream()
                                 .map(participant -> {
                                     int number = eventEntry.isDone() ? participant.getPlacement() : participant.getSeed();
@@ -174,7 +180,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                     });
 
                     if (events.size() == 1)
-                        newBuilder.setTimestamp(new Date(events.get(0).getStartAt() * 1000).toInstant());
+                        newBuilder.setTimestamp(new Date(events.get(0).getStartAt()).toInstant());
                 }
 
                 newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
