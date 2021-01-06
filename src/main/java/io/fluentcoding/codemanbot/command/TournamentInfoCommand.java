@@ -164,7 +164,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                     List<SmashggBridge.ParticipantEntry> participants = events.get(0).getStandings();
                     newBuilder.addField(events.get(0).getName(), participants.stream()
                             .map(participant -> {
-                                return StringUtil.bold(participant.getPlacement() + ". ") + participant.getName();
+                                return StringUtil.bold((participant.getPlacement() != 0 ? participant.getPlacement() : participant.getSeed()) + ". ") + participant.getName();
                             })
                             .collect(Collectors.joining("\n")), true);
                 }
