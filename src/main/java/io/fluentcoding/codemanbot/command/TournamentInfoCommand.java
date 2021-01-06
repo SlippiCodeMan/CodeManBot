@@ -165,7 +165,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     int number = eventEntry.isDone() ? participant.getPlacement() : participant.getSeed();
                                     String prefix = eventEntry.isDone() ? getRankingSuffix(number) : number + ".";
 
-                                    return StringUtil.bold(prefix + participant.getName());
+                                    return prefix + participant.getName();
                                 })
                                 .collect(Collectors.joining("\n")), true);
                     });
