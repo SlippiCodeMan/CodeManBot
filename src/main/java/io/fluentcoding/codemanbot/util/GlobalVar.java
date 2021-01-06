@@ -17,6 +17,7 @@ public class GlobalVar {
             LOADING = new Color(47, 49, 54),
             WAITING = new Color(243, 193, 120),
             CHALLONGE = new Color(255, 115, 36);
+            SMASHGG = new Color(200, 59, 61)
 
     public static int MAX_ITEMS_PER_PAGE = 10;
 

@@ -187,7 +187,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 else
                     newBuilder.setImage(tournament.getImageBanner().isEmpty() ? null : tournament.getImageBanner());
                 
-                newBuilder.setColor(GlobalVar.SUCCESS);
+                newBuilder.setColor(GlobalVar.SMASHGG);
             } else {
                 newBuilder.setDescription("Operation failed: Tournament not found!");
                 newBuilder.setColor(GlobalVar.ERROR);
