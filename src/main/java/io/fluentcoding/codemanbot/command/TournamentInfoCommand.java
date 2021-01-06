@@ -10,10 +10,10 @@ import io.fluentcoding.codemanbot.util.tournament.RankEmotes;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -160,7 +160,10 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (events.size() >= 1) {
                     events.stream().forEach(eventEntry -> {
                         List<SmashggBridge.ParticipantEntry> participants = eventEntry.getStandings();
-                        newBuilder.addField(eventEntry.getName() + " **(" + (eventEntry.isDone() ? "Placements" : "Seeding") + "**)", participants.stream()
+                        newBuilder.addField(
+                                eventEntry.getName() + " **(" + (eventEntry.isDone() ? "Placements" : "Seeding") + "**)",
+                                (events.size() > 1 ? new SimpleDateFormat("MM/dd/yyyy").format(new Date(eventEntry.getStartAt())) : "") +
+                                participants.stream()
                                 .map(participant -> {
                                     int number = eventEntry.isDone() ? participant.getPlacement() : participant.getSeed();
                                     String prefix = eventEntry.isDone() ? getRankingSuffix(number) : number + ".";
@@ -169,6 +172,9 @@ public class TournamentInfoCommand extends CodeManCommand {
                                 })
                                 .collect(Collectors.joining("\n")), true);
                     });
+
+                    if (events.size() == 0)
+                        newBuilder.setTimestamp(new Date(events.get(0).getStartAt()).toInstant());
                 }
 
                 newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
