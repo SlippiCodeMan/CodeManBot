@@ -30,7 +30,7 @@ public class SmashggBridge {
             JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
             content.put("variables", new JSONObject().put("slug", slug));
-            content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name,startAt,isOnline,images{url,type},events{name,standings(query:{page:1,perPage:9}){nodes{placement,isFinal,entrant{name,participants{connectedAccounts}seeds{seedNum}}}}}owner{player{gamerTag},slug,images{url}}}}");
+            content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name,startAt,isOnline,images{url,type},events{name,state,standings(query:{page:1,perPage:9}){nodes{placement,isFinal,entrant{name,participants{connectedAccounts}seeds{seedNum}}}}}owner{player{gamerTag},slug,images{url}}}}");
 
             post.setEntity(new StringEntity(content.toString()));
             HttpResponse response = client.execute(post);
@@ -77,7 +77,7 @@ public class SmashggBridge {
                                 participant.optBoolean("isFinal")
                             ));
                         }
-                        events.add(new EventEntry(event.getString("name"), participants));
+                        events.add(new EventEntry(event.getString("name"), event.getString("state").equals("COMPLETED"), participants));
                     }
                 }
 
@@ -135,8 +135,10 @@ public class SmashggBridge {
     @Getter
     public static class EventEntry {
         private String name;
+        private boolean isDone;
         private List<ParticipantEntry> standings;
     }
+
     @AllArgsConstructor
     @Getter
     public static class TournamentEntry {

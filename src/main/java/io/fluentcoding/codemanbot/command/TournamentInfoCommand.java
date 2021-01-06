@@ -164,7 +164,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 if (events.size() >= 1) {
                     events.stream().forEach(eventEntry -> {
                         List<SmashggBridge.ParticipantEntry> participants = eventEntry.getStandings();
-                        newBuilder.addField(eventEntry.getName(), participants.stream()
+                        newBuilder.addField(eventEntry.getName() + " **(" + (eventEntry.isDone() ? "Placements" : "Seeding") + "**)", participants.stream()
                                 .map(participant ->
                                         StringUtil.bold((participant.getPlacement() != 0 ? participant.getPlacement() : participant.getSeed()) + ". ") + participant.getName()
                                 )
