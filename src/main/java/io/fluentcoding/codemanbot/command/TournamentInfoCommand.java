@@ -161,13 +161,15 @@ public class TournamentInfoCommand extends CodeManCommand {
                 newBuilder.setTitle(tournament.getName(), platform.getUrl() + slug);
                 newBuilder.setAuthor(owner.getName(), platform.getUrl() + owner.getSlug(), owner.getImage().isEmpty() ? null : owner.getImage());
 
-                if (events.size() == 1) {
-                    List<SmashggBridge.ParticipantEntry> participants = events.get(0).getStandings();
-                    newBuilder.addField(events.get(0).getName(), participants.stream()
-                            .map(participant -> {
-                                return StringUtil.bold((participant.getPlacement() != 0 ? participant.getPlacement() : participant.getSeed()) + ". ") + participant.getName();
-                            })
-                            .collect(Collectors.joining("\n")), true);
+                if (events.size() >= 1) {
+                    events.stream().forEach(eventEntry -> {
+                        List<SmashggBridge.ParticipantEntry> participants = eventEntry.getStandings();
+                        newBuilder.addField(eventEntry.getName(), participants.stream()
+                                .map(participant ->
+                                        StringUtil.bold((participant.getPlacement() != 0 ? participant.getPlacement() : participant.getSeed()) + ". ") + participant.getName()
+                                )
+                                .collect(Collectors.joining("\n")), true);
+                    });
                 }
 
                 newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
