@@ -163,7 +163,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                         String date = null;
                         if (events.size() > 1) {
                             Date startsAt = new Date(eventEntry.getStartAt());
-                            date = "*" + (startsAt.after(new Date()) ? "Starts" : "Started") + " the: " + new SimpleDateFormat("MM/dd/yyyy").format(startsAt) + "*\n\n";
+                            date = "*" + (startsAt.after(new Date()) ? "Starts" : "Started") + " on: " + new SimpleDateFormat("MM/dd/yyyy").format(startsAt) + "*\n\n";
                         }
 
                         newBuilder.addField(
