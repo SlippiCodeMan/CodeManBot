@@ -173,7 +173,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                 .collect(Collectors.joining("\n")), true);
                     });
 
-                    if (events.size() == 0)
+                    if (events.size() == 1)
                         newBuilder.setTimestamp(new Date(events.get(0).getStartAt()).toInstant());
                 }
 
