@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot.command;
 
+import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
@@ -7,6 +8,7 @@ import io.fluentcoding.codemanbot.util.SystemUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.hook.ListenerHook;
+import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -28,38 +30,39 @@ public class StatsCommand extends DevCodeManCommand {
     public void handleOnSuccess(GuildMessageReceivedEvent e, Map<String, String> args) {
         SystemUtil.MemoryStats memoryStats = SystemUtil.memoryStats();
 
-        create(Map.of(
-                "Total memory", mb(memoryStats.getTotalMemory()),
-                "Maximum memory", mb(memoryStats.getMaxMemory()),
-                "Free memory", mb(memoryStats.getFreeMemory()),
-                "Used memory", mb(memoryStats.getUsedMemory()),
-                "Discord API Response time", e.getJDA().getGatewayPing() + "ms",
-                "Slippi API Response time", (Supplier) () -> SlippiBridge.ping() + "ms",
-                "Servers", e.getJDA().getGuilds().size(),
-                "Connected users", DatabaseBridge.countDatabase(),
-                "Users with mains", DatabaseBridge.usersWithMains(),
-                "Active ListenerHooks", ListenerHook.getActiveListenerHooks()
-        ), e);
+        create(e,
+            new StatsEntry("Total memory", mb(memoryStats.getTotalMemory())),
+            new StatsEntry("Maximum memory", mb(memoryStats.getMaxMemory())),
+            new StatsEntry("Free memory", mb(memoryStats.getFreeMemory())),
+            new StatsEntry("Used memory", mb(memoryStats.getUsedMemory())),
+            new StatsEntry("Discord API Response time", e.getJDA().getGatewayPing() + "ms"),
+            new StatsEntry("Slippi API Response time", () -> SlippiBridge.ping() + "ms"),
+            new StatsEntry("Challonge API Response time", () -> ChallongeBridge.ping() + "ms"),
+            new StatsEntry("Servers", e.getJDA().getGuilds().size()),
+            new StatsEntry("Connected users", DatabaseBridge.countDatabase()),
+            new StatsEntry("Users with mains", DatabaseBridge.usersWithMains()),
+            new StatsEntry("Active ListenerHooks", ListenerHook.getActiveListenerHooks())
+        );
     }
 
     private String mb(float input) {
         return input + "MiB";
     }
 
-    private void create(Map<String, ?> values, GuildMessageReceivedEvent e) {
+    private void create(GuildMessageReceivedEvent e, StatsEntry... entries) {
         EmbedBuilder builder = new EmbedBuilder();
 
         int i = 0;
         Map<Integer, Supplier> toUpdate = new HashMap<>();
-        for (Map.Entry<String, ?> entry : values.entrySet()) {
+        for (StatsEntry entry : entries) {
             builder.addField(
-                    entry.getKey(),
-                    entry.getValue() instanceof Supplier ? GlobalVar.LOADING_EMOJI : String.valueOf(entry.getValue()),
+                    entry.getTitle(),
+                    entry.getValueRetriever() != null ? GlobalVar.LOADING_EMOJI : String.valueOf(entry.getValue()),
                     true
             );
 
-            if (entry.getValue() instanceof Supplier)
-                toUpdate.put(i, (Supplier) entry.getValue());
+            if (entry.getValueRetriever() != null)
+                toUpdate.put(i, entry.getValueRetriever());
 
             i++;
         }
@@ -101,6 +104,33 @@ public class StatsCommand extends DevCodeManCommand {
         } else {
             builder.setColor(GlobalVar.SUCCESS);
             e.getChannel().sendMessage(builder.build()).queue();
+        }
+    }
+
+    @Getter
+    private static class StatsEntry {
+        private String title;
+        private String value = null;
+        private Supplier<String> valueRetriever = null;
+
+        public StatsEntry(String title, String value) {
+            this.title = title;
+            this.value = value;
+        }
+
+        public StatsEntry(String title, float value) {
+            this.title = title;
+            this.value = String.valueOf(value);
+        }
+
+        public StatsEntry(String title, long value) {
+            this.title = title;
+            this.value = String.valueOf(value);
+        }
+
+        public StatsEntry(String title, Supplier<String> valueRetriever) {
+            this.title = title;
+            this.valueRetriever = valueRetriever;
         }
     }
 }

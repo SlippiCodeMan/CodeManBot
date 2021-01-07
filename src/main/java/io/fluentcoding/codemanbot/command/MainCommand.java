@@ -20,7 +20,7 @@ public class MainCommand extends CodeManCommand {
     @Override
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         if (DatabaseBridge.getCode(e.getAuthor().getIdLong()) == null) {
-            e.getChannel().sendMessage(EmbedUtil.ALREADYCONNECTED.getEmbed().build()).queue();
+            e.getChannel().sendMessage(EmbedUtil.NOTCONNECTED.getEmbed().build()).queue();
 
             return;
         }

@@ -40,6 +40,8 @@ hs_err_pid*
 
 # User-specific stuff:
 .idea/workspace.xml
+.idea/compiler.xml
+.idea/misc.xml
 .idea/tasks.xml
 .idea/dictionaries
 .idea/vcs.xml
