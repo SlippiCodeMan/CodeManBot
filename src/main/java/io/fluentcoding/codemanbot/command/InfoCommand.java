@@ -44,7 +44,7 @@ public class InfoCommand extends CodeManCommand {
             String retrievedCode = DatabaseBridge.getCode(mentionedMember.getIdLong());
 
             if (retrievedCode == null) {
-                builder.setDescription("This person didn't connect to CodeMan yet!");
+                builder.setDescription(StringUtil.bold("Error: ") + "This user is not connected to CodeMan.");
                 builder.setColor(GlobalVar.ERROR);
             } else {
                 output(mentionedMember.getIdLong(), retrievedCode, e, false);
@@ -52,7 +52,7 @@ public class InfoCommand extends CodeManCommand {
             }
         } else if (PatternChecker.isConnectCode(user)) {
             long discordID = DatabaseBridge.getDiscordIdFromConnectCode(user.toUpperCase());
-            builder.addField(StringUtil.getPersonPrefixedString(false, "name"), GlobalVar.LOADING_EMOJI, true);
+            builder.addField(StringUtil.getPersonPrefixedString(false, "tag"), GlobalVar.LOADING_EMOJI, true);
             String mains;
             if (discordID == -1) {
                 mains = "";
@@ -74,10 +74,10 @@ public class InfoCommand extends CodeManCommand {
                     name = null;
                 }
                 if (name == null) {
-                    newBuilder.setDescription("This person doesn't exist!");
+                    newBuilder.setDescription(StringUtil.bold("Error: ") + "No user was found under this tag.");
                     newBuilder.setColor(GlobalVar.ERROR);
                 } else {
-                    newBuilder.addField(StringUtil.getPersonPrefixedString(false, "name"), name, true);
+                    newBuilder.addField(StringUtil.getPersonPrefixedString(false, "tag"), name, true);
                     if (!mains.isEmpty()) {
                         newBuilder.addField(StringUtil.getPersonPrefixedString(false, "mains"), mains, true);
                     }
@@ -166,7 +166,7 @@ public class InfoCommand extends CodeManCommand {
                                         .collect(Collectors.toList())
                         );
 
-                        String title = StringUtil.bold( codes.size() + " players are using this username:") + "\n\n";
+                        String title = StringUtil.bold( codes.size() + " players are using this tag:") + "\n\n";
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(msg::editMessage,
