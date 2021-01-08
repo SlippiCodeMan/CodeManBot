@@ -33,7 +33,7 @@ public class Application {
                 new ConnectCommand(new CodeManArgumentSet().setNecessaryArguments("code"),
                         "Connects your slippi account by using your connect code ", "connect"),
                 new InfoCommand(new CodeManArgumentSet().setOptionalArguments("user").setLastArgumentVarArg(),
-                        "Shows the info based off a slippi username/code or discord tag", "info", "i", "&"),
+                        "Shows the info based off a slippi username/code or discord tag", "info", "i", EXEC_MODE.getCommandPrefix()),
                 new WhoisCommand(new CodeManArgumentSet().setNecessaryArguments("user").setLastArgumentVarArg(),
                         "Shows the discord username based of a slippi username/code", "whois", "wi"),
                 new MainCommand(new CodeManArgumentSet().setOptionalArguments("char").setLastArgumentVarArg(),
