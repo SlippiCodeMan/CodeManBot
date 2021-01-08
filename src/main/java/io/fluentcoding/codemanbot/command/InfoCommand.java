@@ -85,7 +85,7 @@ public class InfoCommand extends CodeManCommand {
                 }
 
                 //msg.editMessage(newBuilder.build()).queue();
-                msg.getMessage().delete().queue(e.getChannel().sendMessage(newBuilder.build));
+                msg.getMessage().delete().queue(e.getChannel().sendMessage(newBuilder.build).queue());
             });
             return;
         } else if (PatternChecker.isSlippiUsername(user)) {
