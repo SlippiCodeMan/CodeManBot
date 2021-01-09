@@ -148,8 +148,8 @@ public class SmashggBridge {
         @Getter
         public enum EventState {
             CREATED("Seeding"),
-            ACTIVE("Current Placements"),
-            COMPLETED("Placements");
+            ACTIVE("In Progress"),
+            COMPLETED("Finished");
 
             private String header;
 

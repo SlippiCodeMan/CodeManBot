@@ -96,7 +96,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                                         Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
                                                 participant.getDisplayName()
                                         );
-                                        String prefix = getRankingSuffix(participant.getFinalRank());
+                                        String prefix = getRankingSuffix(participant.getFinalRank(), true);
                                         return prefix
                                                 + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
                                                 + " "
@@ -174,12 +174,10 @@ public class TournamentInfoCommand extends CodeManCommand {
                                     int number = eventEntry.getState() == SmashggBridge.EventEntry.EventState.CREATED
                                             ? participant.getSeed() : participant.getPlacement();
                                     String prefix;
-                                    if (eventEntry.getState() == SmashggBridge.EventEntry.EventState.COMPLETED) {
-                                        prefix = getRankingSuffix(number);
-                                    } else if (eventEntry.getState() == SmashggBridge.EventEntry.EventState.ACTIVE){
-                                        prefix = StringUtil.bold("(" + number + ")");
-                                    } else {
+                                    if (eventEntry.getState() == SmashggBridge.EventEntry.EventState.CREATED) {
                                         prefix = StringUtil.bold(number + ". ");
+                                    } else {
+                                        prefix = getRankingSuffix(number, eventEntry.getState() == SmashggBridge.EventEntry.EventState.COMPLETED);
                                     }
 
                                     return prefix + participant.getName();
@@ -205,10 +203,10 @@ public class TournamentInfoCommand extends CodeManCommand {
         }
     }
 
-    public String getRankingSuffix(int ranking) {
-        RankEmotes rankEmote = Arrays.stream(RankEmotes.values())
+    public String getRankingSuffix(int ranking, boolean useEmote) {
+        RankEmotes rankEmote = useEmote ? Arrays.stream(RankEmotes.values())
                 .filter(emote -> ranking == emote.getNumber())
-                .findFirst().orElse(null);
+                .findFirst().orElse(null) : null;
         return (rankEmote == null ? StringUtil.bold(ranking + (ranking == 1 ? "st" : (ranking == 2 ? "nd" : (ranking == 3 ? "rd" : "th")))) : rankEmote.getEmote()) + " ";
     }
 }
