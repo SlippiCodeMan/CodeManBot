@@ -11,6 +11,6 @@
         <module name="codemanbot.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="15" />
+    <bytecodeTargetLevel target="13" />
   </component>
 </project>
