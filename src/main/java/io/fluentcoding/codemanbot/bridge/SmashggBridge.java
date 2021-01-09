@@ -1,8 +1,8 @@
 package io.fluentcoding.codemanbot.bridge;
 
+import io.fluentcoding.codemanbot.util.GlobalVar;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -12,10 +12,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import io.fluentcoding.codemanbot.util.GlobalVar;
-
-import java.time.LocalTime;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,12 +89,13 @@ public class SmashggBridge {
                 if (images.length() > 0) {
                     for (int i = 0; i < images.length(); i++) {
                         JSONObject image = images.getJSONObject(i);
+                        String url = image.getString("url");
                         switch (image.getString("type")) {
                             case "profile":
-                                imageProfile = image.getString("url");
+                                imageProfile = url;
                                 break;
                             case "banner":
-                                imageBanner = image.getString("url");
+                                imageBanner = url;
                                 break;
                         }
                     }
