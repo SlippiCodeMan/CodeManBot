@@ -58,19 +58,21 @@ public class SmashggBridge {
                         List<ParticipantEntry> participants = new ArrayList<>();
                         for (int j = 0; j < participantArray.length(); j++) {
                             JSONObject participant = participantArray.getJSONObject(j);
+                            JSONObject entrant = participant.getJSONObject("entrant");
                             participants.add(new ParticipantEntry(
-                                participant.getJSONObject("entrant").optString("name"),
-                                participant.getJSONObject("entrant")
+                                entrant.optString("name"),
+                                entrant
                                         .getJSONArray("participants")
                                         .getJSONObject(0)
                                         .isNull("connectedAccounts") ? "" :
-                                        participant.getJSONObject("entrant")
+                                        entrant
                                                 .getJSONArray("participants")
                                                 .getJSONObject(0)
                                                 .getJSONObject("connectedAccounts")
                                                 .optJSONObject("slippi")
                                                 .optString("value"),
-                                participant.getJSONObject("entrant").optJSONArray("seeds").optJSONObject(0).optInt("seedNum"),
+                                entrant.isNull("seeds") ? null :
+                                        entrant.getJSONArray("seeds").getJSONObject(0).getInt("seedNum"),
                                 participant.optInt("placement"),
                                 participant.optBoolean("isFinal")
                             ));
