@@ -167,12 +167,20 @@ public class TournamentInfoCommand extends CodeManCommand {
                         }
 
                         newBuilder.addField(
-                                eventEntry.getName() + " **(" + (eventEntry.isDone() ? "Placements" : "Seeding") + "**)",
+                                eventEntry.getName() + " (" + eventEntry.getState().getHeader() + ")",
                                 (date == null ? "" : date) +
                                 participants.stream()
                                 .map(participant -> {
-                                    int number = eventEntry.isDone() ? participant.getPlacement() : participant.getSeed();
-                                    String prefix = eventEntry.isDone() ? getRankingSuffix(number) : StringUtil.bold(number + ". ");
+                                    int number = eventEntry.getState() == SmashggBridge.EventEntry.EventState.CREATED
+                                            ? participant.getSeed() : participant.getPlacement();
+                                    String prefix;
+                                    if (eventEntry.getState() == SmashggBridge.EventEntry.EventState.COMPLETED) {
+                                        prefix = getRankingSuffix(number);
+                                    } else if (eventEntry.getState() == SmashggBridge.EventEntry.EventState.ACTIVE){
+                                        prefix = StringUtil.bold("(" + number + ")");
+                                    } else {
+                                        prefix = StringUtil.bold(number + ". ");
+                                    }
 
                                     return prefix + participant.getName();
                                 })

@@ -78,7 +78,7 @@ public class SmashggBridge {
                         events.add(new EventEntry(
                                 event.getString("name"),
                                 event.getLong("startAt") * 1000,
-                                event.getString("state").equals("COMPLETED"),
+                                EventEntry.EventState.safeValueOf(event.getString("state")),
                                 participants));
                     }
                 }
@@ -139,8 +139,26 @@ public class SmashggBridge {
     public static class EventEntry {
         private String name;
         private long startAt;
-        private boolean isDone;
+        private EventState state;
         private List<ParticipantEntry> standings;
+
+        @AllArgsConstructor
+        @Getter
+        public enum EventState {
+            CREATED("Seeding"),
+            ACTIVE("Current Placements"),
+            COMPLETED("Placements");
+
+            private String header;
+
+            private static EventState safeValueOf(String name) {
+                try {
+                    return valueOf(name);
+                } catch(IllegalArgumentException e) {
+                    return CREATED;
+                }
+            }
+        }
     }
 
     @AllArgsConstructor
