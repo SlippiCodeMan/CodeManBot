@@ -47,7 +47,6 @@ public class TournamentInfoCommand extends CodeManCommand {
         Platforms platform = Arrays.stream(Platforms.values())
                 .filter(item -> url.contains(item.getUrl()))
                 .findFirst().orElse(null);
-        */
         Platforms platform = Platforms.SMASHGG;
 
         EmbedBuilder builder = new EmbedBuilder();
@@ -208,5 +207,6 @@ public class TournamentInfoCommand extends CodeManCommand {
                 .filter(emote -> ranking == emote.getNumber())
                 .findFirst().orElse(null) : null;
         return (rankEmote == null ? StringUtil.bold(ranking + (ranking == 1 ? "st" : (ranking == 2 ? "nd" : (ranking == 3 ? "rd" : "th")))) : rankEmote.getEmote()) + " ";
+        */
     }
 }
