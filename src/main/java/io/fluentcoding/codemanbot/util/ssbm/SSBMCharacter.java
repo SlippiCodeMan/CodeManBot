@@ -33,7 +33,8 @@ public enum SSBMCharacter {
     MEWTWO("Mewtwo", 791703555462922251L, "m2", "jason"),
     MRGAMEWATCH("Mr. Game & Watch", 791703555492544582L, "mistergameandwatch", "mistergamewatch", "mistergnw", "mistergw", "gnw", "gw", "mgnw", "mrgnw", "mrgw", "gameandwatch", "mrgameandwatch", "gamewatch", "mrgamenwatch", "gamenwatch"),
     MARTH("Marth", 791703555437756426L, "longgrab", "zain"),
-    ROY("Roy", 791703555529900033L, "cool");
+    ROY("Roy", 791703555529900033L, "cool"),
+    WOLF("Wolf", 802358306415837215L, "wulf");
 
     private final String name;
     private final long emoteId;
