@@ -71,6 +71,7 @@ public class DatabaseBridge {
             for (Document result : codeManCollection.find(new BasicDBObject("discord_id", discordId))) {
                 if (result.containsKey("mains")) {
                     return result.getList("mains", Integer.class).stream()
+                            .filter(main -> main < SSBMCharacter.values().length)
                             .map(main -> SSBMCharacter.values()[main]).collect(Collectors.toList());
                 } else {
                     return null;
