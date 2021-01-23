@@ -50,7 +50,7 @@ public class TournamentInfoCommand extends CodeManCommand {
                 .findFirst().orElse(null);
         
         */
-        Platforms platform = Platforms.SMASHGG;
+        Platforms platform = Platforms.CHALLONGE;
 
         EmbedBuilder builder = new EmbedBuilder();
 
