@@ -27,14 +27,14 @@ public enum SSBMCharacter {
     SHEIK("Sheik", 791703555416260638L, "shiek"),
     LINK("Link", 791703555450863666L, "linkle"),
     YOUNG_LINK("Young Link", 791703555463053332L, "yl", "young", "ylink"),
-    WOLF("Wolf", 802358306415837215L, "wulf"),
     PICHU("Pichu", 791703555358195714L, "pikabutbad"),
     PIKACHU("Pikachu", 791703555445882920L, "pika", "chu", "pikapika", "yellowrat"),
     JIGGLYPUFF("Jigglypuff", 791703555446800394L, "pummeluff", "puff", "overpowered", "jpuff", "jigglyp", "clutchbox"),
     MEWTWO("Mewtwo", 791703555462922251L, "m2", "jason"),
     MRGAMEWATCH("Mr. Game & Watch", 791703555492544582L, "mistergameandwatch", "mistergamewatch", "mistergnw", "mistergw", "gnw", "gw", "mgnw", "mrgnw", "mrgw", "gameandwatch", "mrgameandwatch", "gamewatch", "mrgamenwatch", "gamenwatch"),
     MARTH("Marth", 791703555437756426L, "longgrab", "zain"),
-    ROY("Roy", 791703555529900033L, "cool");
+    ROY("Roy", 791703555529900033L, "cool"),
+    WOLF("Wolf", 802358306415837215L, "wulf");
 
     private final String name;
     private final long emoteId;
