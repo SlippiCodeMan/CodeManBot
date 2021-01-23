@@ -47,7 +47,6 @@ public class ChallongeBridge {
                     participants.add(new ParticipantEntry(
                         StringUtil.stripDiscordMarkdown(participant.optString("display_name")),
                         null, // No connect code
-                        participant.optBoolean("checked_in"),
                         participant.optInt("seed"),
                         participant.optInt("final_rank"),
                         null // No way to know if the ranks are final

@@ -1,6 +1,10 @@
 package io.fluentcoding.codemanbot.bridge;
 
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.entries.EventEntry;
+import io.fluentcoding.codemanbot.util.entries.ParticipantEntry;
+import io.fluentcoding.codemanbot.util.entries.TournamentEntry;
+import io.fluentcoding.codemanbot.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.http.HttpResponse;
@@ -28,7 +32,7 @@ public class SmashggBridge {
             JSONObject content = new JSONObject();
             content.put("operationName", "fetch");
             content.put("variables", new JSONObject().put("slug", slug));
-            content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name,startAt,isOnline,images{url,type},events{name,state,startAt,standings(query:{page:1,perPage:8}){nodes{placement,isFinal,entrant{name,participants{connectedAccounts}seeds{seedNum}}}}}owner{player{gamerTag},slug,images{url}}}}");
+            content.put("query", "query fetch($slug:String!){tournament(slug:$slug){name,startAt,isOnline,images{url,type},events{name,state,startAt,standings(query:{page:1,perPage:8}){nodes{placement,isFinal,entrant{name,participants{connectedAccounts}seeds{seedNum}}}}}}");
 
             post.setEntity(new StringEntity(content.toString()));
             HttpResponse response = client.execute(post);
@@ -36,14 +40,7 @@ public class SmashggBridge {
             String json = EntityUtils.toString(response.getEntity());
             JSONObject object = new JSONObject(json).getJSONObject("data");
             JSONObject tournamentObject = object.getJSONObject("tournament");
-            JSONObject ownerObject = tournamentObject.optJSONObject("owner");
             JSONArray eventArray = tournamentObject.getJSONArray("events");
-
-            OwnerEntry owner = new OwnerEntry(
-                ownerObject.optJSONObject("player").optString("gamerTag"),
-                ownerObject.optString("slug"),
-                ownerObject.getJSONArray("images").isNull(0) ? "" : ownerObject.getJSONArray("images").getJSONObject(0).getString("url")
-            );
 
             if (eventArray.length() == 0)
                 return null;
@@ -106,72 +103,21 @@ public class SmashggBridge {
 
                 return new TournamentEntry(
                     tournamentObject.getString("name"),
+                    null, // Description, null atm
                     imageProfile,
                     imageBanner,
-                    tournamentObject.getLong("startAt"),
-                    tournamentObject.getBoolean("isOnline"),
-                    owner,
-                    events
+                    null,
+                    null,
+                    DateUtil.fromLong(tournamentObject.getLong("startAt")),
+                    null,
+                    null,
+                    events,
+                    null
                 );
             }
         } catch(Exception e) {
             e.printStackTrace();
             return null;
         }
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public static class ParticipantEntry {
-        private String name;
-        private String connectCode;
-        private int seed;
-        private int placement;
-        private boolean isPlacementFinal;
-    }
-    @AllArgsConstructor
-    @Getter
-    public static class OwnerEntry {
-        private String name;
-        private String slug;
-        private String image;
-    }
-    @AllArgsConstructor
-    @Getter
-    public static class EventEntry {
-        private String name;
-        private long startAt;
-        private EventState state;
-        private List<ParticipantEntry> standings;
-
-        @AllArgsConstructor
-        @Getter
-        public enum EventState {
-            CREATED("Seeding"),
-            ACTIVE("In Progress"),
-            COMPLETED("Finished");
-
-            private String header;
-
-            private static EventState safeValueOf(String name) {
-                try {
-                    return valueOf(name);
-                } catch(IllegalArgumentException e) {
-                    return CREATED;
-                }
-            }
-        }
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public static class TournamentEntry {
-        private String name;
-        private String imageProfile;
-        private String imageBanner;
-        private long startsAt;
-        private boolean isOnline;
-        private OwnerEntry owner;
-        private List<EventEntry> events;
     }
 }

@@ -11,4 +11,7 @@ public class DateUtil {
         OffsetDateTime offsetDateTime = OffsetDateTime.parse(isoTime, timeFormatter);
         return Date.from(Instant.from(offsetDateTime));
     }
+    public static Date fromLong(long time) {
+        return new Date(time);
+    }
 }
