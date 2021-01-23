@@ -56,14 +56,12 @@ public class StringUtil {
     public static String getTextFromHtml(String input) {
         return input.replaceAll("<(.|\n)*?>", "");
     }
-    public static String formatIsoDateAndTime(String input) {
-        if (input.equals("null"))
+    public static String fromatDate(Date date) {
+        if (date == null)
             return "";
 
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-        OffsetDateTime offsetDateTime = OffsetDateTime.parse(input, timeFormatter);
         DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy, hh:mm z");  
-        return dateFormat.format(Date.from(Instant.from(offsetDateTime)));
+        return dateFormat.format(date);
     }
     public static String bold(String input) {
         return "**" + input + "**";

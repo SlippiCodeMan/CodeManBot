@@ -4,6 +4,7 @@ import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SmashggBridge;
 import io.fluentcoding.codemanbot.util.*;
+import io.fluentcoding.codemanbot.util.entries.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.tournament.Platforms;
 import io.fluentcoding.codemanbot.util.tournament.RankEmotes;
@@ -47,6 +48,8 @@ public class TournamentInfoCommand extends CodeManCommand {
         Platforms platform = Arrays.stream(Platforms.values())
                 .filter(item -> url.contains(item.getUrl()))
                 .findFirst().orElse(null);
+        
+        */
         Platforms platform = Platforms.SMASHGG;
 
         EmbedBuilder builder = new EmbedBuilder();
@@ -54,152 +57,134 @@ public class TournamentInfoCommand extends CodeManCommand {
         builder.setTitle(GlobalVar.LOADING_EMOJI);
         builder.setColor(GlobalVar.LOADING);
 
-        if (platform == Platforms.CHALLONGE) {
-            Future<ChallongeBridge.TournamentEntry> tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(slug));
-            Future<List<ChallongeBridge.ParticipantEntry>> participantFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getParticipants(slug));
-            e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                ChallongeBridge.TournamentEntry tournament;
-                List<ChallongeBridge.ParticipantEntry> participants;
-                try {
-                    tournament = tournamentFuture.get();
-                    participants = participantFuture.get();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    tournament = null;
-                    participants = null;
-                }
+        Future<TournamentEntry> tournamentFuture;
 
-                EmbedBuilder newBuilder = new EmbedBuilder();
+        if (platform == Platforms.CHALLONGE)
+            tournamentFuture = Executors.newCachedThreadPool().submit(() -> ChallongeBridge.getTournament(slug));
+        else if (platform == Platforms.SMASHGG)
+            tournamentFuture = Executors.newCachedThreadPool().submit(() -> SmashggBridge.getTournament(slug));
+        else
+            tournamentFuture = null;
+    
+        e.getChannel().sendMessage(builder.build()).queue(msg -> {
+            TournamentEntry tournament;
+            try {
+                tournament = tournamentFuture.get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                tournament = null;
+            }
 
-                if (tournament != null) {
-                    newBuilder.setAuthor(platform.getName(),
-                                         platform.getUrl(),
-                                         "https://codeman.rocks/assets/" + platform.name().toLowerCase() + ".png"
-                    );
-                    //newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : platform.getUrl() + url);
+            List<ParticipantEntry> participants = tournament.getParticipants();
+            List<EventEntry> events = tournament.getEvents();
 
-                    String description = StringUtil.getTextFromHtml(tournament.getDescription());
-                    if (!description.isEmpty()) {
+            EmbedBuilder newBuilder = new EmbedBuilder();
+
+            if (tournament != null) {
+                newBuilder.setAuthor(platform.getName(),
+                                        platform.getUrl(),
+                                        "https://codeman.rocks/assets/" + platform.name().toLowerCase() + ".png"
+                );
+                //newBuilder.setTitle(tournament.getName(), isUrl ? StringUtil.makeUrlValid(url) : platform.getUrl() + url);
+
+                String description = StringUtil.getTextFromHtml(tournament.getDescription());
+                if (!description.isEmpty()) {
+                    if (description != null) {
                         if (description.length() > 300)
                             description = description.substring(0, 301) + "...";
 
                         newBuilder.setDescription(description);
                     }
-
-                    if (participants != null) {
-                        if (tournament.getState().equals("complete")) {
-                            newBuilder.addField("Final Results", participants.stream()
-                                    .filter(participant -> participant.getFinalRank() <= 5 && participant.getFinalRank() != 0)
-                                    .sorted(Comparator.comparingInt(ChallongeBridge.ParticipantEntry::getFinalRank))
-                                    .map(participant -> {
-                                        Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
-                                                participant.getDisplayName()
-                                        );
-                                        String prefix = getRankingSuffix(participant.getFinalRank(), true);
-                                        return prefix
-                                                + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
-                                                + " "
-                                                + StringUtil.getMainsFormatted(
-                                                DatabaseBridge.getMains(
-                                                        DatabaseBridge.getDiscordIdFromConnectCode(
-                                                                seperateCodeFromUsername.get("code"))));
-                                    })
-                                    .collect(Collectors.joining("\n")), true);
-                        } else {
-                            newBuilder.addField("Seeding", participants.stream()
-                                    .filter(participant -> participant.getSeed() <= 9)
-                                    .sorted(Comparator.comparingInt(ChallongeBridge.ParticipantEntry::getSeed))
-                                    .map(participant -> {
-                                        Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
-                                                participant.getDisplayName()
-                                        );
-
-                                        return StringUtil.bold(participant.getSeed()
-                                                + ". ")
-                                                + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
-                                                + " "
-                                                + StringUtil.getMainsFormatted(
-                                                DatabaseBridge.getMains(
-                                                        DatabaseBridge.getDiscordIdFromConnectCode(
-                                                                seperateCodeFromUsername.get("code"))));
-                                    })
-                                    .collect(Collectors.joining("\n")), true);
-                        }
-                    }
-
-                    newBuilder.addField("Infos", 
-                            StringUtil.bold("- Game: ") + tournament.getGameName() + "\n"
-                            + StringUtil.bold("- Type: ") + tournament.getType() + "\n"
-                            + StringUtil.bold("- Attendees: ") + tournament.getParticipantsCount() + "\n"
-                            + StringUtil.bold("- State: ") + StringUtil.removeUnderscores(tournament.getState())
-                            , true);
-
-                    newBuilder.setFooter(StringUtil.formatIsoDateAndTime(tournament.getStartsAt()));
-                    newBuilder.setColor(platform.getColor());
-                } else {
-                    newBuilder.setDescription("Operation failed: Tournament not found!");
-                    newBuilder.setColor(GlobalVar.ERROR);
                 }
-                msg.editMessage(newBuilder.build()).queue();
-            });
-        } else if (platform == Platforms.SMASHGG) {
-            // DIRTY UNTIL THE SMASHGG BRIDGE IS DONE
-            EmbedBuilder newBuilder = new EmbedBuilder();
-            SmashggBridge.TournamentEntry tournament = SmashggBridge.getTournament(slug);
 
-            if (tournament != null) {
-                List<SmashggBridge.EventEntry> events = tournament.getEvents();
-
-                newBuilder.setTitle(tournament.getName(), platform.getUrl() + slug);
-                newBuilder.setAuthor(platform.getName(),
-                        platform.getUrl(),
-                        "https://codeman.rocks/assets/" + platform.name().toLowerCase() + ".png"
-                );
-
-                if (events.size() >= 1) {
-                    events.stream().forEach(eventEntry -> {
-                        List<SmashggBridge.ParticipantEntry> participants = eventEntry.getStandings();
-                        String date = null;
-                        if (events.size() > 1) {
-                            Date startsAt = new Date(eventEntry.getStartAt());
-                            date = "*" + (startsAt.after(new Date()) ? "Starts" : "Started") + " on: " + new SimpleDateFormat("MM/dd/yyyy").format(startsAt) + "*\n\n";
-                        }
-
-                        newBuilder.addField(
-                                eventEntry.getName() + " (" + eventEntry.getState().getHeader() + ")",
-                                (date == null ? "" : date) +
-                                participants.stream()
+                if (participants != null) {
+                    if (tournament.getState().equals("complete")) {
+                        newBuilder.addField("Final Results", participants.stream()
+                                .filter(participant -> participant.getPlacement() <= 5 && participant.getPlacement() != 0)
+                                .sorted(Comparator.comparingInt(ParticipantEntry::getPlacement))
                                 .map(participant -> {
-                                    int number = eventEntry.getState() == SmashggBridge.EventEntry.EventState.CREATED
-                                            ? participant.getSeed() : participant.getPlacement();
-                                    String prefix;
-                                    if (eventEntry.getState() == SmashggBridge.EventEntry.EventState.CREATED) {
-                                        prefix = StringUtil.bold(number + ". ");
-                                    } else {
-                                        prefix = getRankingSuffix(number, eventEntry.getState() == SmashggBridge.EventEntry.EventState.COMPLETED);
-                                    }
-
-                                    return prefix + participant.getName();
+                                    Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
+                                            participant.getName()
+                                    );
+                                    String prefix = getRankingSuffix(participant.getPlacement(), true);
+                                    return prefix
+                                            + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
+                                            + " "
+                                            + StringUtil.getMainsFormatted(
+                                            DatabaseBridge.getMains(
+                                                    DatabaseBridge.getDiscordIdFromConnectCode(
+                                                            seperateCodeFromUsername.get("code"))));
                                 })
-                                .collect(Collectors.joining("\n")) + "\n", true);
-                    });
+                                .collect(Collectors.joining("\n")), true);
+                    } else {
+                        newBuilder.addField("Seeding", participants.stream()
+                                .filter(participant -> participant.getSeed() <= 9)
+                                .sorted(Comparator.comparingInt(ParticipantEntry::getSeed))
+                                .map(participant -> {
+                                    Map<String, String> seperateCodeFromUsername = StringUtil.separateCodeFromUsername(
+                                            participant.getName()
+                                    );
 
-                    if (events.size() == 1)
-                        newBuilder.setTimestamp(new Date(events.get(0).getStartAt()).toInstant());
+                                    return StringUtil.bold(participant.getSeed()
+                                            + ". ")
+                                            + StringUtil.removeHardcodedSeeding(seperateCodeFromUsername.get("username"))
+                                            + " "
+                                            + StringUtil.getMainsFormatted(
+                                            DatabaseBridge.getMains(
+                                                    DatabaseBridge.getDiscordIdFromConnectCode(
+                                                            seperateCodeFromUsername.get("code"))));
+                                })
+                                .collect(Collectors.joining("\n")), true);
+                    }
+                } else if (events != null) {
+                    if (events.size() >= 1) {
+                        events.stream().forEach(eventEntry -> {
+                            List<ParticipantEntry> eventParticipants = eventEntry.getStandings();
+                            String date = null;
+                            if (events.size() > 1) {
+                                Date startsAt = new Date(eventEntry.getStartAt());
+                                date = "*" + (startsAt.after(new Date()) ? "Starts" : "Started") + " on: " + new SimpleDateFormat("MM/dd/yyyy").format(startsAt) + "*\n\n";
+                            }
+
+                            newBuilder.addField(
+                                    eventEntry.getName() + " (" + eventEntry.getState().getHeader() + ")",
+                                    (date == null ? "" : date) +
+                                    eventParticipants.stream()
+                                    .map(participant -> {
+                                        int number = eventEntry.getState() == EventEntry.EventState.CREATED
+                                                ? participant.getSeed() : participant.getPlacement();
+                                        String prefix;
+                                        if (eventEntry.getState() == EventEntry.EventState.CREATED) {
+                                            prefix = StringUtil.bold(number + ". ");
+                                        } else {
+                                            prefix = getRankingSuffix(number, eventEntry.getState() == EventEntry.EventState.COMPLETED);
+                                        }
+
+                                        return prefix + participant.getName();
+                                    })
+                                    .collect(Collectors.joining("\n")) + "\n", true);
+                        });
+
+                        if (events.size() == 1)
+                            newBuilder.setTimestamp(new Date(events.get(0).getStartAt()).toInstant());
+                    }
                 }
-                if (tournament.getImageBanner().isEmpty())
-                    newBuilder.setThumbnail(tournament.getImageProfile().isEmpty() ? null : tournament.getImageProfile());
-                else
-                    newBuilder.setImage(tournament.getImageBanner().isEmpty() ? null : tournament.getImageBanner());
-                
+
+                newBuilder.addField("Infos", 
+                        StringUtil.bold("- Game: ") + tournament.getGameName() + "\n"
+                        + StringUtil.bold("- Type: ") + tournament.getType() + "\n"
+                        + StringUtil.bold("- Attendees: ") + tournament.getParticipantsCount() + "\n"
+                        + StringUtil.bold("- State: ") + StringUtil.removeUnderscores(tournament.getState())
+                        , true);
+
+                newBuilder.setFooter(StringUtil.fromatDate(tournament.getStartAt()));
                 newBuilder.setColor(platform.getColor());
-            } else {
+            } else if (tournament == null) {
                 newBuilder.setDescription("Operation failed: Tournament not found!");
                 newBuilder.setColor(GlobalVar.ERROR);
             }
-
-            e.getChannel().sendMessage(newBuilder.build()).queue();
-        }
+            msg.editMessage(newBuilder.build()).queue();
+        });
     }
 
     public String getRankingSuffix(int ranking, boolean useEmote) {
@@ -207,6 +192,5 @@ public class TournamentInfoCommand extends CodeManCommand {
                 .filter(emote -> ranking == emote.getNumber())
                 .findFirst().orElse(null) : null;
         return (rankEmote == null ? StringUtil.bold(ranking + (ranking == 1 ? "st" : (ranking == 2 ? "nd" : (ranking == 3 ? "rd" : "th")))) : rankEmote.getEmote()) + " ";
-        */
     }
 }
