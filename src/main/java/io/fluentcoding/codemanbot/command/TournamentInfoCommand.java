@@ -80,7 +80,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
             EmbedBuilder newBuilder = new EmbedBuilder();
 
-            if (tournament != null) {
+            if (tournament.equals(null)) {
                 newBuilder.setAuthor(platform.getName(),
                                         platform.getUrl(),
                                         "https://codeman.rocks/assets/" + platform.name().toLowerCase() + ".png"
@@ -179,7 +179,7 @@ public class TournamentInfoCommand extends CodeManCommand {
 
                 newBuilder.setFooter(StringUtil.fromatDate(tournament.getStartAt()));
                 newBuilder.setColor(platform.getColor());
-            } else if (tournament == null) {
+            } else {
                 newBuilder.setDescription("Operation failed: Tournament not found!");
                 newBuilder.setColor(GlobalVar.ERROR);
             }
