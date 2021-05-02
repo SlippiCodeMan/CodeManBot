@@ -4,7 +4,7 @@
 ![Codacy grade](https://img.shields.io/codacy/grade/7841a115752a446db5cff42a5243081b)
 ![GitHub issues](https://img.shields.io/github/issues/SlippiCodeMan/CodeManBot)
 
-# CodeMan
+# CodeMan discord bot
 
 [CodeMan](https://slippicodeman.github.io/CodeManWebsite/) is a Discord bot to manage Slippi connect codes for SSBM. 
 
