@@ -2,7 +2,7 @@ name: Build and Deploy Development Build
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ feature/lobby ]
 
 jobs:
   deploy:
@@ -18,6 +18,6 @@ jobs:
           port: 22
           script: |
             cd CodeManDev
-            git checkout dev
+            git checkout feature/lobby
             git pull
             ./deploy.sh

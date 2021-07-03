@@ -22,7 +22,7 @@ public class DeprecatedCodeManCommand extends CodeManCommand {
     public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(GlobalVar.ERROR);
-        builder.setDescription("This command is deprecated! Consider using " + StringUtil.bold(Application.EXEC_MODE.getCommandPrefix()) + newCommand + " instead!");
+        builder.setDescription("This command is deprecated! Consider using " + StringUtil.bold(Application.EXEC_MODE.getCommandPrefix() + newCommand) + " instead!");
 
         e.getChannel().sendMessage(builder.build()).queue();
     }

@@ -62,12 +62,16 @@ public class DatabaseBridge {
 
     @Nullable
     public static List<SSBMCharacter> getMains(long discordId) {
+        if (discordId == -1)
+            return null;
+
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             for (Document result : codeManCollection.find(new BasicDBObject("discord_id", discordId))) {
                 if (result.containsKey("mains")) {
                     return result.getList("mains", Integer.class).stream()
+                            .filter(main -> main < SSBMCharacter.values().length)
                             .map(main -> SSBMCharacter.values()[main]).collect(Collectors.toList());
                 } else {
                     return null;

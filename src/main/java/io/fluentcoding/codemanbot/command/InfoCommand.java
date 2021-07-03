@@ -7,7 +7,6 @@ import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.container.PagingContainer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.util.HashMap;
@@ -35,7 +34,7 @@ public class InfoCommand extends CodeManCommand {
             String retrievedCode = DatabaseBridge.getCode(e.getAuthor().getIdLong());
 
             if (retrievedCode == null) {
-                builder = EmbedUtil.ALREADYCONNECTED.getEmbed();
+                builder = EmbedUtil.NOTCONNECTED.getEmbed();
             } else {
                 output(e.getAuthor().getIdLong(), retrievedCode, e, true);
                 return;
