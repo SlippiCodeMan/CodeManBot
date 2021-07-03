@@ -2,6 +2,10 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        maven {
+            name 'm2-dv8tion'
+            url 'https://m2.dv8tion.net/releases'
+        }
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
@@ -24,7 +28,7 @@ dependencies {
     compile 'com.github.vladimir-bukhtoyarov:bucket4j-core:6.0.0'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
-    implementation ('net.dv8tion:JDA:4.2.0_223') {
+    implementation ('net.dv8tion:JDA:4.3.0_277') {
         exclude module: 'opus-java'
     }
     implementation 'org.mongodb:mongo-java-driver:3.12.5'
@@ -35,6 +39,10 @@ dependencies {
 
 repositories {
     jcenter()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 ext {
