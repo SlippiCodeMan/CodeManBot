@@ -47,16 +47,29 @@ public class ConnectCommand extends CodeManCommand {
                     newBuilder.setColor(GlobalVar.ERROR);
                     newBuilder.setDescription("This connect code doesn't exist!");
                 } else {
-                    DatabaseBridge.InsertCodeResult result = DatabaseBridge.insertCode(e.getAuthor().getIdLong(), code);
+                    boolean codeAlreadyTaken = DatabaseBridge.codeAlreadyTaken(code);
+                    // DatabaseBridge.InsertCodeResult result = DatabaseBridge.insertCode(e.getAuthor().getIdLong(), code);
 
-                    if (result.isAccepted()) {
+                    if (!codeAlreadyTaken) {
+                        e.getAuthor().openPrivateChannel().queue(privateChannel -> {
+                            EmbedBuilder verificationBuilder = new EmbedBuilder();
+                            verificationBuilder.setDescription("Please verify that your code is **" + code + "** by connecting to AUTH#999!");
+                            verificationBuilder.setFooter("You have 5 minutes left!");
+                            verificationBuilder.setColor(GlobalVar.WAITING);
+
+                            privateChannel.sendMessage(verificationBuilder.build()).queue();
+                        });
+
                         newBuilder.setColor(GlobalVar.SUCCESS);
+                        newBuilder.setDescription("We've sent you instructions for connecting your discord account with your slippi account in the direct messages!");
+
+                        /*newBuilder.setColor(GlobalVar.SUCCESS);
                         newBuilder.setDescription("Operation done!");
                         if (result.getOldCode() != null) {
                             newBuilder.addField("Old Code", result.getOldCode(), true);
                         }
                         newBuilder.addField("New Code", code, true);
-                        ActivityUpdater.update(e.getJDA());
+                        ActivityUpdater.update(e.getJDA());*/
                     } else {
                         newBuilder.setColor(GlobalVar.ERROR);
                         newBuilder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
