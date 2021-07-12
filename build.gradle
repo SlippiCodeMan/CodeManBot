@@ -25,6 +25,7 @@ group 'io.fluentcoding'
 version '1.0'
 
 dependencies {
+    compile 'org.glassfish.tyrus:tyrus-container-grizzly-client:1.8.3'
     compile 'javax.websocket:javax.websocket-api:1.1'
     compile 'com.github.vladimir-bukhtoyarov:bucket4j-core:6.0.0'
     compileOnly 'org.projectlombok:lombok:1.18.12'
