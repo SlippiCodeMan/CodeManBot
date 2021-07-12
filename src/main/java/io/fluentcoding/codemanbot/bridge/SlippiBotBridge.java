@@ -144,6 +144,11 @@ class WebsocketClientEndpoint {
         }
     }
 
+    @OnError
+    public void onError(Throwable t) {
+        t.printStackTrace();
+    }
+
     /**
      * register message handler
      *
