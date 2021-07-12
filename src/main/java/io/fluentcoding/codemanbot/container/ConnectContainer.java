@@ -24,8 +24,9 @@ public enum ConnectContainer {
     public PrivateChannel getPrivateChannel(ConnectInformationKey information) {
         return connectInformation.get(information);
     }
-    public boolean isConnecting(ConnectInformationKey information) {
-        return connectInformation.containsKey(information);
+
+    public boolean isConnecting(long userId) {
+        return connectInformation.entrySet().stream().anyMatch(entry -> entry.getKey().getUserId() == userId);
     }
 
     @AllArgsConstructor

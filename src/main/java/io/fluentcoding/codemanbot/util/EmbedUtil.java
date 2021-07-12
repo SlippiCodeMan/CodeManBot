@@ -9,8 +9,8 @@ public enum EmbedUtil {
             + StringUtil.bold(Application.EXEC_MODE.getCommandPrefix()
             + "connect") +
             "!", false),
-    ALREADYCONNECTED("You are already connected to this code !", false),
-    ISCONNECTING("You are already connecting to this code", false);
+    ALREADYCONNECTED("You are already connected to this code!", false),
+    ISCONNECTING("You are already verifying a code!", false);
 
     @Getter private EmbedBuilder embed = new EmbedBuilder();
 

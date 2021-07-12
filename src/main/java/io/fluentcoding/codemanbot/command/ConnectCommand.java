@@ -36,9 +36,10 @@ public class ConnectCommand extends CodeManCommand {
             }
 
             final ConnectContainer.ConnectInformationKey information = new ConnectContainer.ConnectInformationKey(code, e.getAuthor().getIdLong());
-            if (ConnectContainer.INSTANCE.isConnecting(information)) {
+            if (ConnectContainer.INSTANCE.isConnecting(e.getAuthor().getIdLong())) {
                 builder = EmbedUtil.ISCONNECTING.getEmbed();
                 e.getChannel().sendMessage(builder.build()).queue();
+                return;
             }
 
             ConnectContainer.INSTANCE.addConnectInformation(information);

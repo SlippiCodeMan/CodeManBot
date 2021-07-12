@@ -58,7 +58,7 @@ public class SlippiBotBridge {
                     ConnectContainer.INSTANCE.removeConnectInformation(information);
                     break;
                 case "searching":
-                    builder.setDescription("Please verify that your code is " + StringUtil.bold(result.getString("botCode")) + " by connecting to **AUTH#999** with your slippi account!");
+                    builder.setDescription("Please verify that your code is " + StringUtil.bold(information.getCode()) + " by connecting to " + StringUtil.bold(result.getString("botCode")) + " with your slippi account!");
                     builder.setFooter("You have 5 minutes left!");
                     builder.setColor(GlobalVar.WAITING);
                     break;
