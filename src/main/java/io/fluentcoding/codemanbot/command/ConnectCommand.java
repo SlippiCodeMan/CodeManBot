@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -61,10 +62,13 @@ public class ConnectCommand extends CodeManCommand {
                     boolean codeAlreadyTaken = DatabaseBridge.codeAlreadyTaken(code);
 
                     if (!codeAlreadyTaken) {
+                        newBuilder.setDescription("We've sent you the instructions via DM on how to connect your account!");
+                        newBuilder.setColor(GlobalVar.SUCCESS);
+
                         e.getAuthor().openPrivateChannel().queue(privateChannel -> {
                             try {
                                 SlippiBotBridge.sendQueue(information);
-                            } catch (JSONException jsonException) {
+                            } catch (JSONException | IOException jsonException) {
                                 jsonException.printStackTrace();
                             }
                         });

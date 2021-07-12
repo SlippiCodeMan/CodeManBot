@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.websocket.*;
+import java.io.IOException;
 import java.net.URI;
 
 public class SlippiBotBridge {
@@ -82,7 +83,7 @@ public class SlippiBotBridge {
         });
     }
 
-    public static void sendQueue(ConnectContainer.ConnectInformationKey information) throws JSONException {
+    public static void sendQueue(ConnectContainer.ConnectInformationKey information) throws JSONException, IOException {
         JSONObject payload = new JSONObject();
         payload.append("type", "queue");
         payload.append("discordId", information.getUserId());
@@ -163,8 +164,8 @@ class WebsocketClientEndpoint {
      *
      * @param message
      */
-    public void sendMessage(String message) {
-        this.userSession.getAsyncRemote().sendText(message);
+    public void sendMessage(String message) throws IOException {
+        this.userSession.getBasicRemote().sendText(message);
     }
 
     /**
