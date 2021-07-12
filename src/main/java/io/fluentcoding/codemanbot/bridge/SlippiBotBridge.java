@@ -97,8 +97,7 @@ public class SlippiBotBridge {
 
 @ClientEndpoint
 class WebsocketClientEndpoint {
-
-    Session userSession = null;
+    private Session userSession = null;
     private MessageHandler messageHandler;
 
     public WebsocketClientEndpoint(URI endpointURI) {
@@ -124,11 +123,10 @@ class WebsocketClientEndpoint {
     /**
      * Callback hook for Connection close events.
      *
-     * @param userSession the userSession which is getting closed.
      * @param reason the reason for connection close
      */
     @OnClose
-    public void onClose(Session userSession, CloseReason reason) {
+    public void onClose(CloseReason reason) {
         System.out.println("closing websocket");
         this.userSession = null;
     }
