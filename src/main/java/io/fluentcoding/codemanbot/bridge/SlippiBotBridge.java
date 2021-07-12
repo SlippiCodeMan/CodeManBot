@@ -5,21 +5,20 @@ import io.fluentcoding.codemanbot.container.ConnectContainer;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.StringUtil;
+import io.fluentcoding.codemanbot.util.websocket.WebSocketClientEndpoint;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.websocket.*;
 import java.io.IOException;
-import java.net.URI;
 
 public class SlippiBotBridge {
-    private static WebsocketClientEndpoint clientEndPoint = null;
+    private static WebSocketClientEndpoint clientEndPoint = null;
 
     static {
         try {
-            clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:9002"));
+            clientEndPoint = new WebSocketClientEndpoint("ws://localhost:9002");
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
@@ -93,86 +92,4 @@ public class SlippiBotBridge {
         clientEndPoint.sendMessage(payload.toString());
     }
 
-}
-
-@ClientEndpoint
-class WebsocketClientEndpoint {
-    private Session userSession = null;
-    private MessageHandler messageHandler;
-
-    public WebsocketClientEndpoint(URI endpointURI) {
-        try {
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, endpointURI);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Callback hook for Connection open events.
-     *
-     * @param userSession the userSession which is opened.
-     */
-    @OnOpen
-    public void onOpen(Session userSession) {
-        System.out.println("opening websocket");
-        this.userSession = userSession;
-    }
-
-    /**
-     * Callback hook for Connection close events.
-     *
-     * @param reason the reason for connection close
-     */
-    @OnClose
-    public void onClose(CloseReason reason) {
-        System.out.println("closing websocket");
-        this.userSession = null;
-    }
-
-    /**
-     * Callback hook for Message Events. This method will be invoked when a client send a message.
-     *
-     * @param message The text message
-     */
-    @OnMessage
-    public void onMessage(String message) throws JSONException, InterruptedException {
-        if (this.messageHandler != null) {
-            this.messageHandler.handleMessage(message);
-        }
-    }
-
-    @OnError
-    public void onError(Throwable t) {
-        t.printStackTrace();
-    }
-
-    /**
-     * register message handler
-     *
-     * @param msgHandler
-     */
-    public void addMessageHandler(MessageHandler msgHandler) {
-        this.messageHandler = msgHandler;
-    }
-
-    /**
-     * Send a message.
-     *
-     * @param message
-     */
-    public void sendMessage(String message) throws IOException {
-        this.userSession.getBasicRemote().sendText(message);
-    }
-
-    /**
-     * Message handler.
-     *
-     * @author Jiji_Sasidharan
-     */
-    public static interface MessageHandler {
-
-        public void handleMessage(String message) throws JSONException, InterruptedException;
-    }
 }
