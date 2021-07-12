@@ -25,6 +25,7 @@ group 'io.fluentcoding'
 version '1.0'
 
 dependencies {
+    compile 'javax.websocket:javax.websocket-api:1.1'
     compile 'com.github.vladimir-bukhtoyarov:bucket4j-core:6.0.0'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import javax.security.auth.login.LoginException;
 
+import io.fluentcoding.codemanbot.bridge.SlippiBotBridge;
 import io.fluentcoding.codemanbot.command.*;
 import io.fluentcoding.codemanbot.util.ActivityUpdater;
 import io.fluentcoding.codemanbot.util.CodeManArgumentSet;
@@ -12,6 +13,7 @@ import io.fluentcoding.codemanbot.util.ExecutionMode;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.codemancommand.DeprecatedCodeManCommand;
 import io.fluentcoding.codemanbot.util.hook.ListenerHook;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
@@ -20,8 +22,11 @@ public class Application {
         Arrays.stream(ExecutionMode.values())
                 .filter(mode -> GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals(mode.getDotEnvNotation()))
                 .findFirst().orElse(null);
+    public static JDA JDA;
 
     public static void main(final String[] args) throws LoginException {
+        SlippiBotBridge.initHandler();
+
         final JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
 
         builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.EMOTE);
@@ -55,6 +60,6 @@ public class Application {
                 new ListenerHook()
         );
 
-        builder.build();
+        JDA = builder.build();
     }
 }
