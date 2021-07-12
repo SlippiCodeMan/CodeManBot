@@ -84,10 +84,10 @@ public class SlippiBotBridge {
 
     public static void sendQueue(ConnectContainer.ConnectInformationKey information) throws JSONException, IOException {
         JSONObject payload = new JSONObject();
-        payload.append("type", "queue");
-        payload.append("discordId", information.getUserId());
-        payload.append("userCode", information.getCode());
-        payload.append("timeout", 300_000); // 5 minutes
+        payload.put("type", "queue");
+        payload.put("discordId", information.getUserId());
+        payload.put("userCode", information.getCode());
+        payload.put("timeout", 300_000); // 5 minutes
 
         clientEndPoint.sendMessage(payload.toString());
     }
