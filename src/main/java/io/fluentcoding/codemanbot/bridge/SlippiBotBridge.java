@@ -28,6 +28,7 @@ public class SlippiBotBridge {
     public static void initHandler() {
         // add listener
         clientEndPoint.addMessageHandler(message -> {
+            System.out.println(message);
             JSONObject result = new JSONObject(message);
             String type = result.getString("type");
 
