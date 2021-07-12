@@ -25,8 +25,6 @@ public class Application {
     public static JDA JDA;
 
     public static void main(final String[] args) throws LoginException {
-        SlippiBotBridge.initHandler();
-
         final JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
 
         builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.EMOTE);
@@ -61,5 +59,6 @@ public class Application {
         );
 
         JDA = builder.build();
+        SlippiBotBridge.initHandler();
     }
 }

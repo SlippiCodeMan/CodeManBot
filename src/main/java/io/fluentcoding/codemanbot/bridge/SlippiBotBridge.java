@@ -18,7 +18,7 @@ public class SlippiBotBridge {
 
     static {
         try {
-            clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:9002"));
+            clientEndPoint = new WebsocketClientEndpoint(new URI("wss://localhost:9002"));
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
