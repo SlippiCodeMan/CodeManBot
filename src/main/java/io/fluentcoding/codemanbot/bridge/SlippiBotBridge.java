@@ -25,6 +25,10 @@ public class SlippiBotBridge {
         }
     }
 
+    public static boolean isConnected() {
+        return clientEndPoint.userSession != null;
+    }
+
     public static void initHandler() {
         // add listener
         clientEndPoint.addMessageHandler(message -> {

@@ -9,7 +9,7 @@ import java.net.URI;
 @ClientEndpoint
 public
 class WebSocketClientEndpoint {
-    private Session userSession = null;
+    public Session userSession = null;
     private MessageHandler messageHandler;
 
     public WebSocketClientEndpoint(String endpoint) {

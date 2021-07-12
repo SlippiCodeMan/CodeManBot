@@ -6,6 +6,7 @@ import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.container.ConnectContainer;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
+import io.fluentcoding.codemanbot.util.websocket.WebSocketClientEndpoint;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONException;
@@ -63,18 +64,23 @@ public class ConnectCommand extends CodeManCommand {
                     boolean codeAlreadyTaken = DatabaseBridge.codeAlreadyTaken(code);
 
                     if (!codeAlreadyTaken) {
-                        newBuilder.setDescription("We've sent you the instructions via DM on how to connect your account!");
-                        newBuilder.setColor(GlobalVar.SUCCESS);
+                        if (SlippiBotBridge.isConnected()) {
+                            newBuilder.setDescription("We've sent you the instructions via DM on how to connect your account!");
+                            newBuilder.setColor(GlobalVar.SUCCESS);
 
-                        e.getAuthor().openPrivateChannel().queue(privateChannel -> {
-                            ConnectContainer.INSTANCE.setPrivateChannel(information, privateChannel);
-                            try {
-                                SlippiBotBridge.sendQueue(information);
-                            } catch (JSONException | IOException jsonException) {
-                                jsonException.printStackTrace();
-                                ConnectContainer.INSTANCE.removeConnectInformation(information);
-                            }
-                        });
+                            e.getAuthor().openPrivateChannel().queue(privateChannel -> {
+                                ConnectContainer.INSTANCE.setPrivateChannel(information, privateChannel);
+                                try {
+                                    SlippiBotBridge.sendQueue(information);
+                                } catch (JSONException | IOException jsonException) {
+                                    jsonException.printStackTrace();
+                                    ConnectContainer.INSTANCE.removeConnectInformation(information);
+                                }
+                            });
+                        } else {
+                            newBuilder.setDescription("We weren't able to connect to our bot service!");
+                            newBuilder.setColor(GlobalVar.ERROR);
+                        }
                     } else {
                         newBuilder.setColor(GlobalVar.ERROR);
                         newBuilder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
