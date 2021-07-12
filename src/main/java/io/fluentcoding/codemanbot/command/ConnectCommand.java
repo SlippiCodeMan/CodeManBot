@@ -66,10 +66,12 @@ public class ConnectCommand extends CodeManCommand {
                         newBuilder.setColor(GlobalVar.SUCCESS);
 
                         e.getAuthor().openPrivateChannel().queue(privateChannel -> {
+                            ConnectContainer.INSTANCE.setPrivateChannel(information, privateChannel);
                             try {
                                 SlippiBotBridge.sendQueue(information);
                             } catch (JSONException | IOException jsonException) {
                                 jsonException.printStackTrace();
+                                ConnectContainer.INSTANCE.removeConnectInformation(information);
                             }
                         });
                     } else {
