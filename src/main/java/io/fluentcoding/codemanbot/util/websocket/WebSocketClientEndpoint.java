@@ -10,9 +10,17 @@ import java.net.URI;
 public
 class WebSocketClientEndpoint {
     public Session userSession = null;
+    private String endpoint;
     private MessageHandler messageHandler;
+    private CloseHandler closeHandler;
 
     public WebSocketClientEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+
+        connect();
+    }
+
+    public void connect() {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, URI.create(endpoint));
@@ -41,6 +49,10 @@ class WebSocketClientEndpoint {
     public void onClose(CloseReason reason) {
         System.out.println("closing websocket");
         this.userSession = null;
+
+        if (this.closeHandler != null) {
+            this.closeHandler.handleClose();
+        }
     }
 
     /**
@@ -58,6 +70,15 @@ class WebSocketClientEndpoint {
     @OnError
     public void onError(Throwable t) {
         t.printStackTrace();
+    }
+
+    /**
+     * register close handler
+     *
+     * @param closeHandler
+     */
+    public void addCloseHandler(CloseHandler closeHandler) {
+        this.closeHandler = closeHandler;
     }
 
     /**
@@ -80,11 +101,15 @@ class WebSocketClientEndpoint {
 
     /**
      * Message handler.
-     *
-     * @author Jiji_Sasidharan
+     */
+    public static interface CloseHandler {
+        public void handleClose();
+    }
+
+    /**
+     * Message handler.
      */
     public static interface MessageHandler {
-
         public void handleMessage(String message) throws JSONException, InterruptedException;
     }
 }

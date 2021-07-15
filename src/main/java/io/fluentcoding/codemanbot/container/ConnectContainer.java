@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.PrivateChannel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public enum ConnectContainer {
     INSTANCE;
@@ -27,6 +28,14 @@ public enum ConnectContainer {
 
     public boolean isConnecting(long userId) {
         return connectInformation.entrySet().stream().anyMatch(entry -> entry.getKey().getUserId() == userId);
+    }
+
+    public void clearConnectInformation() {
+        connectInformation.clear();
+    }
+
+    public Set<Map.Entry<ConnectInformationKey, PrivateChannel>> getConnectInformationEntries() {
+        return connectInformation.entrySet();
     }
 
     @AllArgsConstructor

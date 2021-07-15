@@ -25,12 +25,27 @@ public class SlippiBotBridge {
         }
     }
 
+    public static void reconnect() {
+        clientEndPoint.connect();
+    }
+
     public static boolean isConnected() {
         return clientEndPoint.userSession != null;
     }
 
     public static void initHandler() {
-        // add listener
+        // add listeners
+        clientEndPoint.addCloseHandler(() -> {
+            for (var entry : ConnectContainer.INSTANCE.getConnectInformationEntries()) {
+                EmbedBuilder builder = new EmbedBuilder();
+
+                builder.setDescription("We lost the connection to our bot service! Please try again later.");
+                builder.setColor(GlobalVar.ERROR);
+                entry.getValue().sendMessage(builder.build()).queue();
+            }
+            ConnectContainer.INSTANCE.clearConnectInformation();
+        });
+
         clientEndPoint.addMessageHandler(message -> {
             System.out.println(message);
             JSONObject result = new JSONObject(message);

@@ -2,6 +2,7 @@ package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
+import io.fluentcoding.codemanbot.bridge.SlippiBotBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
@@ -38,6 +39,7 @@ public class StatsCommand extends DevCodeManCommand {
             new StatsEntry("Discord API Response time", e.getJDA().getGatewayPing() + "ms"),
             new StatsEntry("Slippi API Response time", () -> SlippiBridge.ping() + "ms"),
             new StatsEntry("Challonge API Response time", () -> ChallongeBridge.ping() + "ms"),
+            new StatsEntry("Slippi Bot WebSocket", SlippiBotBridge.isConnected() ? "Connected" : "Disconnected"),
             new StatsEntry("Servers", e.getJDA().getGuilds().size()),
             new StatsEntry("Connected users", DatabaseBridge.countDatabase()),
             new StatsEntry("Users with mains", DatabaseBridge.usersWithMains()),
