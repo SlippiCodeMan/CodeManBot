@@ -19,5 +19,6 @@ jobs:
           script: |
             cd CodeManDev
             git checkout dev
-            git pull
+            git fetch
+            git reset --hard origin/dev
             ./deploy.sh

@@ -37,12 +37,16 @@ public abstract class CodeManCommand {
         if (argumentSet != null) {
             if (argumentSet.getNecessaryArguments().length > 0) {
                 result += " " +
-                        Arrays.stream(argumentSet.getNecessaryArguments()).collect(Collectors.joining(" ", "<", ">"));
+                        Arrays.stream(argumentSet.getNecessaryArguments())
+                                .map(necessaryArgument -> "<" + necessaryArgument + ">")
+                                .collect(Collectors.joining(" "));
             }
 
             if (argumentSet.getOptionalArguments().length > 0) {
                 result += " " +
-                        Arrays.stream(argumentSet.getOptionalArguments()).collect(Collectors.joining(" ", "[", "]"));
+                        Arrays.stream(argumentSet.getNecessaryArguments())
+                                .map(necessaryArgument -> "[" + necessaryArgument + "]")
+                                .collect(Collectors.joining(" "));
             }
         }
 

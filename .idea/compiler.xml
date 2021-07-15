@@ -17,6 +17,6 @@
         </processorPath>
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="13" />
+    <bytecodeTargetLevel target="15" />
   </component>
 </project>

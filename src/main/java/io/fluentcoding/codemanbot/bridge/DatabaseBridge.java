@@ -82,6 +82,13 @@ public class DatabaseBridge {
         }
     }
 
+    public static boolean codeAlreadyTaken(String code) {
+        try (MongoClient client = MongoClients.create(mongoUri)) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+            return codeManCollection.countDocuments(new BasicDBObject("slippi_code", code)) > 0;
+        }
+    }
+
     public static InsertCodeResult insertCode(long discordId, String code) {
         try (MongoClient client = MongoClients.create(mongoUri)) {
             MongoCollection<Document> codeManCollection = getCollection(client);
