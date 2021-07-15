@@ -60,6 +60,7 @@ public class ConnectCommand extends CodeManCommand {
                 if (!userWithCodeExists) {
                     newBuilder.setColor(GlobalVar.ERROR);
                     newBuilder.setDescription("This connect code doesn't exist!");
+                    ConnectContainer.INSTANCE.removeConnectInformation(information);
                 } else {
                     boolean codeAlreadyTaken = DatabaseBridge.codeAlreadyTaken(code);
 
