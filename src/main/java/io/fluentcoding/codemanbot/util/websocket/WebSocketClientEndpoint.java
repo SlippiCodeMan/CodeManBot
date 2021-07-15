@@ -24,9 +24,7 @@ class WebSocketClientEndpoint {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, URI.create(endpoint));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        } catch (Exception e) {}
     }
 
     /**
