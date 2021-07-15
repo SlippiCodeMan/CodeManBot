@@ -49,6 +49,7 @@ public class ConnectCommand extends CodeManCommand {
             builder.setColor(GlobalVar.LOADING);
             Future<Boolean> userWithCodeExistsFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.userWithCodeExists(code));
             e.getChannel().sendMessage(builder.build()).queue(msg -> {
+                ConnectContainer.INSTANCE.removeConnectInformation(information);
                 boolean userWithCodeExists;
                 try {
                     userWithCodeExists = userWithCodeExistsFuture.get();
@@ -81,10 +82,12 @@ public class ConnectCommand extends CodeManCommand {
                         } else {
                             newBuilder.setDescription("We weren't able to connect to our bot service!");
                             newBuilder.setColor(GlobalVar.ERROR);
+                            ConnectContainer.INSTANCE.removeConnectInformation(information);
                         }
                     } else {
                         newBuilder.setColor(GlobalVar.ERROR);
                         newBuilder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
+                        ConnectContainer.INSTANCE.removeConnectInformation(information);
                     }
                 }
 
