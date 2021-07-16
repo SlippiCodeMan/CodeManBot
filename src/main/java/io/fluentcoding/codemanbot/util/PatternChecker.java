@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PatternChecker {
-    private static final Pattern connectCodePattern = Pattern.compile("^([A-Za-z])+#[0-9]{1,3}$"),
+    private static final Pattern connectCodePattern = Pattern.compile("^([A-Za-z0-9])+#[0-9]{1,6}$"),
         challongeUrlPrefixPattern = Pattern.compile("^(https://|http://)?(www.|.+\\.)?challonge.com"),
         subdomainPrefixPattern = Pattern.compile("^[^.]*(?=\\.\\w+\\..+$)");
 
