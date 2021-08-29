@@ -49,6 +49,7 @@ public class Application {
                 new DeprecatedCodeManCommand("info","name", "n"),
 
                 // ADMIN COMMANDS
+                new ServerNamesCommand("servernames"),
                 new StatsCommand("stats"),
                 new ReconnectCommand("reconnect")
         );
