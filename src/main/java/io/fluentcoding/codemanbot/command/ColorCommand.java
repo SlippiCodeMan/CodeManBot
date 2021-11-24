@@ -50,8 +50,8 @@ public class ColorCommand extends CodeManCommand {
             if (PatternChecker.isHexColorPattern(colorInput)) {
                 resultColor = Integer.parseInt(colorInput.substring(1), 16);
             } else {
-                // doing it later
-                resultColor = GlobalVar.SUCCESS.getRGB();
+                String name = colorInput.replaceAll("\\s+","").toLowerCase();
+                resultColor = ColorUtil.getColorFromName(name);
             }
 
             if (resultColor != -1) {
@@ -67,7 +67,8 @@ public class ColorCommand extends CodeManCommand {
                 }
             } else {
                 builder.setColor(GlobalVar.ERROR);
-                builder.setDescription("Operation failed! Please write a valid color!");
+                builder.setDescription("Operation failed! Please write a valid color (either a known color name or a hex color that starts with a #)!");
+                builder.setFooter("Example: " + Application.EXEC_MODE.getCommandPrefix() + "color #ffffff");
             }
         }
         e.getChannel().sendMessage(builder.build()).queue();
