@@ -81,7 +81,7 @@ public class InfoCommand extends CodeManCommand {
                     if (!mains.isEmpty()) {
                         newBuilder.addField(StringUtil.getPersonPrefixedString(false, "mains"), mains, true);
                     }
-                    newBuilder.setColor(GlobalVar.SUCCESS);
+                    newBuilder.setColor(DatabaseBridge.getColor(discordID));
                 }
 
                 msg.editMessage(newBuilder.build()).queue();
@@ -118,7 +118,7 @@ public class InfoCommand extends CodeManCommand {
                                 newBuilder.addField(StringUtil.getPersonPrefixedString(false, "mains"), mains, true);
                             }
                         }
-                        newBuilder.setColor(GlobalVar.SUCCESS);
+                        newBuilder.setColor(DatabaseBridge.getColor(discordID));
                     } else {
                         Map<String, String> codesWithMains = new HashMap<>();
                         for (SlippiBridge.UserEntry entry : codes) {
@@ -223,7 +223,7 @@ public class InfoCommand extends CodeManCommand {
                 newBuilder.addField(StringUtil.getPersonPrefixedString(you, "mains"), mains, true);
             }
 
-            newBuilder.setColor(GlobalVar.SUCCESS);
+            newBuilder.setColor(DatabaseBridge.getColor(discordId));
             msg.editMessage(newBuilder.build()).queue();
         });
     }
