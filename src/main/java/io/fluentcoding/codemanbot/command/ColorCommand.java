@@ -34,7 +34,7 @@ public class ColorCommand extends CodeManCommand {
             return;
         }
 
-        String colorInput = args.get("char");
+        String colorInput = args.get("color");
         EmbedBuilder builder = new EmbedBuilder();
 
         if (colorInput == null) {
