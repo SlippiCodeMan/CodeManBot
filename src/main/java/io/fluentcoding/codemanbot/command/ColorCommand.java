@@ -40,8 +40,14 @@ public class ColorCommand extends CodeManCommand {
         if (colorInput == null) {
             int color = DatabaseBridge.getColor(e.getAuthor().getIdLong());
 
+            String suffix = "";
+            String colorName = ColorUtil.getNameFromColor(color);
+            if (colorName != null) {
+                suffix = StringUtil.bold(" (" + colorName + ")");
+            }
+
             builder.setColor(color);
-            builder.addField(StringUtil.getPersonPrefixedString(true, "color"), "#" + Integer.toHexString(color).toUpperCase(), false);
+            builder.addField(StringUtil.getPersonPrefixedString(true, "color"), "#" + Integer.toHexString(color).toUpperCase() + suffix, false);
         }
         else {
             // boolean allLetters = colorInput.chars().allMatch(Character::isLetter);
@@ -58,8 +64,15 @@ public class ColorCommand extends CodeManCommand {
                 boolean result = DatabaseBridge.insertColor(e.getAuthor().getIdLong(), resultColor);
 
                 if (result) {
+                    String suffix = "";
+                    String colorName = ColorUtil.getNameFromColor(resultColor);
+                    if (colorName != null) {
+                        suffix = StringUtil.bold(" (" + colorName + ")");
+                    }
+
                     builder.setColor(resultColor);
                     builder.setDescription("Operation done!");
+                    builder.addField("New color", "#" + Integer.toHexString(resultColor).toUpperCase() + suffix, false);
                     builder.setFooter("Try out " + Application.EXEC_MODE.getCommandPrefix() + "info to see your new color!");
                 } else {
                     builder.setColor(GlobalVar.ERROR);

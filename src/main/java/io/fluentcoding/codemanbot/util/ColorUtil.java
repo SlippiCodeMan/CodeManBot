@@ -30,6 +30,9 @@ public class ColorUtil {
 
             colorMap.put(key, color);
         }
+
+        // Defaults
+        colorMap.put("default", GlobalVar.SUCCESS.getRGB());
     }
 
     public static int getColorFromName(String name) {
@@ -39,5 +42,13 @@ public class ColorUtil {
             return result;
         else
             return -1;
+    }
+
+    public static String getNameFromColor(int color) {
+        return colorMap.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue() == color)
+                .map(Map.Entry::getKey)
+                .findFirst().orElse(null);
     }
 }
