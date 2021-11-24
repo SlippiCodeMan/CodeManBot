@@ -44,8 +44,8 @@ public abstract class CodeManCommand {
 
             if (argumentSet.getOptionalArguments().length > 0) {
                 result += " " +
-                        Arrays.stream(argumentSet.getNecessaryArguments())
-                                .map(necessaryArgument -> "[" + necessaryArgument + "]")
+                        Arrays.stream(argumentSet.getOptionalArguments())
+                                .map(optionalArgument -> "[" + optionalArgument + "]")
                                 .collect(Collectors.joining(" "));
             }
         }
