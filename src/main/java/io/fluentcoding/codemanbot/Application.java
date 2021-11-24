@@ -34,13 +34,15 @@ public class Application {
         final CommandHandler handler = new CommandHandler(
                 // USER COMMANDS
                 new ConnectCommand(new CodeManArgumentSet().setNecessaryArguments("code"),
-                        "Connects your slippi account by using your connect code ", "connect"),
+                        "Connects your slippi account by using your connect code", "connect"),
                 new InfoCommand(new CodeManArgumentSet().setOptionalArguments("user").setLastArgumentVarArg(),
                         "Shows the info based off a slippi username/code or discord tag", "info", "i"),
                 new WhoisCommand(new CodeManArgumentSet().setNecessaryArguments("user").setLastArgumentVarArg(),
                         "Shows the discord username based of a slippi username/code", "whois", "wi"),
                 new MainCommand(new CodeManArgumentSet().setOptionalArguments("char").setLastArgumentVarArg(),
                         "Toggle a character main", "main", "mains", "m"),
+                new ColorCommand(new CodeManArgumentSet().setOptionalArguments("color").setLastArgumentVarArg(),
+                        "Sets the color of your info message", "color"),
                 new AskCommand("Creates a netplay request", "ask", "a"),
                 new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect"),
 

@@ -13,6 +13,7 @@ import lombok.Data;
 import org.bson.Document;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class DatabaseBridge {
     private final static String mongoUri = GlobalVar.dotenv.get("CODEMAN_DB_URI");
 
     public static ToggleMainResult toggleMain(long discordId, SSBMCharacter main) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
+        try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             ToggleMainResult result;
@@ -53,7 +54,7 @@ public class DatabaseBridge {
     }
 
     public static long usersWithMains() {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
+        try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             return codeManCollection.countDocuments(Filters.exists("mains"));
@@ -65,7 +66,7 @@ public class DatabaseBridge {
         if (discordId == -1)
             return null;
 
-        try (MongoClient client = MongoClients.create(mongoUri)) {
+        try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             for (Document result : codeManCollection.find(new BasicDBObject("discord_id", discordId))) {
@@ -82,15 +83,46 @@ public class DatabaseBridge {
         }
     }
 
+    public static boolean insertColor(long discordId, int color) {
+        try (MongoClient client = getClient()) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            BasicDBObject filter = new BasicDBObject("discord_id", discordId);
+            FindIterable<Document> result = codeManCollection.find(filter);
+            if (result.cursor().hasNext()) {
+                codeManCollection.updateOne(filter, Updates.set("color", color));
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public static int getColor(long discordId) {
+        try (MongoClient client = getClient()) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            for (Document result : codeManCollection.find(new BasicDBObject("discord_id", discordId))) {
+                if (result.containsKey("color")) {
+                    return result.getInteger("color"); // Converts the hex color into a color object
+                } else {
+                    return GlobalVar.SUCCESS.getRGB(); // default color
+                }
+            }
+
+            return GlobalVar.SUCCESS.getRGB();
+        }
+    }
+
     public static boolean codeAlreadyTaken(String code) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
+        try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
             return codeManCollection.countDocuments(new BasicDBObject("slippi_code", code)) > 0;
         }
     }
 
     public static InsertCodeResult insertCode(long discordId, String code) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
+        try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             if (codeManCollection.countDocuments(new BasicDBObject("slippi_code", code)) > 0) {
@@ -113,7 +145,7 @@ public class DatabaseBridge {
 
     @Nullable
     public static String getCode(long discordId) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
+        try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             for (Document result : codeManCollection.find(new BasicDBObject("discord_id", discordId))) {
@@ -129,7 +161,7 @@ public class DatabaseBridge {
     }
 
     public static long getDiscordIdFromConnectCode(String connectCode) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
+        try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             for (Document result : codeManCollection.find(new BasicDBObject("slippi_code", connectCode))) {
@@ -145,7 +177,7 @@ public class DatabaseBridge {
     }
 
     public static void removeData(long discordId) {
-        try (MongoClient client = MongoClients.create(mongoUri)) {
+        try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
 
             codeManCollection.deleteOne(new BasicDBObject("discord_id", discordId));
@@ -160,6 +192,10 @@ public class DatabaseBridge {
 
     private static MongoCollection<Document> getCollection(MongoClient client) {
         return client.getDatabase("codeman").getCollection("player_entries");
+    }
+
+    private static MongoClient getClient() {
+        return MongoClients.create(mongoUri);
     }
 
     @Data
