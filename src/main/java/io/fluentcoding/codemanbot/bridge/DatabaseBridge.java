@@ -61,6 +61,14 @@ public class DatabaseBridge {
         }
     }
 
+    public static long usersWithColors() {
+        try (MongoClient client = getClient()) {
+            MongoCollection<Document> codeManCollection = getCollection(client);
+
+            return codeManCollection.countDocuments(Filters.exists("color"));
+        }
+    }
+
     @Nullable
     public static List<SSBMCharacter> getMains(long discordId) {
         if (discordId == -1)
