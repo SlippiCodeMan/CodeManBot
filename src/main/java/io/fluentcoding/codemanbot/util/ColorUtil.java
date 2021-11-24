@@ -16,7 +16,7 @@ public class ColorUtil {
     private static Map<String, Integer> colorMap = new HashMap<>();
 
     public static void init() throws URISyntaxException, IOException, JSONException {
-        URL resource = ColorUtil.class.getClassLoader().getResource("colors.json");
+        URL resource = Thread.currentThread().getContextClassLoader().getResource("colors.json");
         byte[] bytes = Files.readAllBytes(Paths.get(resource.toURI()));
         String jsonText = new String(bytes);
 
