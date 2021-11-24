@@ -26,7 +26,7 @@ public class ColorUtil {
         while(keys.hasNext()) {
             String key = keys.next();
             String hexCode = jsonObject.getString(key);
-            int color = Integer.parseInt(hexCode, 16);
+            int color = Integer.parseInt(hexCode.substring(1), 16);
 
             colorMap.put(key, color);
         }
