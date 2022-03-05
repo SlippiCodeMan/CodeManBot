@@ -35,7 +35,7 @@ public class SlippiBridge {
             JSONObject user = object.getJSONArray("users").getJSONObject(0);
 
             if (user.get("status").equals("active"))
-                return MarkdownSanitizer.sanitize(user.getString("displayName"));
+                return MarkdownSanitizer.escape(user.getString("displayName"));
             else
                 return null;
         } catch(Exception e) {
