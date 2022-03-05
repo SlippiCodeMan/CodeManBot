@@ -43,6 +43,7 @@ public class StatsCommand extends DevCodeManCommand {
             new StatsEntry("Servers", e.getJDA().getGuilds().size()),
             new StatsEntry("Connected users", DatabaseBridge.countDatabase()),
             new StatsEntry("Users with mains", DatabaseBridge.usersWithMains()),
+            new StatsEntry("Users with custom color", DatabaseBridge.usersWithColors()),
             new StatsEntry("Active ListenerHooks", ListenerHook.getActiveListenerHooks())
         );
     }

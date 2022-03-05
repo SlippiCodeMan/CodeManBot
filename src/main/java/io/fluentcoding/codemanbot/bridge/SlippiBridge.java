@@ -11,6 +11,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class SlippiBridge {
             JSONObject user = object.getJSONArray("users").getJSONObject(0);
 
             if (user.get("status").equals("active"))
-                return user.getString("displayName");
+                return MarkdownSanitizer.sanitize(user.getString("displayName"));
             else
                 return null;
         } catch(Exception e) {
