@@ -6,13 +6,14 @@ import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.container.ConnectContainer;
 import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
-import io.fluentcoding.codemanbot.util.websocket.WebSocketClientEndpoint;
+import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -79,6 +80,11 @@ public class ConnectCommand extends CodeManCommand {
                                     ConnectContainer.INSTANCE.removeConnectInformation(information);
                                 }
                             });
+                        } else if (GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("dev")) {
+                            ConnectContainer.INSTANCE.removeConnectInformation(information);
+                            DatabaseBridge.insertCode(information.getUserId(), information.getCode());
+                            newBuilder.setDescription("Success!");
+                            newBuilder.setColor(GlobalVar.SUCCESS);
                         } else {
                             newBuilder.setDescription("We weren't able to connect to our bot service!");
                             newBuilder.setColor(GlobalVar.ERROR);
@@ -94,7 +100,6 @@ public class ConnectCommand extends CodeManCommand {
                 msg.editMessage(newBuilder.build()).queue();
             });
 
-            return;
         } else {
             builder.setColor(GlobalVar.ERROR);
             builder.setDescription("Operation failed! Your tag format should be like this:\n**ABCD#123**");
