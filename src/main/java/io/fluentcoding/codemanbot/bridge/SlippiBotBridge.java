@@ -85,6 +85,9 @@ public class SlippiBotBridge {
                     builder.setDescription("You have been verified!");
                     builder.setColor(GlobalVar.SUCCESS);
                     ConnectContainer.INSTANCE.removeConnectInformation(information);
+
+                    // Remove previous user if any
+                    DatabaseBridge.removeData(information.getUserId());
                     DatabaseBridge.insertCode(information.getUserId(), information.getCode());
 
                     Application.JDA.awaitReady();
