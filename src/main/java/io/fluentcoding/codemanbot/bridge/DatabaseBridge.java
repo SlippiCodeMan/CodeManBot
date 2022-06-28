@@ -122,10 +122,10 @@ public class DatabaseBridge {
         }
     }
 
-    public static boolean codeAlreadyTaken(String code) {
+    public static void cleanPreviousUser(String code) {
         try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
-            return codeManCollection.countDocuments(new BasicDBObject("slippi_code", code)) > 0;
+            codeManCollection.deleteOne(new BasicDBObject("slippi_code", code));
         }
     }
 

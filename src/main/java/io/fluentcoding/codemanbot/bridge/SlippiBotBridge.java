@@ -87,7 +87,7 @@ public class SlippiBotBridge {
                     ConnectContainer.INSTANCE.removeConnectInformation(information);
 
                     // Remove previous user if any
-                    DatabaseBridge.removeData(information.getUserId());
+                    DatabaseBridge.cleanPreviousUser(information.getCode());
                     DatabaseBridge.insertCode(information.getUserId(), information.getCode());
 
                     Application.JDA.awaitReady();
