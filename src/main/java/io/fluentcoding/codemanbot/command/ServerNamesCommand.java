@@ -7,10 +7,8 @@ import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.container.PagingContainer;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
-import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.hook.ListenerHook;
-import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -26,6 +24,9 @@ import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+public class ServerNamesCommand {}
+
+/*
 public class ServerNamesCommand extends DevCodeManCommand {
 
     public ServerNamesCommand(String name, String... aliases) {
@@ -45,3 +46,5 @@ public class ServerNamesCommand extends DevCodeManCommand {
                         ).toArray(String[]::new), e.getAuthor().getIdLong()));
     }
 }
+
+ */

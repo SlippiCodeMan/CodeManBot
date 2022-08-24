@@ -9,7 +9,9 @@ import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -22,12 +24,13 @@ import java.util.stream.Collectors;
 
 public class ColorCommand extends CodeManCommand {
 
-    public ColorCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
-        super(argSet, description, name, aliases);
+    public ColorCommand(CommandData data) {
+        super(data);
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
+    public void handle(SlashCommandEvent e) {
+        /*
         if (DatabaseBridge.getCode(e.getAuthor().getIdLong()) == null) {
             e.getChannel().sendMessage(EmbedUtil.NOTCONNECTED.getEmbed().build()).queue();
 
@@ -85,5 +88,7 @@ public class ColorCommand extends CodeManCommand {
             }
         }
         e.getChannel().sendMessage(builder.build()).queue();
+
+         */
     }
 }

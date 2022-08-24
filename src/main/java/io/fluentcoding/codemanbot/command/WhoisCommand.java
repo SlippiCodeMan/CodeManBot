@@ -9,7 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +23,13 @@ import java.util.stream.Collectors;
 
 public class WhoisCommand extends CodeManCommand {
 
-    public WhoisCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
-        super(argSet, description, name, aliases);
+    public WhoisCommand(CommandData data) {
+        super(data);
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
+    public void handle(SlashCommandEvent e) {
+        /*
         String user = args.get("user");
 
         EmbedBuilder builder = new EmbedBuilder();
@@ -160,6 +163,8 @@ public class WhoisCommand extends CodeManCommand {
         }
 
         e.getChannel().sendMessage(builder.build()).queue();
+
+         */
     }
 
     @AllArgsConstructor

@@ -4,6 +4,10 @@ import io.fluentcoding.codemanbot.util.antispam.AntiSpamContainer;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -25,6 +29,7 @@ public class CommandHandler extends ListenerAdapter {
         this.commands.add(command);
     }
 
+    /*
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent e) {
         if (e.getAuthor().isBot())
@@ -74,6 +79,37 @@ public class CommandHandler extends ListenerAdapter {
                     command.handle(e, null);
                 }
                 return;
+            }
+        }
+    }
+     */
+
+    @Override
+
+    public void onReady(@Nonnull ReadyEvent e) {
+        // Register slash commands
+        if (GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("dev")) {
+            Guild target = Objects.requireNonNull(e.getJDA().getGuildById(GlobalVar.TEST_SERVER_ID));
+            commands.forEach(codeManCommand ->
+                    target
+                            .upsertCommand(codeManCommand.getData())
+                            .queue()
+            );
+        } else {
+            commands.forEach(codeManCommand ->
+                    e.getJDA()
+                            .upsertCommand(codeManCommand.getData())
+                            .queue()
+            );
+        }
+    }
+
+    @Override
+    public void onSlashCommand(@Nonnull SlashCommandEvent e) {
+        for (CodeManCommand command : commands) {
+            // TODO antispam
+            if (command.getData().getName().equals(e.getName())) {
+                command.handle(e);
             }
         }
     }

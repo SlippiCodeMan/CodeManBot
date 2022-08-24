@@ -1,25 +1,18 @@
 package io.fluentcoding.codemanbot.command;
 
-import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
-import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
-import io.fluentcoding.codemanbot.util.EmbedUtil;
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-
-import java.util.List;
-import java.util.Map;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 public class AskCommand extends CodeManCommand {
 
-    public AskCommand(String description, String prefix, String... aliases) {
-        super(description, prefix, aliases);
+    public AskCommand(CommandData data) {
+        super(data);
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
+    public void handle(SlashCommandEvent e) {
+        /*
         EmbedBuilder builder = new EmbedBuilder();
 
         String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
@@ -41,5 +34,6 @@ public class AskCommand extends CodeManCommand {
         }
 
         e.getChannel().sendMessage(builder.build()).queue();
+         */
     }
 }

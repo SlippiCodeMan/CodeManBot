@@ -6,10 +6,8 @@ import io.fluentcoding.codemanbot.bridge.SlippiBotBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.SystemUtil;
-import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.hook.ListenerHook;
-import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -21,6 +19,9 @@ import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+public class StatsCommand {}
+
+/*
 public class StatsCommand extends DevCodeManCommand {
 
     public StatsCommand(String name, String... aliases) {
@@ -137,3 +138,5 @@ public class StatsCommand extends DevCodeManCommand {
         }
     }
 }
+
+ */

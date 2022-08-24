@@ -1,7 +1,6 @@
 package io.fluentcoding.codemanbot.util.codemancommand;
 
 import io.fluentcoding.codemanbot.util.GlobalVar;
-import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -11,6 +10,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 
+public class RestrictedCodeManCommand {}
+
+/*
 @Getter
 public abstract class RestrictedCodeManCommand extends CodeManCommand {
     private BiPredicate<Member, Guild> restriction;
@@ -49,3 +51,6 @@ public abstract class RestrictedCodeManCommand extends CodeManCommand {
         return null;
     }
 }
+
+
+ */

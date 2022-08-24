@@ -3,16 +3,22 @@ package io.fluentcoding.codemanbot;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.security.auth.login.LoginException;
 
 import io.fluentcoding.codemanbot.bridge.SlippiBotBridge;
 import io.fluentcoding.codemanbot.command.*;
 import io.fluentcoding.codemanbot.util.*;
-import io.fluentcoding.codemanbot.util.codemancommand.DeprecatedCodeManCommand;
 import io.fluentcoding.codemanbot.util.hook.ListenerHook;
+import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.json.JSONException;
 
@@ -34,36 +40,21 @@ public class Application {
         // EVENTS
         final CommandHandler handler = new CommandHandler(
                 // USER COMMANDS
-                new ConnectCommand(new CodeManArgumentSet().setNecessaryArguments("code"),
-                        "Connects your slippi account by using your connect code", "connect"),
-                new InfoCommand(new CodeManArgumentSet().setOptionalArguments("user").setLastArgumentVarArg(),
-                        "Shows the info based off a slippi username/code or discord tag", "info", "i"),
-                new WhoisCommand(new CodeManArgumentSet().setNecessaryArguments("user").setLastArgumentVarArg(),
-                        "Shows the discord username based of a slippi username/code", "whois", "wi"),
-                new MainCommand(new CodeManArgumentSet().setOptionalArguments("char").setLastArgumentVarArg(),
-                        "Toggle a character main", "main", "mains", "m"),
-                new ColorCommand(new CodeManArgumentSet().setOptionalArguments("color").setLastArgumentVarArg(),
-                        "Sets the color of your info message", "color"),
-                new AskCommand("Creates a netplay request", "ask", "a"),
-                new DisconnectCommand("Wipes all your data from CodeMan's database", "disconnect"),
-
-                // DEPRECATED COMMANDS
-                new DeprecatedCodeManCommand("info","code", "c"),
-                new DeprecatedCodeManCommand("info","name", "n"),
-
-                // ADMIN COMMANDS
-                new ServerNamesCommand("servernames"),
-                new StatsCommand("stats"),
-                new ReconnectCommand("reconnect")
+                new InfoCommand(new CommandData("info", "Show info on someone")
+                        .addOption(OptionType.STRING, "username", "Slippi username", false)
+                        .addOption(OptionType.STRING, "code", "Slippi code", false)
+                        .addOption(OptionType.USER, "discord", "Discord user", false)),
+                new MainCommand(new CommandData("main", "Add/remove a character from your mains")
+                        .addOption(OptionType.STRING, "character", "Name of the character", true))
         );
 
-        handler.addCommand(new HelpCommand(handler, "Displays the help message", "help", "h"));
         builder.addEventListeners(
                 handler,
                 new ListenerHook()
         );
 
         JDA = builder.build();
+
         SlippiBotBridge.initHandler();
     }
 }

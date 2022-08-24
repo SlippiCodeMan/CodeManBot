@@ -17,6 +17,6 @@ public class ActivityUpdater {
     }
 
     private static Activity getActivityStatus(long count) {
-        return Activity.playing(Application.EXEC_MODE.getCommandPrefix() + "help | " + count + " users");
+        return Activity.playing("/help | " + count + " users");
     }
 }

@@ -8,7 +8,9 @@ import io.fluentcoding.codemanbot.util.*;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -19,12 +21,13 @@ import java.util.concurrent.Future;
 
 public class ConnectCommand extends CodeManCommand {
 
-    public ConnectCommand(CodeManArgumentSet argSet, String description, String name, String... aliases) {
-        super(argSet, description, name, aliases);
+    public ConnectCommand(CommandData data) {
+        super(data);
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
+    public void handle(SlashCommandEvent e) {
+        /*
         String code = args.get("code").toUpperCase();
         boolean isValid = PatternChecker.isConnectCode(code);
 
@@ -105,5 +108,7 @@ public class ConnectCommand extends CodeManCommand {
             builder.setDescription("Operation failed! Your tag format should be like this:\n**ABCD#123**");
             e.getChannel().sendMessage(builder.build()).queue();
         }
+
+         */
     }
 }
