@@ -27,23 +27,21 @@ public class ConnectCommand extends CodeManCommand {
 
     @Override
     public void handle(SlashCommandEvent e) {
-        /*
-        String code = args.get("code").toUpperCase();
+        String code = e.getOption("code").getAsString().toUpperCase();
+        long authorId = e.getMember().getIdLong();
         boolean isValid = PatternChecker.isConnectCode(code);
 
         EmbedBuilder builder = new EmbedBuilder();
         if (isValid) {
             long discordId = DatabaseBridge.getDiscordIdFromConnectCode(code);
-            if (e.getAuthor().getIdLong() == discordId) {
-                builder = EmbedUtil.ALREADYCONNECTED.getEmbed();
-                e.getChannel().sendMessage(builder.build()).queue();
+            if (authorId == discordId) {
+                e.reply(FeedbackUtil.ALREADYCONNECTED).setEphemeral(true).queue();
                 return;
             }
 
             final ConnectContainer.ConnectInformationKey information = new ConnectContainer.ConnectInformationKey(code, e.getAuthor().getIdLong());
-            if (ConnectContainer.INSTANCE.isConnecting(e.getAuthor().getIdLong())) {
-                builder = EmbedUtil.ISCONNECTING.getEmbed();
-                e.getChannel().sendMessage(builder.build()).queue();
+            if (ConnectContainer.INSTANCE.isConnecting(authorId)) {
+                e.reply(FeedbackUtil.ISCONNECTING).setEphemeral(true).queue();
                 return;
             }
 
@@ -74,7 +72,7 @@ public class ConnectCommand extends CodeManCommand {
                             newBuilder.setDescription("We've sent you the instructions via DM on how to connect your account!");
                             newBuilder.setColor(GlobalVar.SUCCESS);
 
-                            e.getAuthor().openPrivateChannel().queue(privateChannel -> {
+                            e.getMember().openPrivateChannel().queue(privateChannel -> {
                                 ConnectContainer.INSTANCE.setPrivateChannel(information, privateChannel);
                                 try {
                                     SlippiBotBridge.sendQueue(information);
@@ -108,7 +106,5 @@ public class ConnectCommand extends CodeManCommand {
             builder.setDescription("Operation failed! Your tag format should be like this:\n**ABCD#123**");
             e.getChannel().sendMessage(builder.build()).queue();
         }
-
-         */
     }
 }

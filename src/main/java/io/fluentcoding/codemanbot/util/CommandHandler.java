@@ -85,7 +85,6 @@ public class CommandHandler extends ListenerAdapter {
      */
 
     @Override
-
     public void onReady(@Nonnull ReadyEvent e) {
         // Register slash commands
         if (GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("dev")) {

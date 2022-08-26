@@ -45,7 +45,8 @@ public class Application {
                         .addOption(OptionType.STRING, "code", "Slippi code", false)
                         .addOption(OptionType.USER, "discord", "Discord user", false)),
                 new MainCommand(new CommandData("main", "Add/remove a character from your mains")
-                        .addOption(OptionType.STRING, "character", "Name of the character", true))
+                        .addOption(OptionType.STRING, "character", "Name of the character", true)),
+                new DisconnectCommand(new CommandData("disconnect", "Wipe your data from the CodeMan database"))
         );
 
         builder.addEventListeners(

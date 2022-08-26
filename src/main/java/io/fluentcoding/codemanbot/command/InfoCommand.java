@@ -65,7 +65,7 @@ public class InfoCommand extends CodeManCommand {
 
                     EmbedBuilder builder = new EmbedBuilder();
 
-                    if (codes == null) {
+                    if (codes == null || codes.size() == 0) {
                         builder.setColor(GlobalVar.ERROR);
                         builder.setDescription(StringUtil.bold(username) + " does not exist!");
                     } else if (codes.size() == 1) {
