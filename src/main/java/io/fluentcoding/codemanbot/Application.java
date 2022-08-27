@@ -40,13 +40,20 @@ public class Application {
         // EVENTS
         final CommandHandler handler = new CommandHandler(
                 // USER COMMANDS
-                new InfoCommand(new CommandData("info", "Show info on someone")
+                new ConnectCommand(new CommandData("connect", "Connect your slippi account")
+                        .addOption(OptionType.STRING, "code", "Slippi code", true)
+                ),
+                new InfoCommand(new CommandData("info", "Show your infos or the ones of someone else")
                         .addOption(OptionType.STRING, "username", "Slippi username", false)
                         .addOption(OptionType.STRING, "code", "Slippi code", false)
                         .addOption(OptionType.USER, "discord", "Discord user", false)),
                 new MainCommand(new CommandData("main", "Add/remove a character from your mains")
                         .addOption(OptionType.STRING, "character", "Name of the character", true)),
                 new DisconnectCommand(new CommandData("disconnect", "Wipe your data from the CodeMan database"))
+        );
+
+        handler.addCommand(
+                new HelpCommand(handler, new CommandData("help", "Display command usages"))
         );
 
         builder.addEventListeners(

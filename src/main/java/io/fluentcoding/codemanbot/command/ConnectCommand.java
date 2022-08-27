@@ -31,7 +31,6 @@ public class ConnectCommand extends CodeManCommand {
         long authorId = e.getMember().getIdLong();
         boolean isValid = PatternChecker.isConnectCode(code);
 
-        EmbedBuilder builder = new EmbedBuilder();
         if (isValid) {
             long discordId = DatabaseBridge.getDiscordIdFromConnectCode(code);
             if (authorId == discordId) {
@@ -39,7 +38,7 @@ public class ConnectCommand extends CodeManCommand {
                 return;
             }
 
-            final ConnectContainer.ConnectInformationKey information = new ConnectContainer.ConnectInformationKey(code, e.getAuthor().getIdLong());
+            final ConnectContainer.ConnectInformationKey information = new ConnectContainer.ConnectInformationKey(code, e.getMember().getIdLong());
             if (ConnectContainer.INSTANCE.isConnecting(authorId)) {
                 e.reply(FeedbackUtil.ISCONNECTING).setEphemeral(true).queue();
                 return;
@@ -47,10 +46,8 @@ public class ConnectCommand extends CodeManCommand {
 
             ConnectContainer.INSTANCE.addConnectInformation(information);
 
-            builder.setTitle(GlobalVar.LOADING_EMOJI);
-            builder.setColor(GlobalVar.LOADING);
             Future<Boolean> userWithCodeExistsFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.userWithCodeExists(code));
-            e.getChannel().sendMessage(builder.build()).queue(msg -> {
+            e.deferReply().queue(interactionHook -> {
                 ConnectContainer.INSTANCE.removeConnectInformation(information);
                 boolean userWithCodeExists;
                 try {
@@ -59,20 +56,21 @@ public class ConnectCommand extends CodeManCommand {
                     ex.printStackTrace();
                     userWithCodeExists = false;
                 }
-                EmbedBuilder newBuilder = new EmbedBuilder();
+                EmbedBuilder builder = new EmbedBuilder();
+
                 if (!userWithCodeExists) {
-                    newBuilder.setColor(GlobalVar.ERROR);
-                    newBuilder.setDescription("This connect code doesn't exist!");
+                    builder.setColor(GlobalVar.ERROR);
+                    builder.setDescription("It seems this connect code doesn't exist!");
                     ConnectContainer.INSTANCE.removeConnectInformation(information);
                 } else {
                     boolean codeAlreadyTaken = DatabaseBridge.codeAlreadyTaken(code);
 
                     if (!codeAlreadyTaken) {
                         if (SlippiBotBridge.isConnected()) {
-                            newBuilder.setDescription("We've sent you the instructions via DM on how to connect your account!");
-                            newBuilder.setColor(GlobalVar.SUCCESS);
+                            builder.setDescription("We've sent you the instructions via DM on how to connect your account!");
+                            builder.setColor(GlobalVar.SUCCESS);
 
-                            e.getMember().openPrivateChannel().queue(privateChannel -> {
+                            e.getJDA().openPrivateChannelById(e.getMember().getIdLong()).queue(privateChannel -> {
                                 ConnectContainer.INSTANCE.setPrivateChannel(information, privateChannel);
                                 try {
                                     SlippiBotBridge.sendQueue(information);
@@ -84,27 +82,27 @@ public class ConnectCommand extends CodeManCommand {
                         } else if (GlobalVar.dotenv.get("CODEMAN_EXEC_MODE").equals("dev")) {
                             ConnectContainer.INSTANCE.removeConnectInformation(information);
                             DatabaseBridge.insertCode(information.getUserId(), information.getCode());
-                            newBuilder.setDescription("Success!");
-                            newBuilder.setColor(GlobalVar.SUCCESS);
+                            builder.setDescription("Success!");
+                            builder.setColor(GlobalVar.SUCCESS);
                         } else {
-                            newBuilder.setDescription("We weren't able to connect to our bot service!");
-                            newBuilder.setColor(GlobalVar.ERROR);
+                            builder.setDescription("We weren't able to connect to our bot service!");
+                            builder.setColor(GlobalVar.ERROR);
                             ConnectContainer.INSTANCE.removeConnectInformation(information);
                         }
                     } else {
-                        newBuilder.setColor(GlobalVar.ERROR);
-                        newBuilder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
+                        builder.setColor(GlobalVar.ERROR);
+                        builder.setDescription("Operation failed! Someone already uses this code!\nContact **Ananas#5903** or **FluentCoding#3314**!");
                         ConnectContainer.INSTANCE.removeConnectInformation(information);
                     }
                 }
 
-                msg.editMessage(newBuilder.build()).queue();
+                e.getHook().sendMessageEmbeds(builder.build()).queue();
             });
 
         } else {
-            builder.setColor(GlobalVar.ERROR);
-            builder.setDescription("Operation failed! Your tag format should be like this:\n**ABCD#123**");
-            e.getChannel().sendMessage(builder.build()).queue();
+            e.reply("Syntax Error! Your code format should be like this:\n**ABCD#123**")
+                    .setEphemeral(true)
+                    .queue();
         }
     }
 }
