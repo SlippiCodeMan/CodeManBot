@@ -43,12 +43,15 @@ public class Application {
                 new ConnectCommand(new CommandData("connect", "Connect your slippi account")
                         .addOption(OptionType.STRING, "code", "Slippi code", true)
                 ),
-                new InfoCommand(new CommandData("info", "Show your infos or the ones of someone else")
+                new InfoCommand(new CommandData("info", "Shows user info with a given slippi username/code or discord tag")
                         .addOption(OptionType.STRING, "username", "Slippi username", false)
                         .addOption(OptionType.STRING, "code", "Slippi code", false)
                         .addOption(OptionType.USER, "discord", "Discord user", false)),
+                new WhoisCommand(new CommandData("whois", "Shows the discord username with a given slippi username/code")
+                        .addOption(OptionType.STRING, "username", "Slippi username", false)
+                        .addOption(OptionType.STRING, "code", "Slippi code", false)),
                 new MainCommand(new CommandData("main", "Add/remove a character from your mains")
-                        .addOption(OptionType.STRING, "character", "Name of the character", true)),
+                        .addOption(OptionType.STRING, "character", "Character", true)),
                 new DisconnectCommand(new CommandData("disconnect", "Wipe your data from the CodeMan database"))
         );
 

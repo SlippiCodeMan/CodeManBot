@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -29,49 +30,15 @@ public class WhoisCommand extends CodeManCommand {
 
     @Override
     public void handle(SlashCommandEvent e) {
-        /*
-        String user = args.get("user");
-
-        EmbedBuilder builder = new EmbedBuilder();
-
-        if (PatternChecker.isConnectCode(user)) {
-            final String code = user.toUpperCase();
-            long discordId = DatabaseBridge.getDiscordIdFromConnectCode(code);
-
-            // ERROR
-            if (discordId == -1L) {
-                builder.setDescription(GlobalVar.LOADING_EMOJI);
-                builder.setColor(GlobalVar.ERROR);
-
-                Future<Boolean> userWithCodeExistsFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.userWithCodeExists(code));
-                e.getChannel().sendMessage(builder.build()).queue(msg -> {
-                    boolean userWithCodeExists;
-                    try {
-                        userWithCodeExists = userWithCodeExistsFuture.get();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        userWithCodeExists = false;
-                    }
-                    if (!userWithCodeExists) {
-                        builder.setDescription("Nobody uses this connect code!");
-                    } else {
-                        builder.setDescription("This connect code has no discord user associated to it!");
-                    }
-                    msg.editMessage(builder.build()).queue();
-                });
-
-                return;
-            } else {
-                User discordUser = e.getJDA().retrieveUserById(discordId).complete();
-                builder.addField(StringUtil.getPersonPrefixedString(false, "discord tag"), discordUser.getAsTag(), false);
-                builder.setColor(GlobalVar.SUCCESS);
-            }
-        } else if (PatternChecker.isSlippiUsername(user)) {
-            builder.addField(StringUtil.getPersonPrefixedString(false, "discord tag"), GlobalVar.LOADING_EMOJI, false);
-            builder.setColor(GlobalVar.LOADING);
+        if (e.getOptions().size() != 1) {
+            e.reply("You must provide exactly one argument!")
+                    .setEphemeral(true)
+                    .queue();
+        } else if (e.getOption("username") != null) {
+            String user = Objects.requireNonNull(e.getOption("user")).getAsString();
 
             Future<List<SlippiBridge.UserEntry>> codesFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getCodesWithActualName(user));
-            e.getChannel().sendMessage(builder.build()).queue(msg -> {
+            e.deferReply().queue(interactionHook -> {
                 List<SlippiBridge.UserEntry> codes;
                 try {
                     codes = codesFuture.get();
@@ -105,7 +72,7 @@ public class WhoisCommand extends CodeManCommand {
                                     false
                             );
                             newBuilder.setColor(GlobalVar.SUCCESS);
-                            msg.editMessage(newBuilder.build()).queue();
+                            e.getHook().sendMessageEmbeds(newBuilder.build()).queue();
                         });
 
                         return;
@@ -143,7 +110,7 @@ public class WhoisCommand extends CodeManCommand {
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(e.getChannel()::sendMessage,
-                                    new PagingContainer.PageableContent(title, result.stream().toArray(String[]::new), e.getAuthor().getIdLong()));
+                                    new PagingContainer.PageableContent(title, result.stream().toArray(String[]::new), e.getUser().getIdLong()));
                             return;
                         } else {
                             String content = String.join("\n", result);
@@ -153,18 +120,45 @@ public class WhoisCommand extends CodeManCommand {
                     }
                 }
 
-                msg.editMessage(newBuilder.build()).queue();
+                e.getHook().sendMessageEmbeds(newBuilder.build()).queue();
             });
 
             return;
-        } else {
-            builder.setDescription("This parameter could neither get recognized as an username nor as a connect code!");
-            builder.setColor(GlobalVar.ERROR);
+        } else if (e.getOption("code") != null) {
+            String code = Objects.requireNonNull(e.getOption("code")).getAsString().toUpperCase();
+            long discordId = DatabaseBridge.getDiscordIdFromConnectCode(code);
+
+            EmbedBuilder builder = new EmbedBuilder();
+
+            // ERROR
+            if (discordId == -1L) {
+                Future<Boolean> userWithCodeExistsFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.userWithCodeExists(code));
+                e.deferReply().queue(interactionHook -> {
+                    boolean userWithCodeExists;
+                    try {
+                        userWithCodeExists = userWithCodeExistsFuture.get();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        userWithCodeExists = false;
+                    }
+                    builder.setColor(GlobalVar.ERROR);
+                    if (!userWithCodeExists) {
+                        builder.setDescription("Nobody uses this connect code!");
+                    } else {
+                        builder.setDescription("This connect code has no discord user associated to it!");
+                    }
+                    e.getHook().sendMessageEmbeds(builder.build()).queue();
+                });
+
+                return;
+            } else {
+                User discordUser = e.getJDA().retrieveUserById(discordId).complete();
+                builder.addField(StringUtil.getPersonPrefixedString(false, "discord tag"), discordUser.getAsTag(), false);
+                builder.setColor(GlobalVar.SUCCESS);
+
+                e.replyEmbeds(builder.build()).queue();
+            }
         }
-
-        e.getChannel().sendMessage(builder.build()).queue();
-
-         */
     }
 
     @AllArgsConstructor

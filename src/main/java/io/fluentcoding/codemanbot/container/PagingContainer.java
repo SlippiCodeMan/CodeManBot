@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
-import net.dv8tion.jda.api.requests.restaction.WebhookMessageUpdateAction;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +19,7 @@ public enum PagingContainer {
     private Map<Long, Message> lastUserMessage = new HashMap<>();
     private ReentrantLock safetyLock = new ReentrantLock();
 
-    public void pageableMessageHandler(Function<MessageEmbed, WebhookMessageUpdateAction<Message>> action, PageableContent content) {
+    public void pageableMessageHandler(Function<MessageEmbed, MessageAction<Message>> action, PageableContent content) {
         action.apply(content.render()).queue(msg -> {
             content.react(msg, () -> {
                 safetyLock.lock();
