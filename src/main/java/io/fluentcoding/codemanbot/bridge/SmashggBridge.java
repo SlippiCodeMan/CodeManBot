@@ -1,12 +1,10 @@
 package io.fluentcoding.codemanbot.bridge;
 
+import io.fluentcoding.codemanbot.util.DateUtil;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.entries.EventEntry;
 import io.fluentcoding.codemanbot.util.entries.ParticipantEntry;
 import io.fluentcoding.codemanbot.util.entries.TournamentEntry;
-import io.fluentcoding.codemanbot.util.DateUtil;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;

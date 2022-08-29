@@ -1,13 +1,5 @@
 package io.fluentcoding.codemanbot.util.codemancommand;
 
-import io.fluentcoding.codemanbot.Application;
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import io.fluentcoding.codemanbot.util.StringUtil;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-
-import java.util.Map;
-
 public class DeprecatedCodeManCommand {}
 
 /*

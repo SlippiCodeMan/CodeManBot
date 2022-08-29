@@ -1,14 +1,5 @@
 package io.fluentcoding.codemanbot.command;
 
-import io.fluentcoding.codemanbot.bridge.SlippiBotBridge;
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-
-import java.util.Map;
-
 public class ReconnectCommand {
 
 }

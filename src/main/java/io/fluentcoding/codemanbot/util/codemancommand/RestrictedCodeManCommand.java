@@ -1,15 +1,5 @@
 package io.fluentcoding.codemanbot.util.codemancommand;
 
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BiPredicate;
-
 public class RestrictedCodeManCommand {}
 
 /*

@@ -1,10 +1,13 @@
 package io.fluentcoding.codemanbot.util.codemancommand;
 
-import io.fluentcoding.codemanbot.util.GlobalVar;
+public class DevCodeManCommand {
+    private final String name;
 
-import java.util.Arrays;
+    public DevCodeManCommand(String name) {
+        this.name = name;
+    }
 
-public class DevCodeManCommand {}
+}
 
 /*
 public abstract class DevCodeManCommand extends RestrictedCodeManCommand {

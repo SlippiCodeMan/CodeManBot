@@ -1,19 +1,18 @@
 package io.fluentcoding.codemanbot.bridge;
 
-import com.mongodb.client.model.Filters;
-import io.fluentcoding.codemanbot.util.GlobalVar;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import lombok.Data;
 import org.bson.Document;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +47,7 @@ public class DatabaseBridge {
             }
 
             BasicDBObject filter = new BasicDBObject("discord_id", discordId);
-            codeManCollection.updateOne(filter, Updates.set("mains", newMains.stream().map(Enum::ordinal).collect(Collectors.toList())));
+            codeManCollection.updateOne(filter, Updates.set("mains", newMains.stream().map(ssbmCharacter -> ssbmCharacter.ordinal()).collect(Collectors.toList())));
             return result;
         }
     }
@@ -122,10 +121,10 @@ public class DatabaseBridge {
         }
     }
 
-    public static boolean codeAlreadyTaken(String code) {
+    public static void cleanPreviousUser(String code) {
         try (MongoClient client = getClient()) {
             MongoCollection<Document> codeManCollection = getCollection(client);
-            return codeManCollection.countDocuments(new BasicDBObject("slippi_code", code)) > 0;
+            codeManCollection.deleteOne(new BasicDBObject("slippi_code", code));
         }
     }
 

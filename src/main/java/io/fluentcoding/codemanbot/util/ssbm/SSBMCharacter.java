@@ -15,7 +15,7 @@ public enum SSBMCharacter {
     PEACH("Peach", 791703555471310858L, "peach", "turnip"),
     YOSHI("Yoshi", 791703555136421889L, "egg"),
     DK("Donkey Kong", 791703555631218731L, "dk"),
-    CAPTAIN_FALCON("Captain Falcon", 791703555455189022L, "cptfalcon", "falcon", "cfalcon", "bond"),
+    CAPTAIN_FALCON("Captain Falcon", 791703555455189022L, "cptfalcon", "cf", "falcon", "cfalcon", "bond"),
     GANONDORF("Ganondorf", 791703555349807125L, "ganon", "dorf"),
     FALCO("Falco", 791703555794403338L, "bird", "birdo", "falcolombardi"),
     FOX("Fox", 791703556121034762L, "focks", "foxmccloud"),

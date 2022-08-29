@@ -2,6 +2,7 @@ package io.fluentcoding.codemanbot.bridge;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -11,7 +12,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 
 import java.util.ArrayList;
 import java.util.List;

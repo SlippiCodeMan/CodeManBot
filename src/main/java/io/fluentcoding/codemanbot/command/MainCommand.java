@@ -1,17 +1,15 @@
 package io.fluentcoding.codemanbot.command;
 
-import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
-import io.fluentcoding.codemanbot.util.*;
+import io.fluentcoding.codemanbot.util.FeedbackUtil;
+import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class MainCommand extends CodeManCommand {
