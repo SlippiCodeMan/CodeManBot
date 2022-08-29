@@ -227,35 +227,4 @@ public class InfoCommand extends CodeManCommand {
             e.getHook().sendMessageEmbeds(builder.build()).queue();
         });
     }
-
-    /*
-    private void outputWithSlippiName(String username, String retrievedCode, SlashCommandEvent e, boolean you) {
-        Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(retrievedCode));
-
-        e.deferReply().queue(success -> {
-            String mains = getMains(discordId);
-
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.addField(StringUtil.getPersonPrefixedString(you, "code"), retrievedCode, true);
-
-            String name;
-
-            try {
-                name = nameFuture.get(5, TimeUnit.SECONDS);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                name = null;
-            }
-
-            builder.addField(StringUtil.getPersonPrefixedString(you, "name"), name == null ? "*No name found*" : name, true);
-
-            if (!mains.isEmpty()) {
-                builder.addField(StringUtil.getPersonPrefixedString(you, "mains"), mains, true);
-            }
-
-            builder.setColor(DatabaseBridge.getColor(discordId));
-            e.getHook().sendMessageEmbeds(builder.build()).queue();
-        });
-    }
-     */
 }
