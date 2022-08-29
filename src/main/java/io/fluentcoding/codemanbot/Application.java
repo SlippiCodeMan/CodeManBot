@@ -56,6 +56,10 @@ public class Application {
                 new HelpCommand(handler, new CommandData("help", "Display command usages"))
         );
 
+        // Not very fancy but does the job for now...
+        handler.addDevCommand(new ReconnectCommand("reconnect"));
+        handler.addDevCommand(new StatsCommand("stats"));
+
         builder.addEventListeners(
                 handler,
                 new ListenerHook()

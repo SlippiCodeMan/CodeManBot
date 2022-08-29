@@ -2,12 +2,14 @@ package io.fluentcoding.codemanbot.util;
 
 import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
+import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
@@ -19,13 +21,19 @@ import java.util.Objects;
 @Getter
 public class CommandHandler extends ListenerAdapter {
     private final List<CodeManCommand> commands;
+    private final List<DevCodeManCommand> devCommands;
 
     public CommandHandler(CodeManCommand... commands) {
         this.commands = new ArrayList<>(Arrays.asList(commands));
+        this.devCommands = new ArrayList<>();
     }
 
     public void addCommand(CodeManCommand command) {
         this.commands.add(command);
+    }
+
+    public void addDevCommand(DevCodeManCommand devCommand) {
+        this.devCommands.add(devCommand);
     }
 
     @Override
@@ -57,6 +65,20 @@ public class CommandHandler extends ListenerAdapter {
                         "Most verified bots had to migrate to slash command due to discord's new policies, try using " + StringUtil.oneLineCodeBlock("/<command-name>")
                 );
                 e.getChannel().sendMessage(builder.build()).queue();
+            }
+        }
+    }
+
+    @Override
+    public void onPrivateMessageReceived(@Nonnull PrivateMessageReceivedEvent e) {
+        String msg = e.getMessage().getContentStripped();
+        for (long owner: GlobalVar.owners) {
+            if (owner == e.getAuthor().getIdLong()) {
+                for (DevCodeManCommand devCommand: devCommands) {
+                    if (isLegacyCommand(msg, devCommand.getName())) {
+                        devCommand.handle(e);
+                    }
+                }
             }
         }
     }

@@ -1,20 +1,20 @@
 package io.fluentcoding.codemanbot.util.codemancommand;
 
-public class DevCodeManCommand {
+import io.fluentcoding.codemanbot.Application;
+import lombok.Getter;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+
+import java.util.List;
+import java.util.Map;
+
+@Getter
+public abstract class DevCodeManCommand {
     private final String name;
 
     public DevCodeManCommand(String name) {
-        this.name = name;
+        this.name = Application.EXEC_MODE.getCommandPrefix() + name;
     }
 
+    public abstract void handle(PrivateMessageReceivedEvent e);
 }
-
-/*
-public abstract class DevCodeManCommand extends RestrictedCodeManCommand {
-
-    public DevCodeManCommand(String name, String... aliases) {
-        super((user, guild) -> Arrays.stream(GlobalVar.owners).anyMatch(owner -> user.getIdLong() == owner), "devs only", name, aliases);
-    }
-}
-
- */
