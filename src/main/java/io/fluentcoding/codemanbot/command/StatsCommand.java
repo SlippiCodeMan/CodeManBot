@@ -1,18 +1,17 @@
 package io.fluentcoding.codemanbot.command;
 
-import io.fluentcoding.codemanbot.bridge.ChallongeBridge;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBotBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
+import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.SystemUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
-import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.hook.ListenerHook;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +22,12 @@ import java.util.stream.Collectors;
 
 public class StatsCommand extends DevCodeManCommand {
 
-    public StatsCommand(String name, String... aliases) {
-        super(name, aliases);
+    public StatsCommand(String name) {
+        super(name);
     }
 
     @Override
-    public void handleOnSuccess(GuildMessageReceivedEvent e, Map<String, String> args) {
+    public void handle(PrivateMessageReceivedEvent e) {
         SystemUtil.MemoryStats memoryStats = SystemUtil.memoryStats();
 
         create(e,
@@ -38,7 +37,6 @@ public class StatsCommand extends DevCodeManCommand {
             new StatsEntry("Used memory", mb(memoryStats.getUsedMemory())),
             new StatsEntry("Discord API Response time", e.getJDA().getGatewayPing() + "ms"),
             new StatsEntry("Slippi API Response time", () -> SlippiBridge.ping() + "ms"),
-            new StatsEntry("Challonge API Response time", () -> ChallongeBridge.ping() + "ms"),
             new StatsEntry("Slippi Bot WebSocket", SlippiBotBridge.isConnected() ? "Connected" : "Disconnected"),
             new StatsEntry("Servers", e.getJDA().getGuilds().size()),
             new StatsEntry("Connected users", DatabaseBridge.countDatabase()),
@@ -52,7 +50,7 @@ public class StatsCommand extends DevCodeManCommand {
         return input + "MiB";
     }
 
-    private void create(GuildMessageReceivedEvent e, StatsEntry... entries) {
+    private void create(PrivateMessageReceivedEvent e, StatsEntry... entries) {
         EmbedBuilder builder = new EmbedBuilder();
 
         int i = 0;
@@ -72,7 +70,7 @@ public class StatsCommand extends DevCodeManCommand {
 
         if (toUpdate.size() > 0) {
             Map<Integer, Future<String>> updateFutures = toUpdate.entrySet().stream().collect(Collectors.toMap(
-                    entry -> entry.getKey(),
+                    Map.Entry::getKey,
                     entry -> Executors.newCachedThreadPool().submit(() -> String.valueOf(entry.getValue().get()))
             ));
 
@@ -112,7 +110,7 @@ public class StatsCommand extends DevCodeManCommand {
 
     @Getter
     private static class StatsEntry {
-        private String title;
+        private final String title;
         private String value = null;
         private Supplier<String> valueRetriever = null;
 

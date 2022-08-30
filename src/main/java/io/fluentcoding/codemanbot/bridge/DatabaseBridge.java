@@ -1,19 +1,18 @@
 package io.fluentcoding.codemanbot.bridge;
 
-import com.mongodb.client.model.Filters;
-import io.fluentcoding.codemanbot.util.GlobalVar;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import lombok.Data;
 import org.bson.Document;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

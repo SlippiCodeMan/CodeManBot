@@ -4,18 +4,16 @@ import io.fluentcoding.codemanbot.bridge.SlippiBotBridge;
 import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.codemancommand.DevCodeManCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-
-import java.util.Map;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class ReconnectCommand extends DevCodeManCommand {
 
-    public ReconnectCommand(String name, String... aliases) {
-        super(name, aliases);
+    public ReconnectCommand(String name) {
+        super(name);
     }
 
     @Override
-    public void handleOnSuccess(GuildMessageReceivedEvent e, Map<String, String> args) {
+    public void handle(PrivateMessageReceivedEvent e) {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(GlobalVar.SUCCESS);
 

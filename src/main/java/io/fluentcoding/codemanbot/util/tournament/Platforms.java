@@ -1,8 +1,9 @@
 package io.fluentcoding.codemanbot.util.tournament;
 
-import java.awt.Color;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.awt.*;
 
 @AllArgsConstructor
 @Getter

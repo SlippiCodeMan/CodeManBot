@@ -1,7 +1,8 @@
 package io.fluentcoding.codemanbot.util;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import java.awt.Color;
+
+import java.awt.*;
 
 public class GlobalVar {
     public static String FROG_EMOJI = "\uD83D\uDC38",
@@ -25,4 +26,6 @@ public class GlobalVar {
             582645006100201485L, // ANANAS
             522871749667323956L // FLUENTCODING
     };
+
+    public static long TEST_SERVER_ID = 696641107345539093L;
 }

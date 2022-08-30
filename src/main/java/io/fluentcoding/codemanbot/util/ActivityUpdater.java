@@ -1,6 +1,5 @@
 package io.fluentcoding.codemanbot.util;
 
-import io.fluentcoding.codemanbot.Application;
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -17,6 +16,6 @@ public class ActivityUpdater {
     }
 
     private static Activity getActivityStatus(long count) {
-        return Activity.playing(Application.EXEC_MODE.getCommandPrefix() + "help | " + count + " users");
+        return Activity.playing("/help | " + count + " users");
     }
 }

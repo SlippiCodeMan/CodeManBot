@@ -1,7 +1,10 @@
 package io.fluentcoding.codemanbot.bridge;
 
+import io.fluentcoding.codemanbot.util.DateUtil;
+import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.StringUtil;
-
+import io.fluentcoding.codemanbot.util.entries.ParticipantEntry;
+import io.fluentcoding.codemanbot.util.entries.TournamentEntry;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -9,11 +12,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import io.fluentcoding.codemanbot.util.GlobalVar;
-import io.fluentcoding.codemanbot.util.DateUtil;
-import io.fluentcoding.codemanbot.util.entries.TournamentEntry;
-import io.fluentcoding.codemanbot.util.entries.ParticipantEntry;
 
 import java.util.ArrayList;
 import java.util.List;

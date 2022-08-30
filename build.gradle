@@ -25,18 +25,19 @@ group 'io.fluentcoding'
 version '1.0'
 
 dependencies {
-    compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9'
+    compile 'org.glassfish.tyrus.bundles:tyrus-standalone-client:2.1.0'
     compile 'javax.websocket:javax.websocket-api:1.1'
-    compile 'com.github.vladimir-bukhtoyarov:bucket4j-core:6.0.0'
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    compile 'com.github.vladimir-bukhtoyarov:bucket4j-core:7.6.0'
+    compile 'org.slf4j:slf4j-simple:2.0.0'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
     implementation ('net.dv8tion:JDA:4.3.0_277') {
         exclude module: 'opus-java'
     }
-    implementation 'org.mongodb:mongo-java-driver:3.12.5'
+    implementation 'org.mongodb:mongo-java-driver:3.12.11'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation group: 'org.json', name: 'json', version: '20090211'
-    implementation 'io.github.cdimascio:dotenv-java:2.2.0'
+    implementation 'io.github.cdimascio:dotenv-java:2.2.4'
 }
 
 repositories {
@@ -45,6 +46,7 @@ repositories {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
     }
+    mavenCentral()
 }
 
 ext {

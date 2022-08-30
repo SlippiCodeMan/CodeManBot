@@ -1,38 +1,41 @@
 package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
+import io.fluentcoding.codemanbot.util.FeedbackUtil;
+import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.StringUtil;
 import io.fluentcoding.codemanbot.util.codemancommand.CodeManCommand;
-import io.fluentcoding.codemanbot.util.EmbedUtil;
-import io.fluentcoding.codemanbot.util.GlobalVar;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class AskCommand extends CodeManCommand {
 
-    public AskCommand(String description, String prefix, String... aliases) {
-        super(description, prefix, aliases);
+    public AskCommand(CommandData data) {
+        super(data);
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent e, Map<String, String> args) {
+    public void handle(SlashCommandEvent e) {
         EmbedBuilder builder = new EmbedBuilder();
+        Member author = Objects.requireNonNull(e.getMember());
 
-        String code = DatabaseBridge.getCode(e.getAuthor().getIdLong());
+        String code = DatabaseBridge.getCode(author.getIdLong());
         if (code == null) {
-            builder = EmbedUtil.NOTCONNECTED.getEmbed();
+            e.reply(FeedbackUtil.NOTCONNECTED).setEphemeral(true).queue();
         } else {
             builder.setTitle("Netplay Search");
-            builder.setDescription(e.getAuthor().getName() + " is looking for an opponent!");
-            builder.setThumbnail(e.getAuthor().getAvatarUrl());
+            builder.setDescription(author.getEffectiveName() + " is looking for an opponent!");
+            builder.setThumbnail(author.getUser().getAvatarUrl());
             builder.setColor(GlobalVar.SUCCESS);
 
             builder.addField(StringUtil.getPersonPrefixedString(false, "code"), code, true);
-            List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getAuthor().getIdLong());
+            List<SSBMCharacter> characters = DatabaseBridge.getMains(e.getIdLong());
             if (characters != null && characters.size() != 0) {
                 builder.addField(StringUtil.getPersonPrefixedString(false, "mains"), StringUtil.getMainsFormatted(characters), true);
             }
@@ -40,6 +43,6 @@ public class AskCommand extends CodeManCommand {
             builder.setFooter(GlobalVar.FROG_EMOJI + " slippi");
         }
 
-        e.getChannel().sendMessage(builder.build()).queue();
+        e.replyEmbeds(builder.build()).queue();
     }
 }
