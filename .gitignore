@@ -2,6 +2,9 @@
 .gradle
 /build/
 
+# ignore /bin build folder as well
+/bin/
+
 # Ignore Gradle GUI config
 gradle-app.setting
 

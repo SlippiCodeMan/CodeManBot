@@ -2,6 +2,8 @@ package io.fluentcoding.codemanbot.command;
 
 import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBridge;
+import io.fluentcoding.codemanbot.bridge.SlippiRankBridge;
+import io.fluentcoding.codemanbot.bridge.SlippiRankBridge.RankEntry;
 import io.fluentcoding.codemanbot.container.PagingContainer;
 import io.fluentcoding.codemanbot.util.FeedbackUtil;
 import io.fluentcoding.codemanbot.util.GlobalVar;
@@ -54,13 +56,13 @@ public class InfoCommand extends CodeManCommand {
                     e.reply("This person didn't connect to CodeMan yet!").setEphemeral(true).queue();
                 }
             } else {
-
                 outputWithDiscordId(member.getIdLong(), retrievedCode, e, true);
             }
         } else if (e.getOption("username") != null) {
             String username = Objects.requireNonNull(e.getOption("username")).getAsString();
             if (PatternChecker.isSlippiUsername(username)) {
-                Future<List<SlippiBridge.UserEntry>> codesFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getCodesWithActualName(username));
+                var threadPool = Executors.newCachedThreadPool();
+                Future<List<SlippiBridge.UserEntry>> codesFuture = threadPool.submit(() -> SlippiBridge.getCodesWithActualName(username));
                 e.deferReply().queue(interactionHook -> {
                     List<SlippiBridge.UserEntry> codes;
                     try {
@@ -76,19 +78,24 @@ public class InfoCommand extends CodeManCommand {
                         builder.setColor(GlobalVar.ERROR);
                         builder.setDescription(StringUtil.oneLineCodeBlock(username) + " does not exist!");
                     } else if (codes.size() == 1) {
-                        SlippiBridge.UserEntry entry = codes.get(0);
-                        long discordID = DatabaseBridge.getDiscordIdFromConnectCode(entry.getCode());
+                        SlippiBridge.UserEntry userEntry = codes.get(0);
+
+                        RankEntry rank = SlippiRankBridge.getRank(userEntry.getCode());
+                        long discordID = DatabaseBridge.getDiscordIdFromConnectCode(userEntry.getCode());
                         boolean you = (discordID == Objects.requireNonNull(e.getMember()).getIdLong());
 
                         builder.addField(StringUtil.getPersonPrefixedString(you, "code"),
-                                entry.getDisplayName() == null ? entry.getCode()
-                                        : StringUtil.stringWithSlippiUsername(entry.getCode(), entry.getDisplayName()),
+                                userEntry.getDisplayName() == null ? userEntry.getCode()
+                                        : StringUtil.listItemDetails(userEntry.getCode(), userEntry.getDisplayName(), null, null),
                                 true);
                         if (discordID != -1) {
                             String mains = getMains(discordID);
                             if (!mains.isEmpty()) {
                                 builder.addField(StringUtil.getPersonPrefixedString(you, "mains"), mains, true);
                             }
+                        }
+                        if (rank.hasPlayed()) {
+                            builder.setFooter(StringUtil.getRankFormatted(rank, false), StringUtil.getRankImageUrl(rank));
                         }
                         builder.setColor(DatabaseBridge.getColor(discordID));
                     } else {
@@ -100,43 +107,59 @@ public class InfoCommand extends CodeManCommand {
                                 codesWithMains.put(entry.getCode(), mains);
                         }
 
+                        Map<String, RankEntry> codesWithRanks = new HashMap<>();
+                        final var ranks = SlippiRankBridge.getRanks(codes.stream().map(SlippiBridge.UserEntry::getCode).toArray(String[]::new));
+                        for (SlippiBridge.UserEntry entry : codes) {
+                            RankEntry rank = ranks.get(entry.getCode());
+                            if (rank != null)
+                                codesWithRanks.put(entry.getCode(), rank);
+                        }
+
                         List<String> result = codes.stream()
                                 .filter(entry -> entry.getDisplayName() == null && codesWithMains.containsKey(entry.getCode()))
-                                .map(entry -> StringUtil.stringWithMains(
-                                                entry.getCode(),
-                                                codesWithMains.get(entry.getCode())
-                                        )
-                                )
+                                .map(entry -> StringUtil.listItemDetails(
+                                    entry.getCode(),
+                                    null,
+                                    codesWithMains.get(entry.getCode()),
+                                    codesWithRanks.get(entry.getCode())
+                                ))
                                 .collect(Collectors.toList());
                         result.addAll(
                                 codes.stream()
                                         .filter(entry -> entry.getDisplayName() == null && !codesWithMains.containsKey(entry.getCode()))
-                                        .map(entry -> entry.getCode())
+                                        .map(entry -> StringUtil.listItemDetails(
+                                            entry.getCode(),
+                                            entry.getDisplayName(),
+                                            codesWithMains.get(entry.getCode()),
+                                            codesWithRanks.get(entry.getCode())
+                                        ))
                                         .collect(Collectors.toList())
                         );
                         result.addAll(
                                 codes.stream()
                                         .filter(entry -> entry.getDisplayName() != null && codesWithMains.containsKey(entry.getCode()))
-                                        .map(entry -> StringUtil.stringWithSlippiUsernameAndMains(
-                                                        entry.getCode(),
-                                                        entry.getDisplayName(),
-                                                        codesWithMains.get(entry.getCode())
-                                                )
-                                        )
+                                        .map(entry -> StringUtil.listItemDetails(
+                                            entry.getCode(),
+                                            null,
+                                            codesWithMains.get(entry.getCode()),
+                                            codesWithRanks.get(entry.getCode())
+                                        ))
                                         .collect(Collectors.toList())
                         );
                         result.addAll(
                                 codes.stream()
                                         .filter(entry -> entry.getDisplayName() != null && !codesWithMains.containsKey(entry.getCode()))
-                                        .map(entry -> StringUtil.stringWithSlippiUsername(
+                                        .map(entry -> StringUtil.listItemDetails(
                                                         entry.getCode(),
-                                                        entry.getDisplayName()
+                                                        entry.getDisplayName(),
+                                                        null,
+                                                        codesWithRanks.get(entry.getCode())
                                                 )
                                         )
                                         .collect(Collectors.toList())
                         );
 
-                        String title = StringUtil.bold( codes.size() + " players are using this username:") + "\n\n";
+                        String title = StringUtil.bold(codes.size() + " players are using this username:") + "\n\n";
 
                         if (result.size() > GlobalVar.MAX_ITEMS_PER_PAGE) {
                             PagingContainer.INSTANCE.pageableMessageHandler(e.getHook()::editOriginalEmbeds,
@@ -156,51 +179,59 @@ public class InfoCommand extends CodeManCommand {
         } else if (e.getOption("code") != null) {
             String code = Objects.requireNonNull(e.getOption("code")).getAsString().toUpperCase();
             if (PatternChecker.isConnectCode(code)) {
-                    Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(code));
+                var threadPool = Executors.newCachedThreadPool();
+                Future<String> nameFuture = threadPool.submit(() -> SlippiBridge.getName(code));
+                Future<RankEntry> rankFuture = threadPool.submit(() -> SlippiRankBridge.getRank(code));
 
-                    e.deferReply().queue(interactionHook -> {
-                        long discordID = DatabaseBridge.getDiscordIdFromConnectCode(code);
-                        EmbedBuilder builder = new EmbedBuilder();
+                e.deferReply().queue(interactionHook -> {
+                    long discordID = DatabaseBridge.getDiscordIdFromConnectCode(code);
+                    EmbedBuilder builder = new EmbedBuilder();
 
-                        String name;
+                    String name = null;
+                    RankEntry rank = null;
 
-                        boolean you = (discordID == Objects.requireNonNull(e.getMember()).getIdLong());
+                    boolean you = discordID == Objects.requireNonNull(e.getMember()).getIdLong();
 
-                        try {
-                            name = nameFuture.get(5, TimeUnit.SECONDS);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            name = null;
-                        }
-                        if (name == null) {
-                            builder.setDescription(StringUtil.oneLineCodeBlock(code) + " doesn't exist!");
-                            builder.setColor(GlobalVar.ERROR);
-                        } else {
-                            builder.addField(StringUtil.getPersonPrefixedString(you, "name"), name, true);
-                            builder.setColor(DatabaseBridge.getColor(discordID));
+                    try {
+                        name = nameFuture.get(5, TimeUnit.SECONDS);
+                        rank = rankFuture.get(5, TimeUnit.SECONDS);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    if (name == null) {
+                        builder.setDescription(StringUtil.oneLineCodeBlock(code) + " doesn't exist!");
+                        builder.setColor(GlobalVar.ERROR);
+                    } else {
+                        builder.addField(StringUtil.getPersonPrefixedString(you, "name"), name, true);
+                        builder.setColor(DatabaseBridge.getColor(discordID));
 
-                            if (discordID != -1) {
-                                String mains = getMains(discordID);
-                                if (!mains.isEmpty()) {
-                                    builder.addField(StringUtil.getPersonPrefixedString(you, "mains"), mains, true);
-                                }
+                        if (discordID != -1) {
+                            String mains = getMains(discordID);
+                            if (!mains.isEmpty()) {
+                                builder.addField(StringUtil.getPersonPrefixedString(you, "mains"), mains, true);
                             }
                         }
+                        if (rank.hasPlayed()) {
+                            builder.setFooter(StringUtil.getRankFormatted(rank, false), StringUtil.getRankImageUrl(rank));
+                        }
+                    }
 
-                        e.getHook().editOriginalEmbeds(builder.build()).queue();
-                    });
-                }
-            } else {
-                e.reply("Invalid connect code!").setEphemeral(true).queue();
+                    e.getHook().editOriginalEmbeds(builder.build()).queue();
+                });
             }
+        } else {
+            e.reply("Invalid connect code!").setEphemeral(true).queue();
         }
+    }
 
     private String getMains(long discordId) {
         return StringUtil.getMainsFormatted(DatabaseBridge.getMains(discordId));
     }
 
     private void outputWithDiscordId(long discordId, String retrievedCode, SlashCommandEvent e, boolean you) {
-        Future<String> nameFuture = Executors.newCachedThreadPool().submit(() -> SlippiBridge.getName(retrievedCode));
+        var threadPool = Executors.newCachedThreadPool();
+        Future<String> nameFuture = threadPool.submit(() -> SlippiBridge.getName(retrievedCode));
+        Future<RankEntry> rankFuture = threadPool.submit(() -> SlippiRankBridge.getRank(retrievedCode));
 
         e.deferReply().queue(success -> {
             String mains = getMains(discordId);
@@ -208,16 +239,21 @@ public class InfoCommand extends CodeManCommand {
             EmbedBuilder builder = new EmbedBuilder();
             builder.addField(StringUtil.getPersonPrefixedString(you, "code"), retrievedCode, true);
 
-            String name;
+            String name = null;
+            RankEntry rank = null;
 
             try {
                 name = nameFuture.get(5, TimeUnit.SECONDS);
+                rank = rankFuture.get(5, TimeUnit.SECONDS);
             } catch (Exception ex) {
                 ex.printStackTrace();
-                name = null;
             }
 
             builder.addField(StringUtil.getPersonPrefixedString(you, "name"), name == null ? "*No name found*" : name, true);
+
+            if (rank.hasPlayed()) {
+                builder.setFooter(StringUtil.getRankFormatted(rank, false), StringUtil.getRankImageUrl(rank));
+            }
 
             if (!mains.isEmpty()) {
                 builder.addField(StringUtil.getPersonPrefixedString(you, "mains"), mains, true);
