@@ -1,5 +1,6 @@
 package io.fluentcoding.codemanbot;
 
+import io.fluentcoding.codemanbot.bridge.DatabaseBridge;
 import io.fluentcoding.codemanbot.bridge.SlippiBotBridge;
 import io.fluentcoding.codemanbot.command.*;
 import io.fluentcoding.codemanbot.util.*;
@@ -28,7 +29,7 @@ public class Application {
 
         final JDABuilder builder = JDABuilder.createDefault(EXEC_MODE.getDiscordToken());
 
-        builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.EMOTE);
+        builder.disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES);
         ActivityUpdater.update(builder);
 
         // EVENTS

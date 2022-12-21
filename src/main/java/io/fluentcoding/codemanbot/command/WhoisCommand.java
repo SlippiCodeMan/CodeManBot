@@ -69,7 +69,7 @@ public class WhoisCommand extends CodeManCommand {
                             e.getJDA().retrieveUserById(entry.getDiscordId()).queue(discordUser -> {
                                 newBuilder.addField(
                                         StringUtil.getPersonPrefixedString(false, "discord tag"),
-                                        entry.getDisplayName() == null ? discordUser.getAsTag() : StringUtil.stringWithSlippiUsername(discordUser.getAsTag(), entry.getDisplayName()),
+                                        entry.getDisplayName() == null ? discordUser.getAsTag() : StringUtil.listItemDetails(discordUser.getAsTag(), entry.getDisplayName(), null, null),
                                         false
                                 );
                                 newBuilder.setColor(GlobalVar.SUCCESS);
@@ -93,9 +93,12 @@ public class WhoisCommand extends CodeManCommand {
                                     .filter(entry -> entry.getDisplayName() != null)
                                     .map(entry -> {
                                         try {
-                                            return StringUtil.stringWithSlippiUsername(
+                                            return StringUtil.listItemDetails(
                                                     e.getJDA().retrieveUserById(entry.getDiscordId()).submit().get().getAsTag(),
-                                                    entry.getDisplayName());
+                                                    entry.getDisplayName(),
+                                                    null,
+                                                    null
+                                            );
                                         } catch (InterruptedException | ExecutionException interruptedException) {
                                             interruptedException.printStackTrace();
                                         }

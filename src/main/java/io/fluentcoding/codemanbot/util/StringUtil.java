@@ -1,5 +1,7 @@
 package io.fluentcoding.codemanbot.util;
 
+import io.fluentcoding.codemanbot.Application;
+import io.fluentcoding.codemanbot.bridge.SlippiRankBridge.RankEntry;
 import io.fluentcoding.codemanbot.util.ssbm.SSBMCharacter;
 
 import java.text.DateFormat;
@@ -25,14 +27,28 @@ public class StringUtil {
     public static String getPersonPrefixedString(boolean you, String suffix) {
         return (you ? "Your " : "Their ") + suffix;
     }
-    public static String stringWithSlippiUsername(String prefix, String username) {
+    /*public static String withSlippiUsername(String prefix, String username) {
         return prefix + " **(" + username + ")**";
     }
-    public static String stringWithMains(String prefix, String mains) {
+    public static String withMains(String prefix, String mains) {
         return prefix + " " + mains;
     }
-    public static String stringWithSlippiUsernameAndMains(String prefix, String username, String mains) {
-        return prefix + " **(" + username + ")** " + mains ;
+    public static String withSlippiUsernameAndMains(String prefix, String username, String mains) {
+        return withMains(withSlippiUsername(prefix, username), mains);
+    }*/
+    public static String listItemDetails(String prefix, String username, String mains, RankEntry rank) {
+        String result = prefix;
+
+        if (username != null)
+            result += " **(" + username + ")**";
+
+        if (mains != null)
+            result += " " + mains;
+
+        if (rank != null && rank.hasPlayed())
+            result += " **[" + getRankEmoji(rank.getRank()) + " " + rank.getRating() + "]**";
+
+        return result;
     }
     public static String getMainsFormatted(List<SSBMCharacter> characters) {
         return characters == null ? "" : characters.stream()
@@ -41,6 +57,23 @@ public class StringUtil {
                         .replaceAll("[&.-]", "").toLowerCase()
                         + ":" + main.getEmoteId() + ">")
                 .collect(Collectors.joining(" "));
+    }
+    public static String getRankEmoji(String rank) {
+        String rankEmojiName = rank.replace(" ", "");
+        try {
+            return Application.JDA.getGuildById(GlobalVar.TEST_SERVER_ID).getEmotesByName(rankEmojiName, true).get(0).getAsMention();
+        } catch(IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+    public static String getRankFormatted(RankEntry rank, boolean emptyOnNoRank) {
+        return rank == null ?
+            (emptyOnNoRank ? "" : "*No rank found*") :
+            rank.getRank() + " (" + rank.getRating() + ", " + rank.getWins() + "W/" + rank.getLosses() + "L)";
+    }
+    public static String getRankImageUrl(RankEntry rank) {
+        String rankUrl = rank.getRank().replace(" ", "%20");
+        return "http://slprank.com/imgs/" + rankUrl + ".png";
     }
     public static String getNumberedEmoji(int digit) {
         char number = (char)('\u0030' + digit);
